@@ -1,0 +1,34 @@
+{%- comment -%}
+  UC — ürün üst etiketi
+
+  Tasarımdaki "URBANCARE · SAÇ BAKIM" satırı: başlığın hemen üstünde,
+  pembe, harf aralığı açılmış, büyük harf.
+
+  İçerik markadan ve ürün türünden kurulur. Marka yoksa mağaza adına,
+  tür yoksa yalnızca markaya düşer — tek başına ayraç basmamak için
+  parçalar diziye toplanıp birleştiriliyor.
+
+  Kullanım:
+  {% render 'uc-overline' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign brand = product.vendor | default: shop.name
+  assign category = product.type
+
+  assign parts = ''
+  if brand != blank
+    assign parts = brand
+  endif
+  if category != blank
+    if parts != blank
+      assign parts = parts | append: ' · ' | append: category
+    else
+      assign parts = category
+    endif
+  endif
+-%}
+
+{%- if parts != blank -%}
+  <div class="uc-overline">{{ parts | escape }}</div>
+{%- endif -%}

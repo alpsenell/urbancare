@@ -127,6 +127,17 @@
   if disable_quick_shop
     assign show_quick_shop = false
   endif
+
+  comment
+    UC: Standart kartlarda hızlı ekle butonu görselin üstüne yerleşiyor
+    (tasarımdaki yuvarlak pembe "+"). Satır tipi kartlarda (card--related,
+    ör. sepet çekmecesindeki öneriler) görsel 78px'lik bir sütun; oraya
+    buton sığmaz, orada eski yerinde kalıyor.
+  endcomment
+  assign uc_quick_add_over_media = false
+  if show_quick_shop and show_image and card_type != 'related'
+    assign uc_quick_add_over_media = true
+  endif
 -%}
 
 {%- if product and product != empty -%}
@@ -205,6 +216,16 @@
               {{- 'image' | placeholder_svg_tag: 'media__placeholder img-fit' -}}
             {%- endif -%}
           </a>
+        {%- endif -%}
+
+        {%- comment -%}UC: hızlı ekle butonu görselin sağ alt köşesinde{%- endcomment -%}
+        {%- if uc_quick_add_over_media -%}
+          {%- render 'uc-card-quick-add',
+              product: product,
+              product_url: product_url,
+              current_variant: current_variant,
+              section_id: section_id,
+              sibling_products: sibling_products -%}
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -383,98 +404,21 @@
         </div>
       </div>
 
-      {%- # Quick Add -%}
-      {%- if show_quick_shop -%}
+      {%- comment -%}
+        UC: hızlı ekle butonu normalde görselin üstünde, card__media içinde
+        basılıyor. Görsel kapalıysa ya da satır tipi kartsa tutunacak bir kutu
+        olmadığından buraya düşüyor — aksi halde kart hiç sepete ekleme yolu
+        sunmazdı.
+      {%- endcomment -%}
+      {%- if show_quick_shop and uc_quick_add_over_media == false -%}
         <div class="card-reveal has-motion relative">
           <div class="has-motion">
-            <div class="card__quick-add">
-              {%- liquid
-                assign show_one_click_add = false
-                if settings.enable_quick_shop_single_click and sibling_products == blank
-                  if product.has_only_default_variant or product.variants_count == 1
-                    assign show_one_click_add = true
-                  endif
-                endif
-              -%}
-              {%- if show_one_click_add -%}
-                {%- liquid
-                  capture button_text
-                    if product.available
-                      if product.template_suffix contains 'preorder'
-                        echo 'products.product.preorder' | t
-                      else
-                        echo 'products.product.add_to_cart' | t
-                      endif
-                    else
-                      echo 'products.product.sold_out' | t
-                    endif
-                  endcapture
-                -%}
-                <product-form>
-                  <div class="tooltip absolute bottom-full start-0 end-0 z-5 js-form-error" role="alert" hidden></div>
-                  {%- assign product_form_id = 'quick-add-' | append: section_id | append: product.id -%}
-                  {%- form 'product', product,
-                    class: 'js-product-form',
-                    id: product_form_id,
-                    novalidate: 'novalidate'
-                  -%}
-                    <input type="hidden" name="id" value="{{ current_variant.id }}">
-
-                    {%- if card_type != 'related' -%}
-                      <div class="flex items-stretch gap-4">
-                        {%- assign id_suffix = '-' | append: current_variant.id -%}
-                        {%- render 'quantity-input', layout_style: 'combined', id_suffix: id_suffix -%}
-                    {%- else -%}
-                      <input type="hidden" name="quantity" value="1">
-                    {%- endif -%}
-
-                    <button class="btn quick-add-btn{% if card_type != 'related' %} btn--secondary{% endif %}"
-                            name="add"
-                            aria-haspopup="dialog"
-                            {%- if current_variant.available == false %}disabled{% endif %}>
-                      <span class="quick-add-btn-text pointer-events-none">
-                        {{- button_text -}}
-                      </span>
-                      <span class="quick-add-btn-icon pointer-events-none">
-                        {% render 'icon-chevron-right' %}
-                      </span>
-                    </button>
-
-                    {%- if card_type != 'related' -%}
-                      </div>
-                    {%- endif -%}
-                  {%- endform -%}
-                </product-form>
-              {%- else -%}
-                {%- liquid
-                  capture button_text
-                    if product.available
-                      if product.template_suffix contains 'preorder'
-                        echo 'products.product.preorder' | t
-                      else
-                        echo 'products.product.quick_buy' | t
-                      endif
-                    else
-                      echo 'products.product.sold_out' | t
-                    endif
-                  endcapture
-                -%}
-                <div class="no-js-hidden">
-                  <button type="button"
-                          class="btn quick-add-btn{% if card_type != 'related' %} btn--secondary{% endif %} js-quick-add"
-                          aria-haspopup="dialog"
-                          data-product-url="{{ product_url }}"
-                          {%- if product.available == false %}disabled{% endif %}>
-                    <span class="quick-add-btn-text pointer-events-none">
-                      {{- button_text -}}
-                    </span>
-                    <span class="quick-add-btn-icon pointer-events-none">
-                      {% render 'icon-chevron-right' %}
-                    </span>
-                  </button>
-                </div>
-              {%- endif -%}
-            </div>
+            {%- render 'uc-card-quick-add',
+                product: product,
+                product_url: product_url,
+                current_variant: current_variant,
+                section_id: section_id,
+                sibling_products: sibling_products -%}
           </div>
         </div>
       {%- endif -%}

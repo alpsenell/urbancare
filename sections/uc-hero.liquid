@@ -1,0 +1,137 @@
+{%- comment -%}
+  URBAN Care — ana sayfa hero (bölünmüş metin/görsel)
+
+  Tasarımdaki iki farklı düzen tek işaretlemeden çıkıyor:
+  - Masaüstü: 1fr 1fr ızgara, solda metin (#fff5f9 zemin), sağda görsel.
+  - Mobil: 4:5 görsel kartı, metin görselin üstüne, alta hizalı.
+
+  Mobilde metin fotoğrafın üzerine bindiği için alttan yukarı açılan açık
+  bir perde ekliyoruz; ürün fotoğrafı koyu çıkarsa başlık yine okunur kalıyor.
+{%- endcomment -%}
+
+{%- liquid
+  assign heading = section.settings.heading
+  assign image = section.settings.image
+  assign image_mobile = section.settings.image_mobile | default: image
+-%}
+
+<div id="uc-hero-{{ section.id }}" class="uc-hero">
+  <div class="uc-hero__inner">
+    <div class="uc-hero__media">
+      {%- if image_mobile -%}
+        <img class="uc-hero__img uc-hero__img--mobile"
+             src="{{ image_mobile | image_url: width: 900 }}"
+             srcset="{{ image_mobile | image_url: width: 450 }} 450w,
+                     {{ image_mobile | image_url: width: 900 }} 900w"
+             sizes="100vw"
+             width="{{ image_mobile.width }}"
+             height="{{ image_mobile.height }}"
+             alt="{{ image_mobile.alt | escape }}"
+             loading="eager"
+             fetchpriority="high">
+      {%- endif -%}
+
+      {%- if image -%}
+        <img class="uc-hero__img uc-hero__img--desktop"
+             src="{{ image | image_url: width: 1400 }}"
+             srcset="{{ image | image_url: width: 700 }} 700w,
+                     {{ image | image_url: width: 1400 }} 1400w"
+             sizes="(min-width: 768px) 50vw, 100vw"
+             width="{{ image.width }}"
+             height="{{ image.height }}"
+             alt="{{ image.alt | escape }}"
+             loading="eager"
+             fetchpriority="high">
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'uc-hero__placeholder' }}
+      {%- endif -%}
+
+      <span class="uc-hero__scrim" aria-hidden="true"></span>
+    </div>
+
+    <div class="uc-hero__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="uc-hero__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+
+      {%- if heading != blank -%}
+        <h2 class="uc-hero__heading">{{ heading | escape | newline_to_br }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.text != blank -%}
+        <p class="uc-hero__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.button_1_label != blank or section.settings.button_2_label != blank -%}
+        <div class="uc-hero__buttons">
+          {%- if section.settings.button_1_label != blank -%}
+            <a class="uc-hero__btn uc-hero__btn--primary" href="{{ section.settings.button_1_link | default: '#' }}">
+              {{- section.settings.button_1_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.button_2_label != blank -%}
+            <a class="uc-hero__btn uc-hero__btn--secondary" href="{{ section.settings.button_2_link | default: '#' }}">
+              {{- section.settings.button_2_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% style %}
+#uc-hero-{{ section.id }} .uc-hero__inner{position:relative;display:grid;grid-template-columns:1fr;margin:4px 16px 0;border-radius:22px;overflow:hidden;aspect-ratio:4/5}
+#uc-hero-{{ section.id }} .uc-hero__media,#uc-hero-{{ section.id }} .uc-hero__content{grid-area:1/1}
+#uc-hero-{{ section.id }} .uc-hero__media{position:relative;overflow:hidden;background:{{ section.settings.bg_color }}}
+#uc-hero-{{ section.id }} .uc-hero__img,#uc-hero-{{ section.id }} .uc-hero__placeholder{width:100%;height:100%;object-fit:cover;display:block}
+#uc-hero-{{ section.id }} .uc-hero__img--desktop{display:none}
+#uc-hero-{{ section.id }} .uc-hero__scrim{position:absolute;inset:auto 0 0;height:70%;background:linear-gradient(to top,rgba(255,255,255,.92),rgba(255,255,255,0))}
+#uc-hero-{{ section.id }} .uc-hero__content{position:relative;z-index:1;align-self:end;display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:22px}
+#uc-hero-{{ section.id }} .uc-hero__eyebrow{font-weight:700;font-size:11px;letter-spacing:1.5px;color:#d81b8c;text-transform:uppercase}
+#uc-hero-{{ section.id }} .uc-hero__heading{margin:6px 0 12px;font-family:var(--heading-font-family);font-weight:300;font-size:28px;line-height:1.15;letter-spacing:-.8px;color:#1a1a1a}
+#uc-hero-{{ section.id }} .uc-hero__text{display:none}
+#uc-hero-{{ section.id }} .uc-hero__buttons{display:flex;gap:10px;flex-wrap:wrap}
+#uc-hero-{{ section.id }} .uc-hero__btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 20px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;transition:background-color .15s ease,color .15s ease}
+#uc-hero-{{ section.id }} .uc-hero__btn--primary{background:#d81b8c;color:#fff;border:1.5px solid #d81b8c}
+#uc-hero-{{ section.id }} .uc-hero__btn--primary:hover{background:#b01571;border-color:#b01571;color:#fff}
+#uc-hero-{{ section.id }} .uc-hero__btn--secondary{background:#fff;color:#1a1a1a;border:1.5px solid #1a1a1a}
+#uc-hero-{{ section.id }} .uc-hero__btn--secondary:hover{background:#1a1a1a;color:#fff}
+@media(min-width:768px){
+#uc-hero-{{ section.id }} .uc-hero__inner{grid-template-columns:1fr 1fr;margin:0;border-radius:0;aspect-ratio:auto;min-height:460px;background:{{ section.settings.bg_color }}}
+#uc-hero-{{ section.id }} .uc-hero__media{grid-area:1/2}
+#uc-hero-{{ section.id }} .uc-hero__content{grid-area:1/1;align-self:center;gap:16px;padding:0 64px}
+#uc-hero-{{ section.id }} .uc-hero__img--mobile{display:none}
+#uc-hero-{{ section.id }} .uc-hero__img--desktop{display:block}
+#uc-hero-{{ section.id }} .uc-hero__scrim{display:none}
+#uc-hero-{{ section.id }} .uc-hero__eyebrow{font-size:12px;letter-spacing:2px}
+#uc-hero-{{ section.id }} .uc-hero__heading{margin:0;font-size:48px;line-height:1.1;letter-spacing:-1.2px}
+#uc-hero-{{ section.id }} .uc-hero__text{display:block;margin:0;max-width:400px;font-size:16px;line-height:1.6;color:#5a5058}
+#uc-hero-{{ section.id }} .uc-hero__buttons{margin-top:8px;gap:12px}
+#uc-hero-{{ section.id }} .uc-hero__btn{min-height:50px;padding:14px 28px;font-size:15px}
+}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "UC Hero",
+  "tag": "section",
+  "class": "cc-uc-hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Üst etiket", "default": "YENİ SEZON · %20 İNDİRİM" },
+    { "type": "textarea", "id": "heading", "label": "Başlık", "default": "Daha güçlü,\ndolgun saçlar" },
+    { "type": "textarea", "id": "text", "label": "Açıklama (yalnızca masaüstü)", "default": "Biotin & kafein ile köklerden güçlendiren, sülfatsız & vegan günlük bakım." },
+    { "type": "header", "content": "Butonlar" },
+    { "type": "text", "id": "button_1_label", "label": "1. buton metni", "default": "Fırsatları Keşfet" },
+    { "type": "url", "id": "button_1_link", "label": "1. buton bağlantısı" },
+    { "type": "text", "id": "button_2_label", "label": "2. buton metni", "default": "Saç Testi" },
+    { "type": "url", "id": "button_2_link", "label": "2. buton bağlantısı" },
+    { "type": "header", "content": "Görseller" },
+    { "type": "image_picker", "id": "image", "label": "Görsel (masaüstü)" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Görsel (mobil)", "info": "Boş bırakılırsa masaüstü görseli kullanılır. Mobilde 4:5 dikey kırpılır." },
+    { "type": "color", "id": "bg_color", "label": "Zemin rengi", "default": "#fff5f9" }
+  ],
+  "presets": [ { "name": "UC Hero" } ],
+  "disabled_on": { "groups": ["header","footer","aside"] }
+}
+{% endschema %}

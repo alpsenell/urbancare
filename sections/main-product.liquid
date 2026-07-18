@@ -103,7 +103,28 @@
         <a class="skip-link btn btn--primary visually-hidden" href="#product-info-{{ section.id }}">
           {{- 'accessibility.skip_to_product_info' | t -}}
         </a>
+
+        {%- comment -%}
+          UC: Tasarımda rozetler ("ÇOK SATAN", indirim yüzdesi) görselin sol
+          üstünde duruyor, bilgi sütununda değil. Bu yüzden product.json'da
+          product-labels bloğu block_order'dan çıkarıldı — iki yerde birden
+          basılırsa aynı rozet iki kez görünür.
+        {%- endcomment -%}
+        {%- capture uc_media_labels -%}
+          {%- assign uc_labels = nil -%}
+          {%- capture uc_labels -%}
+            {%- render 'product-label',
+                product: product,
+                variant: product.selected_or_first_available_variant,
+                limit: 2 -%}
+          {%- endcapture -%}
+          {%- if uc_labels != blank -%}
+            <div class="uc-media-labels">{{ uc_labels }}</div>
+          {%- endif -%}
+        {%- endcapture -%}
+
         {% render 'media-gallery',
+          overlay: uc_media_labels,
           product: product,
           featured_media: featured_media,
           media_ratio: media_ratio,

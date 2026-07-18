@@ -1,0 +1,109 @@
+{%- comment -%}
+  UC — Ürün kartı hızlı ekle butonu
+
+  Tasarımdaki yuvarlak pembe "+" butonu. Görselin sağ alt köşesinde durur,
+  tek dokunuşla varsayılan varyantı sepete atar.
+
+  Beautify'ın product-card.liquid dosyasından çıkarıldı: aynı işaretleme,
+  farklı yer. İç yapı bilerek birebir korundu, çünkü quick-add.js
+  document seviyesinde `evt.target.matches('.js-quick-add')` ile dinliyor —
+  sınıf tıklanan elemanın ÜZERİNDE olmalı, atasında değil.
+
+  Tek fark: adet seçici basılmıyor. Tasarım tek dokunuşta ekleme istiyor,
+  kart üstünde stepper'a yer de yok. Adet değişikliği sepet çekmecesinde.
+
+  Parametreler (product-card.liquid'deki yereller — render scope taşımaz,
+  hepsi açıkça geçilmeli):
+  - product          {Object} - Ürün
+  - product_url      {String} - Kart bağlantısı (koleksiyon bağlamı dahil)
+  - current_variant  {Object} - Seçili varyant
+  - section_id       {String} - Form id'sini benzersizleştirmek için
+  - sibling_products {Array}  - Kardeş ürünler (varsa tek tık devre dışı)
+
+  Kullanım:
+  {% render 'uc-card-quick-add',
+      product: product,
+      product_url: product_url,
+      current_variant: current_variant,
+      section_id: section_id,
+      sibling_products: sibling_products %}
+{%- endcomment -%}
+
+{%- liquid
+  assign show_one_click_add = false
+  if settings.enable_quick_shop_single_click and sibling_products == blank
+    if product.has_only_default_variant or product.variants_count == 1
+      assign show_one_click_add = true
+    endif
+  endif
+-%}
+
+<div class="card__quick-add uc-quick-add">
+  {%- if show_one_click_add -%}
+    {%- liquid
+      capture button_text
+        if product.available
+          if product.template_suffix contains 'preorder'
+            echo 'products.product.preorder' | t
+          else
+            echo 'products.product.add_to_cart' | t
+          endif
+        else
+          echo 'products.product.sold_out' | t
+        endif
+      endcapture
+    -%}
+    <product-form>
+      <div class="tooltip absolute bottom-full start-0 end-0 z-5 js-form-error" role="alert" hidden></div>
+      {%- assign product_form_id = 'quick-add-' | append: section_id | append: product.id -%}
+      {%- form 'product', product,
+        class: 'js-product-form',
+        id: product_form_id,
+        novalidate: 'novalidate'
+      -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+
+        <button class="btn quick-add-btn uc-quick-add__btn"
+                name="add"
+                aria-haspopup="dialog"
+                {%- if current_variant.available == false %} disabled{% endif %}>
+          <span class="quick-add-btn-text pointer-events-none">
+            {{- button_text -}}
+          </span>
+          <span class="quick-add-btn-icon pointer-events-none">
+            {% render 'icon-plus' %}
+          </span>
+        </button>
+      {%- endform -%}
+    </product-form>
+  {%- else -%}
+    {%- liquid
+      capture button_text
+        if product.available
+          if product.template_suffix contains 'preorder'
+            echo 'products.product.preorder' | t
+          else
+            echo 'products.product.quick_buy' | t
+          endif
+        else
+          echo 'products.product.sold_out' | t
+        endif
+      endcapture
+    -%}
+    <div class="no-js-hidden">
+      <button type="button"
+              class="btn quick-add-btn uc-quick-add__btn js-quick-add"
+              aria-haspopup="dialog"
+              data-product-url="{{ product_url }}"
+              {%- if product.available == false %} disabled{% endif %}>
+        <span class="quick-add-btn-text pointer-events-none">
+          {{- button_text -}}
+        </span>
+        <span class="quick-add-btn-icon pointer-events-none">
+          {% render 'icon-plus' %}
+        </span>
+      </button>
+    </div>
+  {%- endif -%}
+</div>

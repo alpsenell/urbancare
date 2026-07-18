@@ -1,0 +1,38 @@
+{%- comment -%}
+  UC — Teslimat geri sayımı
+
+  Tasarımdaki kamyon satırı: "Yarın kapında. 15 sa 22 dk içinde sipariş verirsen."
+
+  Geri sayım Liquid'de HESAPLANMAZ. Shopify'ın 'now' değeri sunucu saatidir ve
+  sayfa CDN'de önbelleklenir; render anında yazılan bir süre ziyaretçiye bayat
+  ulaşır. Liquid yalnızca statik bir taban metin ("Yarın kapında.") basar,
+  canlı süreyi uc-conversion.js ekler. JS kapalıysa cümle yine de doğrudur.
+
+  Saat dilimi mağazanınkidir (Türkiye, UTC+3 — 2016'dan beri yaz saati yok),
+  ziyaretçinin cihaz saati değil: kargo kesintisi mağazanın günüyle işler.
+
+  Parametreler:
+  - cutoff_hour {Number} - Günlük kargo kesinti saati (varsayılan 16)
+
+  Kullanım:
+  {% render 'uc-delivery' %}
+  {% render 'uc-delivery', cutoff_hour: 15 %}
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign cutoff = cutoff_hour | default: 16
+-%}
+
+{%- if variant.available -%}
+  <div class="uc-delivery"
+       data-uc-delivery
+       data-cutoff-hour="{{ cutoff }}"
+       data-tz-offset="3">
+    {%- render 'icon', icon: 'truck', width: 19, height: 19 -%}
+    <span class="uc-delivery__text">
+      <strong data-uc-delivery-lead>Yarın kapında.</strong>
+      <span data-uc-delivery-countdown hidden></span>
+    </span>
+  </div>
+{%- endif -%}

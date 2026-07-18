@@ -28,7 +28,7 @@
 }
 .product-label--new,
 .label--new {
-  background: #3a7d44 !important;
+  background: #1a1a1a !important;
   color: #fff !important;
   font-weight: 700;
 }
@@ -92,20 +92,17 @@ cart-drawer product-recommendations h2 {
   margin-bottom: 12px;
 }
 
-/* ============================================================
-   Ürün kartı 'Sepete ekle' → dolu pembe (Tekrar Al ile aynı format)
-   ============================================================ */
-.card__quick-add .quick-add-btn.btn--secondary {
+/* Ürün kartı 'Sepete ekle' → dolu pembe.
+   Standart kartlarda buton artık yuvarlak bir FAB; kuralları aşağıdaki
+   yeniden tasarım bölümünde. Burası satır tipi kartlar için. */
+.card--related .uc-quick-add__btn {
   background: #d81b8c !important;
   border-color: #d81b8c !important;
   color: #fff !important;
 }
-.card__quick-add .quick-add-btn.btn--secondary:hover {
+.card--related .uc-quick-add__btn:hover {
   background: #b5167a !important;
   border-color: #b5167a !important;
-  color: #fff !important;
-}
-.card__quick-add .quick-add-btn.btn--secondary .quick-add-btn-icon svg {
   color: #fff !important;
 }
 
@@ -131,4 +128,763 @@ cart-drawer product-recommendations h2 {
 }
 .cc-quiz .quiz__screen .quiz__btn {
   margin-top: 1.5rem !important;
+}
+
+/* ============================================================
+   UrbanCare yeniden tasarım — "UrbanCare Final.dc.html" (1b yönü)
+
+   Mobil öncelikli, sepete ekleme odaklı düzen. Buradaki kurallar
+   kesitler arası (ürün kartı, sepet çekmecesi, PDP blokları); tek bir
+   bölüme ait olanlar kendi .liquid dosyalarında inline duruyor.
+
+   Renk/yarıçap değerleri tasarım dosyasındaki tokenlar. Temanın kendi
+   tokenlarına (--btn-bg-color vb.) bağlamak yerine sabit yazıyoruz;
+   uc-* bölümlerinde kurulu düzen bu.
+   ============================================================ */
+
+:root {
+  --uc-brand: #d81b8c;
+  --uc-brand-dark: #b01571;
+  --uc-brand-soft: #fff5f9;
+  --uc-brand-line: #f4dde9;
+  --uc-brand-deep: #8a3a68;
+  --uc-ink: #1a1a1a;
+  --uc-body: #3a333a;
+  --uc-muted: #8a7d84;
+  --uc-faint: #a397a0;
+  --uc-strike: #b3a7b0;
+  --uc-line: #f2ecef;
+  --uc-input-line: #ece3e8;
+  --uc-panel: #faf6f8;
+  --uc-success: #5f8a3a;
+
+  --uc-card-radius: 12px;
+  --uc-fab-size: 40px;
+  --uc-fab-shadow: 0 4px 12px -2px rgba(216, 27, 140, 0.5);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --uc-fab-size: 34px;
+  }
+}
+
+/* ------------------------------------------------------------
+   1. Ürün kartı — görsel üstünde yuvarlak "+" hızlı ekle
+   ------------------------------------------------------------ */
+
+.card--standard .card__media {
+  position: relative;
+}
+
+.card--standard .card__media .media {
+  overflow: hidden;
+  border-radius: var(--uc-card-radius);
+}
+
+.card--standard .uc-quick-add {
+  position: absolute;
+  z-index: 3;
+  inset-block-end: 10px;
+  inset-inline-end: 10px;
+  width: var(--uc-fab-size);
+  height: var(--uc-fab-size);
+  margin: 0;
+}
+
+.card--standard .uc-quick-add product-form,
+.card--standard .uc-quick-add form,
+.card--standard .uc-quick-add .no-js-hidden {
+  display: block;
+  height: 100%;
+}
+
+.card--standard .uc-quick-add__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--uc-brand);
+  color: #fff;
+  box-shadow: var(--uc-fab-shadow);
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.card--standard .uc-quick-add__btn:hover {
+  background: var(--uc-brand-dark);
+  transform: scale(1.06);
+}
+
+.card--standard .uc-quick-add__btn[disabled] {
+  background: #cfc4cb;
+  box-shadow: none;
+}
+
+/* Etiket ekran okuyucular için duruyor, görsel olarak yalnızca "+" var. */
+.card--standard .uc-quick-add__btn .quick-add-btn-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+/* quick-add.css ikonu genelde gizliyor; FAB'da tek görünen o. */
+.card--standard .uc-quick-add__btn .quick-add-btn-icon {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.card--standard .uc-quick-add__btn .quick-add-btn-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+@media (max-width: 767px) {
+  .card--standard .uc-quick-add__btn .quick-add-btn-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+/* Hata balonu 40px'lik butondan taşabilmeli. */
+.card--standard .uc-quick-add .js-form-error {
+  inset-inline: auto 0;
+  min-width: 180px;
+}
+
+/* Kart artık hover'da açılmıyor — FAB hep görünür, mobilde de dokunulur. */
+.card--standard .card-reveal:empty {
+  display: none;
+}
+
+/* ------------------------------------------------------------
+   2. Rozetler — satış pembe, yeni/çok satan siyah
+   ------------------------------------------------------------ */
+
+.product-label {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.card--standard .product-label-container {
+  inset-block-start: 10px;
+  inset-inline-start: 10px;
+}
+
+/* ------------------------------------------------------------
+   3. PDP — sosyal kanıt satırı
+   ------------------------------------------------------------ */
+
+.uc-social {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.uc-social .rating__stars {
+  font-size: 16px;
+}
+
+.uc-social__count {
+  color: var(--uc-muted);
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.uc-social__count:hover {
+  color: var(--uc-brand);
+}
+
+.uc-social__sold {
+  margin-inline-start: 8px;
+  color: var(--uc-success);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------
+   4. PDP — stok aciliyet kartı
+   ------------------------------------------------------------ */
+
+.uc-urgency {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 13px 14px;
+  border: 1px solid var(--uc-brand-line);
+  border-radius: 10px;
+  background: var(--uc-brand-soft);
+}
+
+.uc-urgency__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.uc-urgency__label {
+  color: var(--uc-brand-deep);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.uc-urgency__note {
+  color: #a86f8d;
+  font-size: 12px;
+}
+
+.uc-urgency__track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--uc-brand-line);
+}
+
+.uc-urgency__fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f2a4cd, var(--uc-brand));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .uc-urgency__fill {
+    transition: width 0.4s ease-out;
+  }
+}
+
+/* ------------------------------------------------------------
+   5. PDP — teslimat geri sayımı
+   ------------------------------------------------------------ */
+
+.uc-delivery {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-block-start: 2px;
+  color: var(--uc-body);
+  font-size: 13px;
+}
+
+.uc-delivery .icon {
+  flex: none;
+  width: 19px;
+  height: 19px;
+  color: var(--uc-ink);
+}
+
+.uc-delivery__text strong {
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------
+   6. PDP — Sepete Ekle butonunda fiyat + Hemen Satın Al
+   ------------------------------------------------------------ */
+
+.uc-atc-price {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Fiyat: tasarımda Poppins 500, pembe, 34px (mobilde 28px). */
+.product-info .price__current {
+  color: var(--uc-brand);
+  font-family: var(--heading-font-family);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.product-info .price__was {
+  color: var(--uc-strike);
+  font-size: 17px;
+}
+
+@media (max-width: 767px) {
+  .product-info .price__current {
+    font-size: 28px;
+  }
+
+  .product-info .price__was {
+    font-size: 15px;
+  }
+}
+
+/* Tasarımdaki ikincil siyah "Hemen Satın Al". Shopify'ın dinamik ödeme
+   butonu markasız modda tema renklerini alır; siyaha çekiyoruz. */
+.product-info .shopify-payment-button__button--unbranded {
+  background: var(--uc-ink);
+  /* Tema markasız butona pembe kenarlık veriyor; tasarımda düz siyah. */
+  border-color: var(--uc-ink);
+  border-radius: var(--btn-border-radius);
+  color: #fff;
+  font-weight: 600;
+}
+
+.product-info .shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  background: #000;
+  border-color: #000;
+}
+
+/* ------------------------------------------------------------
+   7. Sepet çekmecesi
+   ------------------------------------------------------------ */
+
+/* Ücretsiz kargo çubuğu pembe bir panele oturuyor. */
+cart-drawer #free-shipping-notice {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: var(--uc-card-radius);
+  background: var(--uc-brand-soft);
+}
+
+cart-drawer #free-shipping-notice .free-shipping-notice {
+  color: var(--uc-brand-deep);
+}
+
+cart-drawer #free-shipping-notice .free-shipping-notice__bar {
+  height: 8px;
+  background-color: var(--uc-brand-line);
+}
+
+cart-drawer .drawer__heading {
+  font-weight: 500;
+}
+
+cart-drawer .cart-item {
+  padding-inline: 0;
+  border-bottom: 1px solid var(--uc-line);
+  border-radius: 0;
+}
+
+cart-drawer .cart-item__image img {
+  border-radius: 10px;
+}
+
+cart-drawer .cart-item__title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+cart-drawer .cart-item__variants {
+  color: var(--uc-faint);
+  font-size: 12px;
+}
+
+/* "Rutinini Tamamla" üst başlığı — tasarımdaki pembe overline.
+   [class] niteleyicisi gerekli: başlık .regular-text (0-1-0) taşıyor,
+   düz `cart-drawer product-recommendations h2` (0-0-3) ona yeniliyor. */
+cart-drawer product-recommendations h2[class] {
+  color: var(--uc-brand);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+cart-drawer product-recommendations .card--related {
+  padding: 12px;
+  border-radius: var(--uc-card-radius);
+  background: var(--uc-panel);
+}
+
+cart-drawer .drawer__footer .btn--primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------
+   8. Sabit sepete ekle çubuğu (mobil PDP)
+   ------------------------------------------------------------ */
+
+.sticky-atc-panel {
+  border-top: 1px solid #f0e6eb;
+  box-shadow: 0 -6px 24px -12px rgba(26, 26, 26, 0.35);
+}
+
+.sticky-atc-panel .js-atc-button {
+  min-height: 54px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Masaüstünde fiyat zaten .js-atc-price ile ayrı duruyor; butona
+   eklediğimiz kopyayı orada göstermiyoruz. */
+@media (min-width: 768px) {
+  .sticky-atc-panel .uc-atc-price {
+    display: none;
+  }
+}
+
+/* Beautify sabit çubuğu mobilde ikon-butona indiriyor (etiket .md:block ile
+   gizli, yerine .md:hidden ikon). Tasarım tam etiketli "Sepete Ekle — ₺X"
+   istiyor, o yüzden etiketi geri açıp ikonu kapatıyoruz. Ürün başlığı da
+   mobilde gizleniyor: butona yer açıyor ve zaten sayfanın kendisinde yazıyor. */
+@media (max-width: 767px) {
+  /* .card__info mobilde yalnızca başlık ve (zaten gizli) fiyatı taşıyor;
+     komple kaldırınca buton satırın tamamını alıyor. */
+  .sticky-atc-panel .card__info,
+  .sticky-atc-panel .js-atc-button > .md\:hidden {
+    display: none !important;
+  }
+
+  .sticky-atc-panel .js-atc-button > .md\:block {
+    display: inline !important;
+  }
+
+  .sticky-atc-panel .card__buttons {
+    flex: 1 1 100%;
+  }
+
+  .sticky-atc-panel .js-atc-button {
+    display: block;
+    width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------
+   9. Koleksiyon (PLP) — mobil filtre/sırala çubuğu
+   ------------------------------------------------------------ */
+
+@media (max-width: 767px) {
+  .products-toolbar {
+    position: sticky;
+    z-index: 20;
+    top: var(--header-height, 56px);
+    padding-block: 10px;
+    border-bottom: 1px solid var(--uc-line);
+    background: #fff;
+  }
+
+  .products-toolbar .btn,
+  .products-toolbar .facet-filters__toggle {
+    min-height: 38px;
+    border: 1.5px solid var(--uc-input-line);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+/* ------------------------------------------------------------
+   10. Ürün sayfası — tipografi ve bilgi sütunu
+   ------------------------------------------------------------ */
+
+.uc-overline {
+  color: var(--uc-brand);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+/* Tasarımda başlık Poppins 400, mobil 23px / masaüstü 32px.
+   Beautify varsayılanı çok daha iri; bilgi sütununu ezip
+   sepete ekleyi ekranın altına itiyor. */
+.product-info .product-title,
+.product-info h1 {
+  font-family: var(--heading-font-family);
+  font-size: 23px;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+}
+
+.product-info__inner {
+  max-width: 540px;
+}
+
+@media (min-width: 768px) {
+  .uc-overline {
+    font-size: 12px;
+  }
+
+  .product-info .product-title,
+  .product-info h1 {
+    font-size: 32px;
+    letter-spacing: -0.6px;
+    line-height: 1.2;
+  }
+}
+
+/* ------------------------------------------------------------
+   11. Koleksiyon — masaüstü kenar çubuğu filtreleri
+   ------------------------------------------------------------ */
+
+@media (min-width: 1024px) {
+  /* Yapı zaten hazır: .main-products-grid bir flex satırı, içinde
+     __filters ve __results var. Tasarımdaki 240px'lik sabit kenar
+     çubuğunu vermek için sadece genişlik + boşluk gerekiyor. */
+  .main-products-grid {
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  .main-products-grid__filters {
+    flex: 0 0 240px;
+    width: 240px;
+    position: sticky;
+    top: calc(var(--header-height, 72px) + 16px);
+  }
+
+  .main-products-grid__results {
+    min-width: 0;
+  }
+
+  .main-products-grid__filters .facet-filters__heading,
+  .main-products-grid__filters .disclosure__title {
+    font-family: var(--heading-font-family);
+    font-size: 15px;
+    font-weight: 500;
+  }
+}
+
+/* Koleksiyon başlığı: tasarımda Poppins 300, 34px, sıkı harf aralığı. */
+.cc-main-collection-banner .section__heading,
+.collection-banner__heading {
+  font-family: var(--heading-font-family);
+  font-weight: 300;
+  letter-spacing: -0.6px;
+}
+
+@media (min-width: 768px) {
+  .cc-main-collection-banner .section__heading,
+  .collection-banner__heading {
+    font-size: 34px;
+  }
+}
+
+/* ------------------------------------------------------------
+   12. Ürün galerisi — masaüstünde dikey küçük görsel sütunu
+
+   Tasarımda küçük görseller ana görselin SOLUNDA 74px'lik bir sütun.
+   Beautify'ın slider düzeni onları görselin altına yatay diziyor ve
+   konum ayarlanabilir bir seçenek değil, o yüzden CSS ile çeviriyoruz.
+   Mobilde tasarım da yatay istiyor; bu yüzden yalnızca ≥1024px.
+   ------------------------------------------------------------ */
+
+@media (min-width: 1024px) {
+  .cc-main-product .media-gallery {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .cc-main-product .media-gallery__viewer {
+    flex: 1 1 auto;
+    min-width: 0;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .cc-main-product .media-gallery__thumbs {
+    order: -1;
+    flex: 0 0 74px;
+    width: 74px;
+  }
+
+  .cc-main-product .media-thumbs {
+    flex-direction: column;
+    gap: 10px;
+    overflow: visible;
+  }
+
+  .cc-main-product .media-thumbs__item {
+    width: 74px;
+    margin: 0;
+  }
+
+  .cc-main-product .media-thumbs__btn {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* Dikey sütunda yatay kaydırma okları anlamsız. */
+  .cc-main-product .media-gallery__thumbs .slider-nav,
+  .cc-main-product .media-gallery__thumbs .slider-nav__btn {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   13. Koleksiyon filtreleri — masaüstünde kalıcı kenar çubuğu
+
+   <facet-filters> aslında bir SideDrawer: sabit konumlu, ekran dışına
+   ötelenmiş, görünmez. Masaüstünde onu sütunun içine oturtuyoruz.
+   Diyalog nitelikleri (role/aria-modal/aria-hidden) CSS ile
+   düzeltilemediği için uc-facets-sidebar.js ile sökülüyor.
+   ------------------------------------------------------------ */
+
+@media (min-width: 1024px) {
+  .main-products-grid__filters #facet-filters {
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    transform: none !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    z-index: auto !important;
+  }
+
+  /* Çekmece kabuğu: başlık, kapat düğmesi, "uygula" ayağı. Kenar
+     çubuğunda karşılığı yok — filtreler anında uygulanıyor. */
+  .main-products-grid__filters .drawer__header,
+  .main-products-grid__filters .drawer__footer,
+  .products-toolbar__filter-btn {
+    display: none !important;
+  }
+
+  .main-products-grid__filters .drawer__content {
+    overflow: visible !important;
+    padding-inline: 0 !important;
+  }
+
+  /* Çekmece içeriği açılış animasyonu için opacity:0 + translateX(50px)
+     ile başlıyor ve .is-open ile görünür hâle geliyor. Kenar çubuğunda
+     .is-open hiç gelmediği için içerik kalıcı olarak görünmez kalırdı. */
+  .main-products-grid__filters .drawer__content > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Tasarımda gruplar ince çizgilerle ayrılıyor, başlıklar Poppins 500. */
+  .main-products-grid__filters .facets__form > * + * {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--uc-line);
+  }
+}
+
+/* ------------------------------------------------------------
+   14. Ürün görseli üzerindeki rozetler
+
+   Rozet .media-gallery__viewer içine basılıyor (media-gallery.liquid'in
+   `overlay` parametresi): görselin gerçek sınırlarını veren tek relative
+   kapsayıcı o. #product-media görselden önce boşluk içerdiği için oraya
+   dayanınca rozet görselin üstünde, boşlukta kalıyordu.
+   ------------------------------------------------------------ */
+
+.uc-media-labels {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 16px;
+  inset-inline-start: 16px;
+}
+
+.uc-media-labels .product-label-container {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.uc-media-labels .product-label {
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+@media (min-width: 768px) {
+  .uc-media-labels {
+    inset-block-start: 18px;
+    inset-inline-start: 18px;
+  }
+
+  .uc-media-labels .product-label {
+    padding: 6px 11px;
+    font-size: 12px;
+  }
+}
+
+/* ------------------------------------------------------------
+   15. Sepet çekmecesi — "Rutinini Tamamla" satır içi öneri
+
+   Beautify öneriyi çekmecenin soluna 400px'lik ayrı bir panel olarak
+   mutlak konumlandırıyor (right:100%). Tasarımda blok çekmecenin
+   içinde, ürün satırlarının hemen altında.
+   ------------------------------------------------------------ */
+
+.drawer__content product-recommendations {
+  position: static !important;
+  visibility: visible !important;
+  width: auto !important;
+  margin-top: 20px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* Panel dışarıdayken kaplama sola 400px taşıyordu; artık gerek yok. */
+cart-drawer:has(product-recommendations:not(:empty)) .overlay--drawer {
+  left: 0;
+}
+
+/* Tasarımdaki kompakt satır: yumuşak zemin, 54px görsel, "Ekle" butonu. */
+.drawer__content product-recommendations .card--related {
+  align-items: center;
+  padding: 12px;
+  border-radius: var(--uc-card-radius);
+  background: var(--uc-panel);
+}
+
+.drawer__content product-recommendations .card--related .card__media {
+  flex: 0 0 54px;
+  margin-inline-end: 12px;
+}
+
+.drawer__content product-recommendations .card--related .card__title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.drawer__content product-recommendations .card--related .card__price {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* "Ekle" — tasarımda pembe çerçeveli, beyaz zeminli. */
+.drawer__content product-recommendations .uc-quick-add__btn {
+  min-height: 36px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--uc-brand) !important;
+  border-radius: 7px;
+  background: #fff !important;
+  color: var(--uc-brand) !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.drawer__content product-recommendations .uc-quick-add__btn:hover {
+  background: var(--uc-brand) !important;
+  color: #fff !important;
 }

@@ -1,0 +1,61 @@
+{%- comment -%}
+  URBAN Care — saç testi tanıtım bandı
+
+  Tasarımda mobil ve masaüstü sürümleri bilerek farklı:
+  - Masaüstü: koyu (#1a1a1a) geniş bant, beyaz Poppins 300 başlık, pembe buton.
+  - Mobil: açık pembe (#fff5f9) kart, koyu başlık, siyah buton.
+
+  Aynı işaretleme, medya sorgusuyla iki görünüm.
+{%- endcomment -%}
+
+<div id="uc-promo-{{ section.id }}" class="uc-promo">
+  <div class="uc-promo__inner">
+    <div class="uc-promo__copy">
+      {%- if section.settings.heading != blank -%}
+        <span class="uc-promo__heading">{{ section.settings.heading | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <span class="uc-promo__text">{{ section.settings.text | escape }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.button_label != blank -%}
+      <a class="uc-promo__btn" href="{{ section.settings.button_link | default: '#' }}">
+        {{- section.settings.button_label | escape -}}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% style %}
+#uc-promo-{{ section.id }} .uc-promo__inner{display:flex;flex-direction:column;gap:6px;margin:16px;padding:18px;border-radius:16px;background:#fff5f9}
+#uc-promo-{{ section.id }} .uc-promo__copy{display:flex;flex-direction:column;gap:6px}
+#uc-promo-{{ section.id }} .uc-promo__heading{font-family:var(--heading-font-family);font-weight:400;font-size:17px;color:#1a1a1a}
+#uc-promo-{{ section.id }} .uc-promo__text{font-size:13px;color:#8a7d84}
+#uc-promo-{{ section.id }} .uc-promo__btn{align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:8px;padding:9px 16px;border-radius:8px;background:#1a1a1a;color:#fff;font-weight:600;font-size:13px;text-decoration:none;transition:background-color .15s ease}
+#uc-promo-{{ section.id }} .uc-promo__btn:hover{background:#000;color:#fff}
+@media(min-width:768px){
+#uc-promo-{{ section.id }} .uc-promo__inner{flex-direction:row;align-items:center;justify-content:space-between;gap:24px;margin:0 40px 40px;padding:40px;border-radius:18px;background:#1a1a1a}
+#uc-promo-{{ section.id }} .uc-promo__copy{gap:8px}
+#uc-promo-{{ section.id }} .uc-promo__heading{font-weight:300;font-size:28px;color:#fff}
+#uc-promo-{{ section.id }} .uc-promo__text{font-size:15px;color:#cbb9c4}
+#uc-promo-{{ section.id }} .uc-promo__btn{align-self:auto;min-height:50px;margin-top:0;padding:14px 28px;background:#d81b8c;font-size:15px;white-space:nowrap}
+#uc-promo-{{ section.id }} .uc-promo__btn:hover{background:#b01571}
+}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "UC Tanıtım Bandı",
+  "tag": "section",
+  "class": "cc-uc-promo",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Başlık", "default": "Saç testini çöz, rutinini bul" },
+    { "type": "text", "id": "text", "label": "Açıklama", "default": "60 saniyede sana özel bakım önerisi." },
+    { "type": "text", "id": "button_label", "label": "Buton metni", "default": "Teste Başla" },
+    { "type": "url", "id": "button_link", "label": "Buton bağlantısı" }
+  ],
+  "presets": [ { "name": "UC Tanıtım Bandı" } ],
+  "disabled_on": { "groups": ["header","footer","aside"] }
+}
+{% endschema %}

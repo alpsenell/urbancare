@@ -1,0 +1,56 @@
+{%- comment -%}
+  UC — Stok aciliyet kartı
+
+  Tasarımdaki "🔥 Son 7 adet kaldı" + ilerleme çubuğu. Sadece seçili
+  varyantın stoğu eşiğin altındayken görünür.
+
+  Stok Shopify tarafından takip edilmiyorsa (inventory_management boş) veya
+  stok bittiğinde satışa devam ediliyorsa hiçbir şey basılmaz — yanlış
+  aciliyet göstermektense hiç göstermemek yeğdir.
+
+  Eşik: settings.low_stock_label_threshold (Tema ayarları → Ürün etiketleri).
+
+  main-product içinde "variant_content": true olan bir custom-liquid
+  bloğundan render edilir; böylece varyant değişiminde yeniden basılır.
+
+  Kullanım:
+  {% render 'uc-urgency' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign threshold = settings.low_stock_label_threshold | default: 10
+  assign qty = variant.inventory_quantity
+
+  assign show_urgency = false
+  if variant.inventory_management != blank and variant.inventory_policy != 'continue'
+    if qty > 0 and qty <= threshold
+      assign show_urgency = true
+    endif
+  endif
+
+  comment
+    Çubuk aciliyeti gösterir: stok azaldıkça dolar. Eşikteyken %55,
+    son adette %95. Alt sınırı 55 tutuyoruz; kart zaten yalnızca stok
+    düşükken göründüğü için çubuğun boş görünmesi mesajla çelişirdi.
+  endcomment
+  assign consumed = threshold | minus: qty | times: 40 | divided_by: threshold
+  assign fill = consumed | plus: 55 | at_most: 95
+-%}
+
+{%- if show_urgency -%}
+  <div class="uc-urgency">
+    <div class="uc-urgency__row">
+      <span class="uc-urgency__label">🔥 Son {{ qty }} adet kaldı</span>
+      <span class="uc-urgency__note">Bu ürün hızlı tükeniyor</span>
+    </div>
+    <div class="uc-urgency__track"
+         role="progressbar"
+         aria-valuenow="{{ qty }}"
+         aria-valuemin="0"
+         aria-valuemax="{{ threshold }}"
+         aria-label="Kalan stok">
+      <div class="uc-urgency__fill" style="width: {{ fill }}%;"></div>
+    </div>
+  </div>
+{%- endif -%}

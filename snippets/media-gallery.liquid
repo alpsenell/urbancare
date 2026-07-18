@@ -13,6 +13,7 @@
   - zoom_level {String} - The level of zoom to apply to the image. (Options: medium, large, original)
   - zoom_mode {String} - The type of image zoom to initialize (Options: lightbox, click, hover)
   - omit_script_tag {Boolean} - Whether to omit scripts from markup (optional, default is false)
+  - overlay {String} - Markup rendered over the main image, inside the viewer (optional)
 
   Usage:
   {% render 'media-gallery',
@@ -85,6 +86,13 @@
   <div class="media-gallery__status visually-hidden" role="status"></div>
 
   <div class="media-gallery__viewer relative">
+    {%- comment -%}
+      UC: görselin üstüne binen içerik (ürün rozetleri). Buraya basılıyor
+      çünkü .media-gallery__viewer görselin gerçek sınırlarını veren tek
+      relative kapsayıcı; #product-media görselden önce boşluk içeriyor.
+    {%- endcomment -%}
+    {{ overlay }}
+
     <ul class="media-viewer flex" id="gallery-viewer" role="list" tabindex="0">
       {%- for media in product.media -%}
         {%- liquid

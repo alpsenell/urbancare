@@ -52,6 +52,34 @@
             "show_gift_card_recipient": false
           }
         },
+        "uc_overline": {
+          "type": "custom-liquid",
+          "settings": {
+            "custom_liquid": "{% render 'uc-overline' %}",
+            "variant_content": false
+          }
+        },
+        "uc_social_proof": {
+          "type": "custom-liquid",
+          "settings": {
+            "custom_liquid": "{% render 'uc-social-proof' %}",
+            "variant_content": false
+          }
+        },
+        "uc_urgency": {
+          "type": "custom-liquid",
+          "settings": {
+            "custom_liquid": "{% render 'uc-urgency' %}",
+            "variant_content": true
+          }
+        },
+        "uc_delivery": {
+          "type": "custom-liquid",
+          "settings": {
+            "custom_liquid": "{% render 'uc-delivery' %}",
+            "variant_content": true
+          }
+        },
         "selling_points_jMkBR3": {
           "type": "selling-points",
           "settings": {
@@ -124,10 +152,13 @@
         }
       },
       "block_order": [
-        "product_labels",
+        "uc_overline",
         "title",
+        "uc_social_proof",
         "price",
         "variant-picker",
+        "uc_urgency",
+        "uc_delivery",
         "buy-buttons",
         "selling_points_jMkBR3",
         "uc_fbt_block",
@@ -138,10 +169,10 @@
       ],
       "settings": {
         "stick_media": true,
-        "media_layout": "stacked",
+        "media_layout": "slider",
         "media_stacked_type": "2-1",
-        "media_size": "edge",
-        "media_ratio": "0.75",
+        "media_size": "medium",
+        "media_ratio": "1",
         "media_crop": "none",
         "stacked_scroll": "always",
         "underline_active": false,
@@ -214,7 +245,7 @@
         "icon_size": 48,
         "icon_position": "beside",
         "height": "py-6",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-57822735-32ea-4111-abb2-a6d7bd3e4330"
       }
     },
     "recommendations": {

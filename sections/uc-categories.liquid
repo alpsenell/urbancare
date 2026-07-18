@@ -1,0 +1,78 @@
+{%- comment -%}
+  URBAN Care — kategori kısayolları
+
+  Tasarımda iki biçim var, ikisi de aynı bloklardan:
+  - Masaüstü: 5 sütunlu ızgara, 1:1 kare kutular, 16px köşe.
+  - Mobil: yatay kaydırılan 64px daire rozetler.
+
+  Blok bir koleksiyona bağlanır; başlık ve görsel boş bırakılırsa
+  koleksiyonun kendi başlığı ve öne çıkan görseli kullanılır.
+{%- endcomment -%}
+
+<div id="uc-cats-{{ section.id }}" class="uc-cats">
+  <ul class="uc-cats__list uc-scroll" role="list">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign collection = collections[block.settings.collection]
+        assign title = block.settings.title | default: collection.title
+        assign image = block.settings.image | default: collection.featured_image
+        assign url = collection.url | default: '#'
+      -%}
+      <li class="uc-cats__item" {{ block.shopify_attributes }}>
+        <a class="uc-cats__link" href="{{ url }}">
+          <span class="uc-cats__thumb">
+            {%- if image -%}
+              <img src="{{ image | image_url: width: 320 }}"
+                   srcset="{{ image | image_url: width: 160 }} 160w,
+                           {{ image | image_url: width: 320 }} 320w"
+                   sizes="(min-width: 768px) 20vw, 64px"
+                   width="{{ image.width }}"
+                   height="{{ image.height }}"
+                   alt="{{ image.alt | default: title | escape }}"
+                   loading="lazy">
+            {%- endif -%}
+          </span>
+          <span class="uc-cats__label">{{ title | escape }}</span>
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% style %}
+#uc-cats-{{ section.id }} .uc-cats__list{display:flex;gap:10px;margin:0;padding:18px 16px 4px;list-style:none;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#uc-cats-{{ section.id }} .uc-cats__list::-webkit-scrollbar{width:0;height:0}
+#uc-cats-{{ section.id }} .uc-cats__item{flex:none}
+#uc-cats-{{ section.id }} .uc-cats__link{display:flex;flex-direction:column;align-items:center;gap:7px;text-decoration:none;color:#1a1a1a}
+#uc-cats-{{ section.id }} .uc-cats__thumb{display:block;width:64px;height:64px;border-radius:50%;overflow:hidden;background:{{ section.settings.tile_color }}}
+#uc-cats-{{ section.id }} .uc-cats__thumb img{width:100%;height:100%;object-fit:cover;display:block}
+#uc-cats-{{ section.id }} .uc-cats__label{font-size:11.5px;text-align:center}
+@media(min-width:768px){
+#uc-cats-{{ section.id }} .uc-cats__list{display:grid;grid-template-columns:repeat({{ section.blocks.size | at_least: 1 }},1fr);gap:20px;padding:40px;overflow:visible}
+#uc-cats-{{ section.id }} .uc-cats__link{gap:12px}
+#uc-cats-{{ section.id }} .uc-cats__thumb{width:100%;height:auto;aspect-ratio:1/1;border-radius:16px}
+#uc-cats-{{ section.id }} .uc-cats__label{font-size:14px;font-weight:500}
+#uc-cats-{{ section.id }} .uc-cats__link:hover .uc-cats__label{color:#d81b8c}
+}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "UC Kategoriler",
+  "tag": "section",
+  "class": "cc-uc-cats",
+  "settings": [
+    { "type": "color", "id": "tile_color", "label": "Kutu zemini", "default": "#fff5f9" }
+  ],
+  "blocks": [
+    { "type": "category", "name": "Kategori", "settings": [
+      { "type": "collection", "id": "collection", "label": "Koleksiyon" },
+      { "type": "text", "id": "title", "label": "Başlık", "info": "Boşsa koleksiyon adı kullanılır." },
+      { "type": "image_picker", "id": "image", "label": "Görsel", "info": "Boşsa koleksiyonun öne çıkan görseli kullanılır." }
+    ] }
+  ],
+  "max_blocks": 8,
+  "presets": [ { "name": "UC Kategoriler", "blocks": [ {"type":"category"}, {"type":"category"}, {"type":"category"}, {"type":"category"}, {"type":"category"} ] } ],
+  "disabled_on": { "groups": ["header","footer","aside"] }
+}
+{% endschema %}

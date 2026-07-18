@@ -64,12 +64,26 @@
     </form>
 
     {%- if settings.show_recommendations and cart != empty -%}
+      {%- comment -%}
+        UC: Tasarımda bu blok çekmecenin İÇİNDE, satır içi kompakt bir öneri.
+        Beautify varsayılanı çekmecenin soluna 400px'lik ayrı bir panel
+        konumlandırıyor (bkz. cart.css). Panel konumu custom.css'te iptal
+        edildi; burada da ürün sayısını 2'ye indiriyoruz ki çekmece şişmesin.
+      {%- endcomment -%}
+      {%- comment -%}
+        layout: 'grid' — tasarımda dikey kompakt satırlar var, yatay kaydırma
+        yok. Ayrıca carousel modunda snippet limiti products_to_show + 4'e
+        çıkarıyor (recommendations.liquid:54); grid modunda tam sayıya uyuyor.
+        hide_promo — "Editörün Seçimi" tanıtım kartı tasarımda yok.
+      {%- endcomment -%}
       {%- render 'recommendations',
         is_cart: true,
-        heading: 'Sepeti Tamamla',
-        layout: 'carousel',
+        heading: 'Rutinini Tamamla',
+        products_to_show: 2,
+        hide_promo: true,
+        layout: 'grid',
         related_cards: true,
-        grid_classes: 'grid grid-flow-col auto-cols-[84%] gap-x-4'
+        grid_classes: 'grid grid-cols-1 gap-y-3'
       -%}
     {%- endif -%}
 
