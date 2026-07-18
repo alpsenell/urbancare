@@ -1,0 +1,670 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow_hero": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_kFyBaK": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/3840_x_1920_px.jpg",
+            "tint_override": false,
+            "tint_color": "#000000",
+            "tint_opacity": 40,
+            "url": "",
+            "overlay_position": "justify-center items-center",
+            "overlay_text_align": "text-center",
+            "overlay_width_override": false,
+            "overlay_max_width": 640,
+            "mob_center_text": false,
+            "subheading": "",
+            "heading": "",
+            "heading_size_override": false,
+            "heading_size_desktop": "h1",
+            "heading_size_mobile": "h1",
+            "text": "",
+            "enlarge_text": false,
+            "button_1_label": "",
+            "button_1_link": "",
+            "button_1_style": "btn btn--primary",
+            "button_2_label": "",
+            "button_2_link": "",
+            "button_2_style": "btn btn--primary",
+            "countdown_show": false,
+            "end_date": "",
+            "end_time": "",
+            "end_text": "",
+            "hide_on_end": false,
+            "number_size": 40,
+            "number_font": "base",
+            "show_timer_labels": true
+          }
+        },
+        "slide_4": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/3840x1920px_TUANA.jpg",
+            "tint_override": false,
+            "tint_color": "#000000",
+            "tint_opacity": 40,
+            "url": "shopify://collections/glycolic-retinol",
+            "overlay_position": "justify-center items-center",
+            "overlay_text_align": "text-center",
+            "overlay_width_override": false,
+            "overlay_max_width": 640,
+            "mob_center_text": false,
+            "subheading": "",
+            "heading": "",
+            "heading_size_override": false,
+            "heading_size_desktop": "h1",
+            "heading_size_mobile": "h1",
+            "text": "",
+            "enlarge_text": false,
+            "button_1_label": "",
+            "button_1_link": "",
+            "button_1_style": "btn btn--primary",
+            "button_2_label": "",
+            "button_2_link": "",
+            "button_2_style": "btn btn--primary",
+            "countdown_show": false,
+            "end_date": "",
+            "end_time": "",
+            "end_text": "",
+            "hide_on_end": false,
+            "number_size": 40,
+            "number_font": "base",
+            "show_timer_labels": true
+          }
+        },
+        "slide_5": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/helin.jpg",
+            "tint_override": false,
+            "tint_color": "#000000",
+            "tint_opacity": 40,
+            "url": "shopify://collections/glycolic-retinol",
+            "overlay_position": "justify-center items-center",
+            "overlay_text_align": "text-center",
+            "overlay_width_override": false,
+            "overlay_max_width": 640,
+            "mob_center_text": false,
+            "subheading": "",
+            "heading": "",
+            "heading_size_override": false,
+            "heading_size_desktop": "h1",
+            "heading_size_mobile": "h1",
+            "text": "",
+            "enlarge_text": false,
+            "button_1_label": "",
+            "button_1_link": "",
+            "button_1_style": "btn btn--primary",
+            "button_2_label": "",
+            "button_2_link": "",
+            "button_2_style": "btn btn--primary",
+            "countdown_show": false,
+            "end_date": "",
+            "end_time": "",
+            "end_text": "",
+            "hide_on_end": false,
+            "number_size": 40,
+            "number_font": "base",
+            "show_timer_labels": true
+          }
+        }
+      },
+      "block_order": [
+        "slide_kFyBaK",
+        "slide_4",
+        "slide_5"
+      ],
+      "name": "Slideshow",
+      "settings": {
+        "height_mode": "auto",
+        "fixed_height_desktop": 600,
+        "fixed_height_mobile": 350,
+        "mobile_stacked": false,
+        "transition": "slide-fade",
+        "nav_style": "slideshow_nav_pills",
+        "pagination_color": "#ffffff",
+        "autoplay": true,
+        "slider_pause": false,
+        "autoplay_speed": 5,
+        "tint_color": "#000000",
+        "tint_opacity": 0,
+        "color_scheme": "",
+        "heading_size_desktop": "h1",
+        "heading_size_mobile": "h1",
+        "full_width": true,
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)",
+        "accessibility_info": "",
+        "prevent_animation": true,
+        "section_join_mode": "default"
+      }
+    },
+    "flash_sale_NaeQVV": {
+      "type": "flash-sale",
+      "blocks": {
+        "flash_product_J3Nmck": {
+          "type": "flash_product",
+          "settings": {
+            "enabled": true,
+            "product": "hyaluronic-collagen-kuru-ve-cansiz-saclara-ozel-4lu-sac-bakim-seti-vegan",
+            "discount_percent": 0,
+            "start_at": "",
+            "end_at": "2026-07-17 23:59",
+            "discount_code": "",
+            "subtext": ""
+          }
+        },
+        "flash_product_JLqaXq": {
+          "type": "flash_product",
+          "settings": {
+            "enabled": true,
+            "product": "expert-biotin-ve-kafein-dokulme-karsiti-sac-bakim-seti-sampuan-tonik-serum",
+            "discount_percent": 0,
+            "start_at": "",
+            "end_at": "2026-07-17 23:59",
+            "discount_code": "",
+            "subtext": ""
+          }
+        },
+        "flash_product_dJU6Xi": {
+          "type": "flash_product",
+          "settings": {
+            "enabled": true,
+            "product": "glycolic-retinol-parlaklik-etkili-3lu-sac-bakim-seti",
+            "discount_percent": 0,
+            "start_at": "",
+            "end_at": "2026-07-17 23:59",
+            "discount_code": "",
+            "subtext": ""
+          }
+        }
+      },
+      "block_order": [
+        "flash_product_J3Nmck",
+        "flash_product_JLqaXq",
+        "flash_product_dJU6Xi"
+      ],
+      "name": "UC Flash Sale",
+      "settings": {
+        "master_enabled": true,
+        "heading": "Flash Sale",
+        "badge_text": "FLASH SALE",
+        "cta_label": "Sepete Ekle",
+        "show_countdown": true,
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "uc_rail_aJNkJJ": {
+      "type": "uc-rail",
+      "blocks": {
+        "offer_GYdyDt": {
+          "type": "offer",
+          "settings": {
+            "segment_tags": "crm-bitoin sampuan",
+            "scope": "products",
+            "products": [
+              "expert-no6-biotin-caffeine-dokulme-karsiti-sac-bakim-serumu-50-ml-vegan"
+            ],
+            "badge_text": "Sana Özel",
+            "start_date": "",
+            "end_date": ""
+          }
+        }
+      },
+      "block_order": [
+        "offer_GYdyDt"
+      ],
+      "name": "UC Personal Rail",
+      "settings": {
+        "heading": "Senin İçin",
+        "heading_size": 18,
+        "limit": 12,
+        "empty_text": "Sayfaları gezdikçe burada öneriler belirecek.",
+        "tab_viewed_label": "Son Gezdiklerin",
+        "tab_purchased_label": "Son Aldıkların",
+        "tab_foryou_label": "Sana Özel",
+        "tab_active_color": "#c5006a",
+        "card_size": "medium",
+        "card_gap": 12,
+        "image_fit": "contain",
+        "image_padding": 6,
+        "show_price": true,
+        "show_sale_badge": true,
+        "btn_style": "outline",
+        "cta_add": "Sepete Ekle",
+        "cta_reorder": "Tekrar Al",
+        "color_scheme": "",
+        "padding_top": 28,
+        "padding_bottom": 12
+      }
+    },
+    "featured_collection_bestsellers": {
+      "type": "featured-collection",
+      "blocks": {
+        "subheading_best": {
+          "type": "subheading",
+          "disabled": true,
+          "settings": {
+            "text": "En Çok Tercih Edilenler"
+          }
+        },
+        "heading_best": {
+          "type": "heading",
+          "settings": {
+            "heading": "Çok Satanlar",
+            "heading_size": "h1",
+            "heading_h1": false
+          }
+        }
+      },
+      "block_order": [
+        "subheading_best",
+        "heading_best"
+      ],
+      "name": "Çok Satanlar",
+      "settings": {
+        "collection": "cok-satanlar",
+        "layout": "grid",
+        "carousel_effect": "slide",
+        "products_per_row": "2",
+        "products_per_row_desktop": "4",
+        "products_to_show": 8,
+        "card_cutout": false,
+        "show_view_all": true,
+        "view_all_text": "Tüm Ürünleri Gör",
+        "view_all_style": "btn btn--primary",
+        "text_align": "text-center",
+        "text_width_override": false,
+        "text_max_width": 640,
+        "text_column_to_edge": false,
+        "mob_center_text": true,
+        "full_width": true,
+        "color_scheme": "scheme-1",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "",
+        "section_join_mode": "default"
+      }
+    },
+    "uc_trust": {
+      "type": "icons-with-text",
+      "blocks": {
+        "i1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "usp_icon": "none",
+            "heading": "Ücretsiz Kargo",
+            "text": "<p>Tüm siparişlerde</p>"
+          }
+        },
+        "i2": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "usp_icon": "vegan",
+            "heading": "Vegan Formül",
+            "text": ""
+          }
+        },
+        "i3": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "usp_icon": "cruelty-free",
+            "heading": "Hayvan Dostu",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "i1",
+        "i2",
+        "i3"
+      ],
+      "name": "Güven Rozetleri",
+      "settings": {
+        "heading": "",
+        "heading_size": "x-large-heading",
+        "icon_size": 48,
+        "icon_position": "beside",
+        "height": "py-6",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "sets_section": {
+      "type": "featured-collection",
+      "blocks": {
+        "subheading_sets": {
+          "type": "subheading",
+          "settings": {
+            "text": "TAM BAKIM"
+          }
+        },
+        "heading_sets": {
+          "type": "heading",
+          "settings": {
+            "heading": "Setler & Rutinler",
+            "heading_size": "h1",
+            "heading_h1": false
+          }
+        },
+        "text_sets": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Birlikte kullanılınca etkisi 3 kat artar.</p>",
+            "enlarge_text": false
+          }
+        }
+      },
+      "block_order": [
+        "subheading_sets",
+        "heading_sets",
+        "text_sets"
+      ],
+      "name": "Setler & Rutinler",
+      "settings": {
+        "collection": "sac-bakim-setleri",
+        "layout": "grid",
+        "carousel_effect": "slide",
+        "products_per_row": "2",
+        "products_per_row_desktop": "3",
+        "products_to_show": 6,
+        "card_cutout": false,
+        "show_view_all": true,
+        "view_all_text": "Tüm Setler",
+        "view_all_style": "btn btn--primary",
+        "text_align": "text-center",
+        "text_width_override": false,
+        "text_max_width": 640,
+        "text_column_to_edge": false,
+        "mob_center_text": true,
+        "full_width": true,
+        "color_scheme": "scheme-1",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "",
+        "section_join_mode": "default"
+      }
+    },
+    "collection_list_EAraJP": {
+      "type": "collection-list",
+      "blocks": {
+        "collection_mkyFcd": {
+          "type": "collection",
+          "settings": {
+            "collection": "sac-bakim",
+            "title": "",
+            "card_image": "shopify://shop_images/Anasayfa_2li_sacbakim.jpg"
+          }
+        },
+        "collection_ybCE9y": {
+          "type": "collection",
+          "settings": {
+            "collection": "vucut-bakim",
+            "title": "VÜCUT BAKIM",
+            "card_image": "shopify://shop_images/Anasayfa_2li_vucut.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "collection_mkyFcd",
+        "collection_ybCE9y"
+      ],
+      "name": "Kategoriler",
+      "settings": {
+        "title": "",
+        "heading_h1": false,
+        "heading_size": "h2",
+        "heading_align": "text-center",
+        "heading_after_blocks": false,
+        "card_size": "large",
+        "card_style": "text-below",
+        "card_show_count": false,
+        "card_compact": true,
+        "grid_offset": false,
+        "color_scheme": "scheme-3",
+        "remove_top_padding": false,
+        "replace_color_scheme_bg": false,
+        "bg_color": "",
+        "bg_gradient": "",
+        "card_inherit_color_scheme": true,
+        "card_color_scheme": ""
+      }
+    },
+    "video_carousel_FmCTeY": {
+      "type": "video-carousel",
+      "blocks": {
+        "shopify_video_6PaJgk": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/yasminozdemirkaraa_1771949968_3839716042062978488_3724795457.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "hibiscus-shea-butter-kivircik-ve-dalgali-saclara-ozel-sac-kremi-250ml",
+            "tag": "@yasminozdemirkaraa",
+            "tag_url": "https://www.instagram.com/yasminozdemirkaraa/?hl=en"
+          }
+        },
+        "shopify_video_3Q8W8F": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/bilgealtintas7_1763208140_3765469716786499132_1031501057.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "hibiscus-shea-butter-kivircik-ve-dalgali-saclara-ozel-sac-kremi-250ml",
+            "tag": "@bilgealtintas7",
+            "tag_url": "https://www.instagram.com/bilgealtintas7/?hl=en"
+          }
+        },
+        "shopify_video_D7Kd6g": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/urbancaretr_1720004049_3403962589648300372_573872577.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "urban-care-summer-glow-asamali-kalici-renk-acici-sac-spreyi-150-ml",
+            "tag": "@melisayanik",
+            "tag_url": "https://www.instagram.com/melisayanik/?hl=en"
+          }
+        },
+        "shopify_video_dAgCdn": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/urbancaretr_1755776657_3704043876507936692_573872577.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "style-guide-stick-wax-35-gr",
+            "tag": "@akinireem",
+            "tag_url": "https://www.instagram.com/akinireem/?hl=en"
+          }
+        },
+        "shopify_video_p3CKCp": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/gizemsaritekin_1729013879_3479538802389716165_320923377.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "no1-bond-plex-maske-50-ml",
+            "tag": "@gizemsaritekin",
+            "tag_url": "https://www.instagram.com/gizemsaritekin/?hl=en"
+          }
+        },
+        "shopify_video_DRndFQ": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/begumbahardemir_1747488432_3634518159951775300_47152750721.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "hyaluronic-collagen-ekstra-dolgunlastirici-sac-bakim-sampuani-350-ml-vegan",
+            "tag": "@begumbahardemir",
+            "tag_url": "https://www.instagram.com/begumbahardemir/?hl=en"
+          }
+        },
+        "shopify_video_iiEFHa": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/urbancaretr_1744822800_3612157566050355491_573872577.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "hibiscus-shea-butter-bukle-belirginlestirici-sac-bakim-sampuani-350-ml-vegan",
+            "tag": "@melisminkari",
+            "tag_url": "https://www.instagram.com/melisminkari/?hl=en"
+          }
+        },
+        "shopify_video_jGNXhV": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/yarenalaca_1747750001_3636712467658937622_5126082671.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "intense-keratin-yogun-hasar-onarici-sac-bakim-sampuani-350ml-vegan",
+            "tag": "@yarenalaca",
+            "tag_url": "https://www.instagram.com/yarenalaca/?hl=en"
+          }
+        },
+        "shopify_video_am8V4A": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/ahsenbucek_1709991076_3319967113491380075_737806467.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "pink-grapefruit-pomelo-dus-jeli",
+            "tag": "@ahsenbucek",
+            "tag_url": "https://www.instagram.com/ahsenbucek/?hl=en"
+          }
+        }
+      },
+      "block_order": [
+        "shopify_video_6PaJgk",
+        "shopify_video_3Q8W8F",
+        "shopify_video_D7Kd6g",
+        "shopify_video_dAgCdn",
+        "shopify_video_p3CKCp",
+        "shopify_video_DRndFQ",
+        "shopify_video_iiEFHa",
+        "shopify_video_jGNXhV",
+        "shopify_video_am8V4A"
+      ],
+      "name": "Video carousel",
+      "settings": {
+        "heading": "",
+        "heading_size": "h2",
+        "heading_align": "text-center",
+        "mob_center_text": true,
+        "autoplay": true,
+        "hover_enabled": false,
+        "cta_label": "Sepete Ekle",
+        "color_scheme": "",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)"
+      }
+    },
+    "uc_concern": {
+      "type": "uc-concern",
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "title": "Saç Dökülmesi",
+            "desc": "Biotin & kafein ile güçlendirici rutinler",
+            "link": "shopify://collections/expert-biotin-caffeine",
+            "accent": "green",
+            "icon": "drop"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "title": "Mat & Cansız",
+            "desc": "Glycolic & retinol ile parlaklık",
+            "link": "shopify://collections/glycolic-retinol",
+            "accent": "pink",
+            "icon": "spark"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "title": "Hacimsiz Saç",
+            "desc": "Hyaluronic & collagen ile dolgunluk",
+            "link": "shopify://collections/hyaluronic-collagen",
+            "accent": "blue",
+            "icon": "wind"
+          }
+        },
+        "c4": {
+          "type": "card",
+          "settings": {
+            "title": "Yıpranmış Uçlar",
+            "desc": "Argan & keratin ile onarım",
+            "link": "shopify://collections/argan-oil-keratin",
+            "accent": "orange",
+            "icon": "sun"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "name": "Endişe Navigasyonu",
+      "settings": {
+        "subheading": "SAÇINLA KONUŞ",
+        "heading": "Hangi derdine çözüm arıyorsun?",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "slideshow_hero",
+    "flash_sale_NaeQVV",
+    "uc_rail_aJNkJJ",
+    "featured_collection_bestsellers",
+    "uc_trust",
+    "sets_section",
+    "collection_list_EAraJP",
+    "video_carousel_FmCTeY",
+    "uc_concern"
+  ]
+}

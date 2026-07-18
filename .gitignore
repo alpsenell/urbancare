@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Shopify CLI
+.shopify/
+*.shopifyignore.local
+
+# Node (build tooling, theme-check, prettier, etc.)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs & OS junk
+*.log
+Thumbs.db

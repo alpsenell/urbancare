@@ -1,0 +1,158 @@
+{%- comment -%} URBAN Care - Frequently Bought Together (inline block version). Renders inside main-product info column via a custom-liquid block. Params: heading, button_label, limit. {%- endcomment -%}
+{%- liquid
+  assign fbt_heading = heading | default: 'Sıkça Birlikte Alınan'
+  assign fbt_button = button_label | default: 'Hepsini Sepete Ekle'
+  assign to_show = limit | default: 4
+  assign comp = product.metafields['shopify--discovery--product_recommendation']['complementary_products'].value
+  assign fbt_items = comp
+  if fbt_items == blank or fbt_items.size == 0
+    assign best = null
+    assign best_count = 999999
+    for c in product.collections
+      if c.handle == 'frontpage'
+        continue
+      endif
+      if c.all_products_count > 1 and c.all_products_count < best_count
+        assign best = c
+        assign best_count = c.all_products_count
+      endif
+    endfor
+    if best == null
+      assign best = collections['cok-satanlar']
+    endif
+    if best
+      assign fbt_items = best.products
+    endif
+  endif
+  assign shown = 0
+-%}
+
+{%- capture fbt_rows -%}
+  {%- for rec in fbt_items -%}
+    {%- if shown >= to_show -%}{%- break -%}{%- endif -%}
+    {%- if rec.id == product.id -%}{%- continue -%}{%- endif -%}
+    {%- unless rec.available -%}{%- continue -%}{%- endunless -%}
+    {%- assign rv = rec.selected_or_first_available_variant -%}
+    {%- unless rv -%}{%- continue -%}{%- endunless -%}
+    {%- assign shown = shown | plus: 1 -%}
+    <label class="uc-fbt__item">
+      <input class="uc-fbt__check-input" type="checkbox" value="{{ rv.id }}" data-price="{{ rv.price }}" checked aria-label="{{ rec.title | escape }}">
+      <span class="uc-fbt__checkbox">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="uc-fbt__img-wrap">
+        {%- if rec.featured_media -%}<img src="{{ rec.featured_media | image_url: width: 100 }}" alt="{{ rec.title | escape }}" width="50" height="50" loading="lazy">{%- endif -%}
+      </span>
+      <span class="uc-fbt__info">
+        <span class="uc-fbt__name">{{ rec.title }}</span>
+        <span class="uc-fbt__price">{{ rv.price | money }}</span>
+      </span>
+    </label>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if shown > 0 -%}
+<div class="uc-fbt" id="uc-fbt-{{ section.id }}">
+  <div class="uc-fbt__inner">
+    <h2 class="uc-fbt__title">{{ fbt_heading }}</h2>
+    <div class="uc-fbt__list">
+      <label class="uc-fbt__item uc-fbt__item--current">
+        <span class="uc-fbt__checkbox uc-fbt__checkbox--checked">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="uc-fbt__img-wrap">
+          {%- if product.featured_media -%}<img src="{{ product.featured_media | image_url: width: 100 }}" alt="{{ product.title | escape }}" width="50" height="50" loading="lazy">{%- endif -%}
+        </span>
+        <span class="uc-fbt__info">
+          <span class="uc-fbt__name">{{ product.title }}</span>
+          <span class="uc-fbt__price">{{ product.selected_or_first_available_variant.price | money }}</span>
+        </span>
+        <span class="uc-fbt__badge">Bu ürün</span>
+      </label>
+      {{ fbt_rows }}
+    </div>
+    <div class="uc-fbt__footer">
+      <div class="uc-fbt__total">
+        <span class="uc-fbt__total-label">Toplam</span>
+        <strong class="uc-fbt__total-price">{{ product.selected_or_first_available_variant.price | money }}</strong>
+      </div>
+      <button type="button" class="uc-fbt__atc"
+        data-base-price="{{ product.selected_or_first_available_variant.price }}"
+        data-base-variant="{{ product.selected_or_first_available_variant.id }}">
+        <span class="uc-fbt__atc-text">{{ fbt_button }}</span>
+        <svg class="uc-fbt__spinner" width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="7" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+          <path d="M9 2a7 7 0 017 7" stroke="#fff" stroke-width="2" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 9 9" to="360 9 9" dur="0.7s" repeatCount="indefinite"/></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+#uc-fbt-{{ section.id }}.uc-fbt { margin: 16px 0 4px; }
+#uc-fbt-{{ section.id }} .uc-fbt__inner { background: #f7f3f5; border: 1px solid rgba(216,27,140,0.1); border-radius: 16px; padding: 18px; }
+#uc-fbt-{{ section.id }} .uc-fbt__title { font-size: 1rem; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.01em; color: #1a1a1a; }
+#uc-fbt-{{ section.id }} .uc-fbt__list { display: flex; flex-direction: column; }
+#uc-fbt-{{ section.id }} .uc-fbt__item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); cursor: pointer; position: relative; margin: 0; }
+#uc-fbt-{{ section.id }} .uc-fbt__item:last-child { border-bottom: none; }
+#uc-fbt-{{ section.id }} .uc-fbt__item--current { cursor: default; }
+#uc-fbt-{{ section.id }} .uc-fbt__check-input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+#uc-fbt-{{ section.id }} .uc-fbt__checkbox { flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px; border: 2px solid #d0d0d0; background: #fff; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
+#uc-fbt-{{ section.id }} .uc-fbt__checkbox svg { opacity: 0; transition: opacity 0.12s; }
+#uc-fbt-{{ section.id }} .uc-fbt__checkbox--checked, #uc-fbt-{{ section.id }} .uc-fbt__item:has(.uc-fbt__check-input:checked) .uc-fbt__checkbox { background: #3a7d44; border-color: #3a7d44; }
+#uc-fbt-{{ section.id }} .uc-fbt__checkbox--checked svg, #uc-fbt-{{ section.id }} .uc-fbt__item:has(.uc-fbt__check-input:checked) .uc-fbt__checkbox svg { opacity: 1; }
+#uc-fbt-{{ section.id }} .uc-fbt__img-wrap { flex-shrink: 0; width: 50px; height: 50px; border-radius: 8px; overflow: hidden; background: #fff; border: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; }
+#uc-fbt-{{ section.id }} .uc-fbt__img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+#uc-fbt-{{ section.id }} .uc-fbt__info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+#uc-fbt-{{ section.id }} .uc-fbt__name { font-size: 0.82rem; font-weight: 600; line-height: 1.3; color: #1a1a1a; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+#uc-fbt-{{ section.id }} .uc-fbt__price { font-size: 0.82rem; font-weight: 700; color: #1a1a1a; }
+#uc-fbt-{{ section.id }} .uc-fbt__badge { flex-shrink: 0; font-size: 0.7rem; font-weight: 600; white-space: nowrap; color: #3a7d44; background: rgba(58,125,68,0.1); padding: 3px 9px; border-radius: 99px; }
+#uc-fbt-{{ section.id }} .uc-fbt__footer { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+#uc-fbt-{{ section.id }} .uc-fbt__total { display: flex; align-items: baseline; gap: 8px; }
+#uc-fbt-{{ section.id }} .uc-fbt__total-label { color: #666; font-size: 0.9rem; }
+#uc-fbt-{{ section.id }} .uc-fbt__total-price { font-size: 1.15rem; font-weight: 800; color: #1a1a1a; }
+#uc-fbt-{{ section.id }} .uc-fbt__atc { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; border: none; font-size: 0.88rem; font-weight: 700; font-family: inherit; background: #d81b8c; color: #fff; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+#uc-fbt-{{ section.id }} .uc-fbt__atc:hover:not(:disabled) { background: #b5167a; }
+#uc-fbt-{{ section.id }} .uc-fbt__atc:disabled { opacity: 0.65; cursor: default; }
+#uc-fbt-{{ section.id }} .uc-fbt__spinner { display: none; }
+#uc-fbt-{{ section.id }} .uc-fbt__atc.is-loading .uc-fbt__spinner { display: inline-block; }
+#uc-fbt-{{ section.id }} .uc-fbt__atc.is-loading .uc-fbt__atc-text { opacity: 0.65; }
+@media (max-width: 640px) { #uc-fbt-{{ section.id }} .uc-fbt__footer { flex-direction: column; align-items: stretch; gap: 10px; } #uc-fbt-{{ section.id }} .uc-fbt__total { justify-content: space-between; } #uc-fbt-{{ section.id }} .uc-fbt__atc { justify-content: center; width: 100%; } }
+</style>
+
+<script>
+(function() {
+  var el = document.getElementById('uc-fbt-{{ section.id }}');
+  if (!el) return;
+  var btn = el.querySelector('.uc-fbt__atc');
+  var totalEl = el.querySelector('.uc-fbt__total-price');
+  var boxes = el.querySelectorAll('.uc-fbt__check-input');
+  var basePrice = parseInt(btn.dataset.basePrice, 10);
+  var baseVar = btn.dataset.baseVariant;
+  function fmt(c) { return (c/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' TL'; }
+  function recalc() { var t = basePrice; boxes.forEach(function(b){ if (b.checked) t += parseInt(b.dataset.price,10); }); totalEl.textContent = fmt(t); }
+  boxes.forEach(function(b){ b.addEventListener('change', recalc); });
+  recalc();
+  btn.addEventListener('click', function() {
+    var items = [{ id: parseInt(baseVar,10), quantity: 1 }];
+    boxes.forEach(function(b){ if (b.checked) items.push({ id: parseInt(b.value,10), quantity: 1 }); });
+    btn.disabled = true; btn.classList.add('is-loading');
+    var cartDrawer = document.querySelector('cart-drawer');
+    var body = { items: items };
+    if (cartDrawer && cartDrawer.dataset.section) { body.sections = cartDrawer.dataset.section + ',cart-icon-bubble'; body.sections_url = window.location.pathname; }
+    var addUrl = (window.theme && theme.routes && theme.routes.cartAdd) ? theme.routes.cartAdd : '/cart/add.js';
+    fetch(addUrl, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/javascript', 'X-Requested-With': 'XMLHttpRequest' }, body: JSON.stringify(body) })
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(data){
+      try {
+        if (cartDrawer && typeof cartDrawer.renderContents === 'function') { cartDrawer.renderContents(data, true, btn); }
+        else { window.location.href = '/cart'; }
+      } catch(e) { if (cartDrawer && typeof cartDrawer.open === 'function') { cartDrawer.open(); } else { window.location.href = '/cart'; } }
+    })
+    .catch(function(e){ console.error('[UC FBT]', e); window.location.href = '/cart'; })
+    .finally(function(){ btn.disabled = false; btn.classList.remove('is-loading'); });
+  });
+})();
+</script>
+{%- endif -%}

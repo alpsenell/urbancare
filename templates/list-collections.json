@@ -1,0 +1,175 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-list-collections-banner",
+      "settings": {
+        "style": "scrolling-text",
+        "heading": "Koleksiyonlarımız",
+        "heading_marquee_speed": 15,
+        "heading_case": "none",
+        "text_align": "text-center",
+        "color_scheme": "scheme-1",
+        "color_scheme_overlay": "scheme-3",
+        "fixed_height_desktop": 600,
+        "fixed_height_mobile": 350,
+        "tint_color": "#000000",
+        "tint_opacity": 0
+      }
+    },
+    "main": {
+      "type": "main-list-collections",
+      "blocks": {
+        "highlight_collection_1": {
+          "type": "highlight_collection",
+          "settings": {
+            "collection": "",
+            "title": "",
+            "card_image": "",
+            "card_image_ratio": "1.5",
+            "card_image_fit": "cover",
+            "card_image_align": "",
+            "card_image_disable_focal_point": false,
+            "card_style": "text-over",
+            "card_show_count": true,
+            "card_compact": false,
+            "card_inherit_color_scheme": true,
+            "card_color_scheme": ""
+          }
+        },
+        "highlight_collection_2": {
+          "type": "highlight_collection",
+          "settings": {
+            "collection": "",
+            "title": "",
+            "card_image_ratio": "1.4",
+            "card_image_fit": "cover",
+            "card_image_align": "",
+            "card_image_disable_focal_point": false,
+            "card_style": "text-over",
+            "card_show_count": true,
+            "card_compact": false,
+            "card_inherit_color_scheme": true,
+            "card_color_scheme": ""
+          }
+        },
+        "highlight_collection_3": {
+          "type": "highlight_collection",
+          "settings": {
+            "collection": "",
+            "title": "",
+            "card_image_ratio": "1.2",
+            "card_image_fit": "cover",
+            "card_image_align": "",
+            "card_image_disable_focal_point": false,
+            "card_style": "text-over",
+            "card_show_count": true,
+            "card_compact": false,
+            "card_inherit_color_scheme": true,
+            "card_color_scheme": ""
+          }
+        },
+        "highlight_collection_4": {
+          "type": "highlight_collection",
+          "settings": {
+            "collection": "",
+            "title": "",
+            "card_image": "",
+            "card_image_ratio": "1.4",
+            "card_image_fit": "cover",
+            "card_image_align": "",
+            "card_image_disable_focal_point": false,
+            "card_style": "text-over",
+            "card_show_count": true,
+            "card_compact": false,
+            "card_inherit_color_scheme": true,
+            "card_color_scheme": ""
+          }
+        }
+      },
+      "block_order": [
+        "highlight_collection_1",
+        "highlight_collection_2",
+        "highlight_collection_3",
+        "highlight_collection_4"
+      ],
+      "settings": {
+        "title": "Diğer Koleksiyonlar",
+        "heading_h1": false,
+        "heading_size": "h2",
+        "heading_align": "text-center",
+        "heading_after_blocks": true,
+        "display_type": "all",
+        "selected_collections": [],
+        "collections_per_page": 8,
+        "sort_order": "alphabetical",
+        "card_size": "small",
+        "card_style": "text-over",
+        "card_show_count": true,
+        "card_compact": false,
+        "grid_offset": true,
+        "color_scheme": "scheme-1",
+        "remove_top_padding": false,
+        "replace_color_scheme_bg": true,
+        "bg_color": "",
+        "bg_gradient": "linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(247, 244, 240, 1) 98%)",
+        "card_inherit_color_scheme": false,
+        "card_color_scheme": "scheme-1"
+      }
+    },
+    "rich_text_akmHw7": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_7FW8HP": {
+          "type": "heading",
+          "settings": {
+            "heading": "Doğal Bakım ve Güzellik",
+            "heading_size": "h3",
+            "heading_h1": false
+          }
+        },
+        "text_jLVFcy": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Doğal bakım ürünlerimiz, <em><strong>gelişmiş formüller</strong></em> ve çevre dostu ambalajlarımızla <em><strong>cilt bakımı</strong></em> ve <em><strong>güzellik</strong></em> arasındaki sınırları kaldırıyoruz.</p>",
+            "enlarge_text": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_7FW8HP",
+        "text_jLVFcy"
+      ],
+      "name": "Rich text",
+      "settings": {
+        "text_align": "text-center",
+        "text_width_override": true,
+        "text_max_width": 640,
+        "text_column_to_edge": false,
+        "mob_center_text": true,
+        "full_width": true,
+        "color_scheme": "scheme-2",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)",
+        "section_join_mode": "default"
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "main",
+    "rich_text_akmHw7"
+  ]
+}

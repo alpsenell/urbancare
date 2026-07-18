@@ -1,0 +1,134 @@
+/* ============================================================
+   URBAN Care — Custom CRO Styles
+   ============================================================ */
+
+/* Announcement bar */
+.cc-announcement .announcement__slide {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Product card hover lift */
+@media (min-width: 768px) {
+  .product-card:hover,
+  .card:hover {
+    transform: translateY(-3px);
+    transition: transform 0.2s ease;
+  }
+}
+
+/* Sale / new labels brand color */
+.product-label--sale,
+.label--sale {
+  background: #d81b8c !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+.product-label--new,
+.label--new {
+  background: #3a7d44 !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+/* Sticky ATC brand color */
+.sticky-atc {
+  border-top: 2px solid #d81b8c;
+}
+.sticky-atc .btn--primary,
+.sticky-atc .btn--add-to-cart {
+  background: #d81b8c !important;
+  border-color: #d81b8c !important;
+}
+
+/* USP icons brand color */
+.product-usp__icon svg,
+.cc-icons-with-text .item__icon {
+  color: #d81b8c;
+}
+
+/* Collection filter bar sticky on desktop */
+@media (min-width: 1024px) {
+  .products-toolbar {
+    position: sticky;
+    top: var(--header-height, 64px);
+    z-index: 20;
+    background: var(--color-scheme-bg, #fff);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+}
+
+/* Related collections pills */
+.related-collection--pill {
+  font-weight: 600;
+  border: 1.5px solid currentColor;
+  transition: background 0.15s, color 0.15s;
+}
+.related-collection--pill:hover {
+  background: #d81b8c;
+  color: #fff;
+  border-color: #d81b8c;
+}
+
+/* Free shipping bar brand color */
+.free-shipping-notice__bar-fill {
+  background: #d81b8c !important;
+}
+
+/* Cart drawer 'Sepeti Tamamla' başlık boşluğu */
+cart-drawer product-recommendations {
+  display: block;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.07);
+}
+cart-drawer product-recommendations h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* ============================================================
+   Ürün kartı 'Sepete ekle' → dolu pembe (Tekrar Al ile aynı format)
+   ============================================================ */
+.card__quick-add .quick-add-btn.btn--secondary {
+  background: #d81b8c !important;
+  border-color: #d81b8c !important;
+  color: #fff !important;
+}
+.card__quick-add .quick-add-btn.btn--secondary:hover {
+  background: #b5167a !important;
+  border-color: #b5167a !important;
+  color: #fff !important;
+}
+.card__quick-add .quick-add-btn.btn--secondary .quick-add-btn-icon svg {
+  color: #fff !important;
+}
+
+/* ============================================================
+   Saç Testi (quiz) — daha kompakt, daha az dikey boşluk
+   ============================================================ */
+.cc-quiz .quiz__screen .container,
+.cc-quiz .quiz__landing .grid > div {
+  padding-top: 2.25rem !important;
+  padding-bottom: 2.25rem !important;
+}
+@media (min-width: 768px) {
+  .cc-quiz .quiz__screen .container,
+  .cc-quiz .quiz__landing .grid > div {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+}
+.cc-quiz .quiz__answers {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cc-quiz .quiz__screen .quiz__btn {
+  margin-top: 1.5rem !important;
+}

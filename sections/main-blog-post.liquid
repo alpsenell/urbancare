@@ -1,0 +1,129 @@
+{{ 'blog.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.border_radius %}
+  {% style %}
+    .article__content img {
+      border-radius: 32px;
+    }
+  {% endstyle %}
+{% endif %}
+
+<article class="article js-article">
+  <div class="container">
+
+    <div class="article__content reading-width rte article-content mt-12 mx-auto">
+      {{ article.content }}
+    </div>
+
+    {% if section.settings.show_share_buttons %}
+      <div class="social-share flex reading-width article-width mx-auto mt-12">
+        <p class="social-share__heading mb-0 font-bold">{{ 'general.social.share_heading' | t }}:</p>
+        {% render 'social-share',
+            share_twitter: section.settings.show_twitter,
+            share_facebook: section.settings.show_facebook,
+            share_pinterest: section.settings.show_pinterest,
+            share_title: article.title,
+            share_url: article.url,
+            share_image: article.image %}
+      </div>
+    {% endif %}
+    
+    <article-pagination class="pagination flex reading-width article-width mx-auto mt-12 mb-6">
+      <div class="flex flex-1 items-center justify-start">
+        <a class="pagination__arrow pagination__arrow--previous hover:lighten flex text-current has-ltr-icon"
+          {% if blog.previous_article %}
+            href="{{ blog.previous_article }}"
+            title="{{ blog.previous_article.title | escape }}"
+          {% else %}
+            role="link" aria-disabled="true"
+          {% endif %}>
+          <span class="pagination__arrow-icon" aria-hidden="true">{% render 'icon-chevron-left' %}</span>
+          <span class="pagination__prev-label text-start ml-2">
+            {{ 'blogs.article.previous_post' | t }}
+          </span>
+        </a>
+      </div>
+      <div class="flex flex-1 flex-grow:1 md:[flex-grow:2] items-center justify-center">
+        <span class="back-to-blog hover:lighten text-center">
+          {{ blog.title | link_to: blog.url }}
+        </span>
+      </div>
+      <div class="flex flex-1 items-center justify-end">
+        <a class="pagination__arrow pagination__arrow--next hover:lighten flex text-current has-ltr-icon js-pagination-load-more"
+          {% if blog.next_article %}
+            href="{{ blog.next_article }}"
+            title="{{ blog.next_article.title | escape }}"
+          {% else %}
+            role="link" aria-disabled="true"
+          {% endif %}>
+          <span class="pagination__next-label text-end mr-2">
+            {{ 'blogs.article.next_post' | t }}
+          </span>
+          <span class="pagination__arrow-icon" aria-hidden="true">{% render 'icon-chevron-right' %}</span>
+        </a>
+      </div>
+    </article-pagination>
+
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll('.article__content table').forEach((table) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'scrollable-table';
+    table.parentNode.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  });
+</script>
+
+{% render 'structured-data-article', article: article %}
+
+{% schema %}
+{
+  "name": "Blog post",
+  "class": "cc-main-article section section--template",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "[Learn more about Shopify blogs](https://help.shopify.com/en/manual/online-store/blogs/adding-a-blog)"
+    },
+    {
+      "type": "checkbox",
+      "id": "border_radius",
+      "label": "Enable round corners on article images",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Blog post footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share_buttons",
+      "label": "Show social share links",
+      "default": true
+    },
+    {
+      "visible_if": "{{ section.settings.show_share_buttons }}",
+      "type": "checkbox",
+      "id": "show_twitter",
+      "label": "Show X (formerly Twitter)",
+      "default": true
+    },
+    {
+      "visible_if": "{{ section.settings.show_share_buttons }}",
+      "type": "checkbox",
+      "id": "show_facebook",
+      "label": "Show Facebook",
+      "default": true
+    },
+    {
+      "visible_if": "{{ section.settings.show_share_buttons }}",
+      "type": "checkbox",
+      "id": "show_pinterest",
+      "label": "Show Pinterest",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

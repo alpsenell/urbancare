@@ -1,0 +1,35 @@
+<div class="section section--standard">
+  <div class="container">
+    {%- if section.settings.show_page_title -%}
+      <h1 class="text-center mb-12">{{ page.title | escape }}</h1>
+    {%- endif -%}
+    <div class="reading-width rte">
+      {{- page.content -}}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.rte > table').forEach((table) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'scrollable-table';
+    table.parentNode.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Page",
+  "class": "cc-main-page section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_page_title",
+      "label": "Show the default page heading",
+      "info": "If hidden, you should provide a primary page heading (h1 tag) in another section with h1 capability (e.g. image banner, slideshow or background video) for SEO purposes.",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

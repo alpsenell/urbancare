@@ -1,0 +1,864 @@
+{%- comment -%}
+  uc-curate-hair-care.liquid
+  ─────────────────────────────────────────────────────────────────
+  Urban Care · Beautify Theme
+  "Saç Tipine Göre Keşfet" — Hair Type Tab + Influencer + Product Rail
+  
+  Her tab bir saç tipi bloğu:
+    · Üstte scroll-snap ikon+etiket tab bar
+    · Seçili tab: sol→influencer video/fotoğraf + profil bilgileri + alıntı
+                  sağ→koleksiyon adı + ürün yatay slider + Tümünü Gör
+  
+  KURULUM:
+  1. Shopify Admin → Themes → (draft theme) → Edit code
+  2. Sections klasörü → "Add a new section" → uc-curate-hair-care
+  3. Liquid içeriğini yapıştır, kaydet
+  4. Theme Customizer → Add Section → "UC Saç Tipine Göre Keşfet"
+  5. Her Tab bloğuna ürünleri/influencer'ı gir
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{%- style -%}
+/* ═══════════════════════════════════════════════════
+   UC CURATE — Root Tokens
+═══════════════════════════════════════════════════ */
+#uc-chc-{{ section.id }} {
+  --chc-magenta:   {{ section.settings.accent_color | default: '#C5006A' }};
+  --chc-dark:      #1a1a1a;
+  --chc-mid:       #555;
+  --chc-line:      rgba(26,26,26,.1);
+  --chc-bg:        {{ section.settings.section_bg | default: '#FAFAF8' }};
+  --chc-card-bg:   #ffffff;
+  --chc-radius-lg: 20px;
+  --chc-radius-sm: 12px;
+  --chc-gap:       24px;
+  background: var(--chc-bg);
+  padding: {{ section.settings.pad_top | default: 64 }}px 0 {{ section.settings.pad_bottom | default: 64 }}px;
+}
+
+/* ── Heading ── */
+#uc-chc-{{ section.id }} .chc__heading {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+@media (max-width: 767px) {
+  #uc-chc-{{ section.id }} .chc__heading { margin-bottom: 24px; }
+  #uc-chc-{{ section.id }} .chc__tabs-wrap { margin-bottom: 20px; }
+}
+#uc-chc-{{ section.id }} .chc__heading h2 {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: var(--chc-dark);
+  margin: 0 0 6px;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+#uc-chc-{{ section.id }} .chc__heading h2 em {
+  font-style: italic;
+  color: var(--chc-magenta);
+}
+#uc-chc-{{ section.id }} .chc__heading p {
+  font-size: .95rem;
+  color: var(--chc-mid);
+  margin: 0;
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+/* ── Tab Nav ── */
+#uc-chc-{{ section.id }} .chc__tabs-wrap {
+  position: relative;
+  margin-bottom: 36px;
+}
+#uc-chc-{{ section.id }} .chc__tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0 max(20px, calc((100vw - 1200px) / 2));
+}
+#uc-chc-{{ section.id }} .chc__tabs::-webkit-scrollbar { display: none; }
+
+#uc-chc-{{ section.id }} .chc__tab {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 10px 16px 12px;
+  border-radius: var(--chc-radius-sm);
+  border: 2px solid transparent;
+  background: var(--chc-card-bg);
+  transition: border-color .22s, background .22s, transform .18s;
+  min-width: 90px;
+  max-width: 120px;
+}
+#uc-chc-{{ section.id }} .chc__tab:hover {
+  border-color: rgba(197,0,106,.3);
+  transform: translateY(-2px);
+}
+#uc-chc-{{ section.id }} .chc__tab.is-active {
+  border-color: var(--chc-magenta);
+  background: #fff8fc;
+}
+#uc-chc-{{ section.id }} .chc__tab-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+#uc-chc-{{ section.id }} .chc__tab-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--chc-dark);
+  text-align: center;
+  line-height: 1.3;
+}
+#uc-chc-{{ section.id }} .chc__tab.is-active .chc__tab-label {
+  color: var(--chc-magenta);
+}
+
+/* Tab scroll arrows */
+#uc-chc-{{ section.id }} .chc__tabs-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--chc-line);
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  transition: opacity .2s;
+}
+#uc-chc-{{ section.id }} .chc__tabs-arrow--prev { left: 4px; }
+#uc-chc-{{ section.id }} .chc__tabs-arrow--next { right: 4px; }
+#uc-chc-{{ section.id }} .chc__tabs-arrow svg { width: 16px; height: 16px; color: var(--chc-dark); }
+@media (max-width: 767px) {
+  #uc-chc-{{ section.id }} .chc__tabs-arrow { display: none; }
+}
+
+/* ── Panel ── */
+#uc-chc-{{ section.id }} .chc__panel { display: none; }
+#uc-chc-{{ section.id }} .chc__panel.is-active { display: block; }
+
+#uc-chc-{{ section.id }} .chc__panel-inner {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 32px;
+  align-items: start;
+  padding: 0 max(20px, calc((100vw - 1200px) / 2));
+}
+@media (max-width: 900px) {
+  #uc-chc-{{ section.id }} .chc__panel-inner {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+@media (max-width: 767px) {
+  #uc-chc-{{ section.id }} .chc__panel-inner {
+    padding: 0 16px;
+  }
+  #uc-chc-{{ section.id }} .chc__tabs {
+    padding: 0 16px;
+  }
+}
+
+/* ── Influencer card ── */
+#uc-chc-{{ section.id }} .chc__infl {
+  border-radius: var(--chc-radius-lg);
+  overflow: hidden;
+  background: var(--chc-card-bg);
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+}
+@media (min-width: 901px) {
+  #uc-chc-{{ section.id }} .chc__infl {
+    position: sticky;
+    top: 20px;
+  }
+}
+#uc-chc-{{ section.id }} .chc__infl-media {
+  position: relative;
+  overflow: hidden;
+  background: #f0e8f0;
+  /* Desktop: sabit yükseklik — 380px kolon genişliğinde 9/16 = 676px çok uzun olur */
+  height: 480px;
+}
+#uc-chc-{{ section.id }} .chc__infl-media img,
+#uc-chc-{{ section.id }} .chc__infl-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top; /* yüz üstte kalsın */
+  display: block;
+}
+#uc-chc-{{ section.id }} .chc__infl-media video {
+  position: absolute; inset: 0;
+}
+/* Tablet: biraz daha kısa */
+@media (max-width: 1100px) and (min-width: 901px) {
+  #uc-chc-{{ section.id }} .chc__infl-media { height: 400px; }
+}
+/* Mobil: gerçek 9/16 — video tam format */
+@media (max-width: 900px) {
+  #uc-chc-{{ section.id }} .chc__infl-media {
+    height: auto;
+    aspect-ratio: 9/16;
+    max-height: 75vh; /* ekranın %75'inden uzun olmasın */
+  }
+}
+
+
+/* stats overlay */
+#uc-chc-{{ section.id }} .chc__infl-stats {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(20,10,18,.72));
+  padding: 32px 16px 14px;
+  display: flex;
+  gap: 14px;
+  z-index: 2;
+}
+#uc-chc-{{ section.id }} .chc__stat {
+  text-align: center;
+  flex: 1;
+}
+#uc-chc-{{ section.id }} .chc__stat-icon {
+  font-size: 17px;
+  margin-bottom: 2px;
+  line-height: 1;
+}
+#uc-chc-{{ section.id }} .chc__stat-label {
+  display: block;
+  font-size: .58rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  margin-bottom: 1px;
+}
+#uc-chc-{{ section.id }} .chc__stat-val {
+  display: block;
+  font-size: .88rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+}
+
+/* quote area */
+#uc-chc-{{ section.id }} .chc__infl-quote {
+  padding: 16px 18px 18px;
+}
+#uc-chc-{{ section.id }} .chc__infl-name {
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--chc-magenta);
+  margin-bottom: 6px;
+}
+#uc-chc-{{ section.id }} .chc__infl-quote p {
+  font-size: .92rem;
+  line-height: 1.55;
+  color: var(--chc-dark);
+  margin: 0;
+  font-style: italic;
+}
+#uc-chc-{{ section.id }} .chc__infl-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+#uc-chc-{{ section.id }} .chc__infl-meta-item {
+  font-size: .72rem;
+  color: var(--chc-mid);
+}
+#uc-chc-{{ section.id }} .chc__infl-meta-item strong {
+  display: block;
+  font-size: .68rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--chc-dark);
+  margin-bottom: 1px;
+}
+
+/* ── Product rail ── */
+#uc-chc-{{ section.id }} .chc__products-col {}
+#uc-chc-{{ section.id }} .chc__products-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+#uc-chc-{{ section.id }} .chc__products-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--chc-dark);
+  margin: 0;
+}
+#uc-chc-{{ section.id }} .chc__explore-btn {
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--chc-magenta);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1.5px solid var(--chc-magenta);
+  padding: 7px 16px;
+  border-radius: 100px;
+  transition: background .2s, color .2s;
+}
+#uc-chc-{{ section.id }} .chc__explore-btn:hover {
+  background: var(--chc-magenta);
+  color: white;
+}
+
+/* slider */
+#uc-chc-{{ section.id }} .chc__slider-wrap {
+  position: relative;
+}
+#uc-chc-{{ section.id }} .chc__slider {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+#uc-chc-{{ section.id }} .chc__slider::-webkit-scrollbar { display: none; }
+
+#uc-chc-{{ section.id }} .chc__pcard {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  border-radius: var(--chc-radius-sm);
+  background: var(--chc-card-bg);
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  overflow: hidden;
+  transition: box-shadow .2s, transform .2s;
+}
+#uc-chc-{{ section.id }} .chc__pcard:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,.13);
+  transform: translateY(-3px);
+}
+@media (max-width: 767px) {
+  #uc-chc-{{ section.id }} .chc__pcard { flex: 0 0 56vw; }
+  #uc-chc-{{ section.id }} .chc__slider { padding-bottom: 8px; }
+}
+
+#uc-chc-{{ section.id }} .chc__pcard-badge {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: var(--chc-magenta);
+  color: white;
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  z-index: 2;
+}
+#uc-chc-{{ section.id }} .chc__pcard-img-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f5eef5;
+}
+#uc-chc-{{ section.id }} .chc__pcard-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s ease;
+}
+#uc-chc-{{ section.id }} .chc__pcard:hover .chc__pcard-img-wrap img {
+  transform: scale(1.04);
+}
+#uc-chc-{{ section.id }} .chc__pcard-info {
+  padding: 12px 14px;
+}
+#uc-chc-{{ section.id }} .chc__pcard-name {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--chc-dark);
+  margin: 0 0 4px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+#uc-chc-{{ section.id }} .chc__pcard-sub {
+  font-size: .72rem;
+  color: var(--chc-mid);
+  margin: 0 0 8px;
+}
+#uc-chc-{{ section.id }} .chc__pcard-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+#uc-chc-{{ section.id }} .chc__pcard-price {
+  font-size: .92rem;
+  font-weight: 800;
+  color: var(--chc-magenta);
+}
+#uc-chc-{{ section.id }} .chc__pcard-compare {
+  font-size: .72rem;
+  color: #999;
+  text-decoration: line-through;
+}
+#uc-chc-{{ section.id }} .chc__pcard-rating {
+  font-size: .7rem;
+  color: var(--chc-mid);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+#uc-chc-{{ section.id }} .chc__pcard-star { color: #FFC200; }
+#uc-chc-{{ section.id }} .chc__atc-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background: var(--chc-magenta);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity .2s, transform .15s;
+}
+#uc-chc-{{ section.id }} .chc__atc-btn:hover { opacity: .88; transform: scale(.98); }
+#uc-chc-{{ section.id }} .chc__atc-btn.is-added { background: #2d8a4e; }
+
+/* slider nav */
+#uc-chc-{{ section.id }} .chc__snav {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+#uc-chc-{{ section.id }} .chc__snav-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--chc-line);
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background .18s, border-color .18s;
+}
+#uc-chc-{{ section.id }} .chc__snav-btn:hover {
+  background: var(--chc-magenta);
+  border-color: var(--chc-magenta);
+  color: white;
+}
+#uc-chc-{{ section.id }} .chc__snav-btn svg { width: 16px; height: 16px; }
+{%- endstyle -%}
+
+<div id="uc-chc-{{ section.id }}">
+  <div class="chc__heading">
+    <h2>{{ section.settings.heading | default: 'Saç Tipine Göre <em>Keşfet</em>' }}</h2>
+    {%- if section.settings.subheading != blank -%}
+      <p>{{ section.settings.subheading }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ── Tab Navigation ── {%- endcomment -%}
+  <div class="chc__tabs-wrap">
+    <button class="chc__tabs-arrow chc__tabs-arrow--prev" data-chtabs-prev aria-label="Önceki">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="chc__tabs" id="chc-tabs-{{ section.id }}">
+      {%- for block in section.blocks -%}
+        <button
+          class="chc__tab{% if forloop.first %} is-active{% endif %}"
+          data-chtab="{{ forloop.index0 }}"
+          type="button">
+          {%- if block.settings.tab_image != blank -%}
+            <img class="chc__tab-thumb"
+                 src="{{ block.settings.tab_image | image_url: width: 128 }}"
+                 alt="{{ block.settings.tab_label | escape }}"
+                 width="64" height="64" loading="lazy">
+          {%- else -%}
+            <span class="chc__tab-thumb" style="background:{{ block.settings.tab_color | default: '#f0e0eb' }};display:flex;align-items:center;justify-content:center;font-size:26px;">
+              {{ block.settings.tab_emoji | default: '💇' }}
+            </span>
+          {%- endif -%}
+          <span class="chc__tab-label">{{ block.settings.tab_label | default: 'Saç Tipi' }}</span>
+        </button>
+      {%- endfor -%}
+    </div>
+    <button class="chc__tabs-arrow chc__tabs-arrow--next" data-chtabs-next aria-label="Sonraki">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  {%- comment -%} ── Panels ── {%- endcomment -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign panel_id = 'chc-panel-' | append: forloop.index0 | append: '-' | append: section.id
+    -%}
+    <div
+      class="chc__panel{% if forloop.first %} is-active{% endif %}"
+      id="{{ panel_id }}"
+      {{ block.shopify_attributes }}>
+
+      <div class="chc__panel-inner">
+
+        {%- comment -%} LEFT: Influencer {%- endcomment -%}
+        <div class="chc__infl">
+          <div class="chc__infl-media">
+            {%- if block.settings.video_url != blank -%}
+              <video autoplay muted loop playsinline
+                     data-src="{{ block.settings.video_url }}"
+                     class="uc-lazy-vid">
+              </video>
+            {%- elsif block.settings.influencer_image != blank -%}
+              <img src="{{ block.settings.influencer_image | image_url: width: 760 }}"
+                   alt="{{ block.settings.influencer_name | escape }}"
+                   loading="lazy" width="380" height="507">
+            {%- else -%}
+              <div style="height:100%;background:linear-gradient(135deg,#f0e0eb,#fce4f3);display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:3rem;opacity:.4">🌿</span>
+              </div>
+            {%- endif -%}
+
+            <div class="chc__infl-stats">
+              {%- if block.settings.stat1_label != blank -%}
+                <div class="chc__stat">
+                  <span class="chc__stat-icon">{{ block.settings.stat1_icon | default: '👤' }}</span>
+                  <span class="chc__stat-label">{{ block.settings.stat1_label }}</span>
+                  <span class="chc__stat-val">{{ block.settings.stat1_val }}</span>
+                </div>
+              {%- endif -%}
+              {%- if block.settings.stat2_label != blank -%}
+                <div class="chc__stat">
+                  <span class="chc__stat-icon">{{ block.settings.stat2_icon | default: '⚡' }}</span>
+                  <span class="chc__stat-label">{{ block.settings.stat2_label }}</span>
+                  <span class="chc__stat-val">{{ block.settings.stat2_val }}</span>
+                </div>
+              {%- endif -%}
+              {%- if block.settings.stat3_label != blank -%}
+                <div class="chc__stat">
+                  <span class="chc__stat-icon">{{ block.settings.stat3_icon | default: '✨' }}</span>
+                  <span class="chc__stat-label">{{ block.settings.stat3_label }}</span>
+                  <span class="chc__stat-val">{{ block.settings.stat3_val }}</span>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="chc__infl-quote">
+            {%- if block.settings.influencer_name != blank -%}
+              <p class="chc__infl-name">{{ block.settings.influencer_name }}</p>
+            {%- endif -%}
+            {%- if block.settings.quote != blank -%}
+              <p>"{{ block.settings.quote }}"</p>
+            {%- endif -%}
+            <div class="chc__infl-meta">
+              {%- if block.settings.meta1_val != blank -%}
+                <div class="chc__infl-meta-item">
+                  <strong>{{ block.settings.meta1_label | default: 'Saç Tipi' }}</strong>
+                  {{ block.settings.meta1_val }}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.meta2_val != blank -%}
+                <div class="chc__infl-meta-item">
+                  <strong>{{ block.settings.meta2_label | default: 'Sorun' }}</strong>
+                  {{ block.settings.meta2_val }}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.meta3_val != blank -%}
+                <div class="chc__infl-meta-item">
+                  <strong>{{ block.settings.meta3_label | default: 'Şehir' }}</strong>
+                  {{ block.settings.meta3_val }}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} RIGHT: Products {%- endcomment -%}
+        <div class="chc__products-col">
+          <div class="chc__products-head">
+            <h3 class="chc__products-title">
+              {%- if block.settings.collection_title != blank -%}
+                {{ block.settings.collection_title }}
+              {%- else -%}
+                {{ block.settings.tab_label }} Serisi
+              {%- endif -%}
+            </h3>
+            {%- if block.settings.collection != blank -%}
+              <a class="chc__explore-btn" href="{{ block.settings.collection.url }}">
+                Tümünü Gör
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+            {%- endif -%}
+          </div>
+
+          <div class="chc__slider-wrap">
+            <div class="chc__slider" id="chc-slider-{{ forloop.index0 }}-{{ section.id }}">
+              {%- liquid
+                if block.settings.collection != blank
+                  assign products_source = block.settings.collection.products
+                  assign products_limit = block.settings.products_count | default: 6
+                else
+                  assign products_source = null
+                  assign products_limit = 0
+                endif
+              -%}
+
+              {%- if products_source != blank -%}
+                {%- for p in products_source limit: products_limit -%}
+                  {%- assign v = p.selected_or_first_available_variant -%}
+                  <div class="chc__pcard">
+                    <div class="chc__pcard-img-wrap">
+                      {%- if block.settings.card_badge != blank -%}
+                        <span class="chc__pcard-badge">{{ block.settings.card_badge }}</span>
+                      {%- endif -%}
+                      <a href="{{ p.url }}">
+                        {%- if p.featured_image -%}
+                          <img src="{{ p.featured_image | image_url: width: 440 }}"
+                               alt="{{ p.title | escape }}"
+                               loading="lazy" width="220" height="220">
+                        {%- endif -%}
+                      </a>
+                    </div>
+                    <div class="chc__pcard-info">
+                      <a href="{{ p.url }}" style="text-decoration:none;">
+                        <p class="chc__pcard-name">{{ p.title }}</p>
+                      </a>
+                      {%- if p.metafields.custom.subtitle != blank -%}
+                        <p class="chc__pcard-sub">{{ p.metafields.custom.subtitle }}</p>
+                      {%- elsif p.description != blank -%}
+                        <p class="chc__pcard-sub">{{ p.description | strip_html | truncate: 60 }}</p>
+                      {%- endif -%}
+                      <div class="chc__pcard-meta">
+                        <div>
+                          <span class="chc__pcard-price">{{ p.price | money }}</span>
+                          {%- if v.compare_at_price > p.price -%}
+                            <span class="chc__pcard-compare">{{ v.compare_at_price | money }}</span>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        class="chc__atc-btn"
+                        data-vid="{{ v.id }}"
+                        data-pname="{{ p.title | escape }}">
+                        Sepete Ekle
+                      </button>
+                    </div>
+                  </div>
+                {%- endfor -%}
+              {%- else -%}
+                {%- comment -%} Placeholder cards when collection not yet selected {%- endcomment -%}
+                {%- for i in (1..4) -%}
+                  <div class="chc__pcard" style="opacity:.35;">
+                    <div class="chc__pcard-img-wrap" style="background:#f0e8f0;height:220px;display:flex;align-items:center;justify-content:center;">
+                      <span style="font-size:2rem;">🌿</span>
+                    </div>
+                    <div class="chc__pcard-info">
+                      <p class="chc__pcard-name">Ürün {{ i }}</p>
+                      <p class="chc__pcard-sub">Koleksiyon seçin</p>
+                    </div>
+                  </div>
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+
+            <div class="chc__snav">
+              <button type="button" class="chc__snav-btn" data-chslider-prev="{{ forloop.index0 }}-{{ section.id }}" aria-label="Önceki">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button type="button" class="chc__snav-btn" data-chslider-next="{{ forloop.index0 }}-{{ section.id }}" aria-label="Sonraki">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  {%- endfor -%}
+</div>
+
+<script>
+(function(){
+  var root = document.getElementById('uc-chc-{{ section.id }}');
+  if (!root || root.dataset.ucChcInited) return;
+  root.dataset.ucChcInited = '1';
+
+  /* ── Tab switching ── */
+  var tabs   = root.querySelectorAll('.chc__tab');
+  var panels = root.querySelectorAll('.chc__panel');
+
+  function activateTab(idx) {
+    tabs.forEach(function(t,i){
+      t.classList.toggle('is-active', i === idx);
+    });
+    panels.forEach(function(p,i){
+      p.classList.toggle('is-active', i === idx);
+    });
+    var vid = panels[idx] ? panels[idx].querySelector('.uc-lazy-vid') : null;
+    if (vid && !vid.src && vid.dataset.src) {
+      vid.src = vid.dataset.src;
+      vid.play().catch(function(){});
+    }
+  }
+
+  tabs.forEach(function(btn, idx){
+    btn.addEventListener('click', function(){ activateTab(idx); });
+  });
+
+  /* ── Tab scroll arrows ── */
+  var tabsEl = root.querySelector('.chc__tabs');
+  var prevTabBtn = root.querySelector('[data-chtabs-prev]');
+  var nextTabBtn = root.querySelector('[data-chtabs-next]');
+  if (prevTabBtn) prevTabBtn.addEventListener('click', function(){ tabsEl.scrollBy({left:-120,behavior:'smooth'}); });
+  if (nextTabBtn) nextTabBtn.addEventListener('click', function(){ tabsEl.scrollBy({left:120,behavior:'smooth'}); });
+
+  /* ── Product slider nav ── */
+  root.querySelectorAll('[data-chslider-prev]').forEach(function(btn){
+    var key = btn.dataset.chsliderPrev;
+    var sl = document.getElementById('chc-slider-' + key);
+    if (sl) btn.addEventListener('click', function(){
+      var w = sl.querySelector('.chc__pcard');
+      sl.scrollBy({left: w ? -(w.getBoundingClientRect().width + 14) : -234, behavior:'smooth'});
+    });
+  });
+  root.querySelectorAll('[data-chslider-next]').forEach(function(btn){
+    var key = btn.dataset.chsliderNext;
+    var sl = document.getElementById('chc-slider-' + key);
+    if (sl) btn.addEventListener('click', function(){
+      var w = sl.querySelector('.chc__pcard');
+      sl.scrollBy({left: w ? (w.getBoundingClientRect().width + 14) : 234, behavior:'smooth'});
+    });
+  });
+
+  /* ── Add to Cart ── */
+  root.querySelectorAll('.chc__atc-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = parseInt(btn.dataset.vid, 10);
+      if (!id) return;
+      btn.textContent = 'Ekleniyor…';
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({id: id, quantity: 1})
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(){
+        btn.textContent = 'Eklendi ✓';
+        btn.classList.add('is-added');
+        try{ document.dispatchEvent(new CustomEvent('cart:refresh',{bubbles:true,detail:{open:true}})); }catch(e){}
+        setTimeout(function(){
+          btn.textContent = 'Sepete Ekle';
+          btn.classList.remove('is-added');
+        }, 1800);
+      })
+      .catch(function(){ btn.textContent = 'Hata'; setTimeout(function(){ btn.textContent = 'Sepete Ekle'; }, 1200); });
+    });
+  });
+
+  /* ── Lazy video on first active panel ── */
+  var firstVid = root.querySelector('.chc__panel.is-active .uc-lazy-vid');
+  if (firstVid && firstVid.dataset.src && !firstVid.src) {
+    firstVid.src = firstVid.dataset.src;
+    firstVid.play().catch(function(){});
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "UC Saç Tipine Göre Keşfet",
+  "tag": "section",
+  "class": "uc-curate-hair-care",
+  "settings": [
+    { "type": "header", "content": "Başlık" },
+    { "type": "text",   "id": "heading",    "label": "Başlık",  "default": "Saç Tipine Göre Keşfet" },
+    { "type": "text",   "id": "subheading", "label": "Alt başlık" },
+    { "type": "header", "content": "Renk & Stil" },
+    { "type": "color",  "id": "accent_color", "label": "Vurgu rengi",    "default": "#C5006A" },
+    { "type": "color",  "id": "section_bg",   "label": "Arka plan rengi","default": "#FAFAF8" },
+    { "type": "header", "content": "Boşluk" },
+    { "type": "range",  "id": "pad_top",    "label": "Üst boşluk (px)", "min": 0, "max": 120, "step": 8, "default": 64 },
+    { "type": "range",  "id": "pad_bottom", "label": "Alt boşluk (px)", "min": 0, "max": 120, "step": 8, "default": 64 }
+  ],
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "hair_type",
+      "name": "Saç Tipi",
+      "settings": [
+        { "type": "header",       "content": "Tab Görseli" },
+        { "type": "text",         "id": "tab_label",  "label": "Tab etiketi",  "default": "Kıvırcık Saç" },
+        { "type": "image_picker", "id": "tab_image",  "label": "Tab görseli (64×64 yuvarlak)" },
+        { "type": "color",        "id": "tab_color",  "label": "Görsel yoksa bg rengi", "default": "#f0e0eb" },
+        { "type": "text",         "id": "tab_emoji",  "label": "Görsel yoksa emoji",    "default": "🌀" },
+
+        { "type": "header",       "content": "Influencer Bilgileri" },
+        { "type": "text",         "id": "influencer_name",  "label": "İsim",    "default": "Ayşe K." },
+        { "type": "image_picker", "id": "influencer_image", "label": "Fotoğraf (3:4 önerilir)" },
+        { "type": "url",          "id": "video_url",        "label": "Video URL (.mp4 — opsiyonel, görsel yerine geçer)" },
+        { "type": "textarea",     "id": "quote",            "label": "Alıntı",  "default": "Urban Care sayesinde saçlarım inanılmaz derecede canlandı!" },
+
+        { "type": "header",       "content": "İstatistik Kartları (overlay)" },
+        { "type": "text",   "id": "stat1_icon",  "label": "Stat 1 emoji",  "default": "👤" },
+        { "type": "text",   "id": "stat1_label", "label": "Stat 1 etiket", "default": "YAŞ" },
+        { "type": "text",   "id": "stat1_val",   "label": "Stat 1 değer",  "default": "24" },
+        { "type": "text",   "id": "stat2_icon",  "label": "Stat 2 emoji",  "default": "⚡" },
+        { "type": "text",   "id": "stat2_label", "label": "Stat 2 etiket", "default": "SORUN" },
+        { "type": "text",   "id": "stat2_val",   "label": "Stat 2 değer",  "default": "Kırılganlık" },
+        { "type": "text",   "id": "stat3_icon",  "label": "Stat 3 emoji",  "default": "✨" },
+        { "type": "text",   "id": "stat3_label", "label": "Stat 3 etiket", "default": "TİP" },
+        { "type": "text",   "id": "stat3_val",   "label": "Stat 3 değer",  "default": "Kıvırcık 3A" },
+
+        { "type": "header",       "content": "Meta Bilgileri (profil altı)" },
+        { "type": "text",   "id": "meta1_label", "label": "Meta 1 etiket", "default": "Saç Tipi" },
+        { "type": "text",   "id": "meta1_val",   "label": "Meta 1 değer",  "default": "Kıvırcık 3A" },
+        { "type": "text",   "id": "meta2_label", "label": "Meta 2 etiket", "default": "Sorun" },
+        { "type": "text",   "id": "meta2_val",   "label": "Meta 2 değer",  "default": "Kırılganlık" },
+        { "type": "text",   "id": "meta3_label", "label": "Meta 3 etiket", "default": "Şehir" },
+        { "type": "text",   "id": "meta3_val",   "label": "Meta 3 değer",  "default": "İstanbul" },
+
+        { "type": "header",         "content": "Ürün Serisi" },
+        { "type": "collection",     "id": "collection",       "label": "Koleksiyon" },
+        { "type": "text",           "id": "collection_title", "label": "Başlık (boş bırakılırsa tab adı + Serisi kullanılır)" },
+        { "type": "range",          "id": "products_count",   "label": "Ürün sayısı",   "min": 2, "max": 8, "step": 1, "default": 4 },
+        { "type": "text",           "id": "card_badge",       "label": "Ürün kartı badge (opsiyonel)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "UC Saç Tipine Göre Keşfet",
+      "blocks": [
+        { "type": "hair_type", "settings": { "tab_label": "Kıvırcık Saç", "tab_emoji": "🌀", "influencer_name": "Ayşe K.", "quote": "Kıvırcık saçlarım hiç bu kadar iyi görünmemişti!" } },
+        { "type": "hair_type", "settings": { "tab_label": "Dalgalı Saç",  "tab_emoji": "~", "influencer_name": "Zeynep A.", "quote": "Dalgalarım artık çok daha belirgin ve bakımlı." } },
+        { "type": "hair_type", "settings": { "tab_label": "Düz Saç",      "tab_emoji": "-",  "influencer_name": "Merve B.", "quote": "Düz saçım artık çok daha parlak ve sağlıklı!" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

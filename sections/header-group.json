@@ -1,0 +1,240 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header Group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_tVTbV8": {
+          "type": "announcement",
+          "settings": {
+            "text": "400₺ ve Üzeri Siparişlerinizde Ücretsiz Kargo",
+            "bg_color": "#d81b8c",
+            "bg_gradient": "",
+            "text_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_tVTbV8"
+      ],
+      "settings": {
+        "home_page_only": false,
+        "enable_close": true,
+        "font_size": 12,
+        "read_time": 8
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "mega_menu_columns_gLt3Yk": {
+          "type": "mega-menu-columns",
+          "settings": {
+            "menu_link_title": "Shop",
+            "show_collection_images": true,
+            "collection_image_source": "featured",
+            "collection_image_ratio": "1",
+            "promo_image_ratio": "0.75",
+            "link_1": "",
+            "overline_1": "",
+            "heading_1": "Shade Finder",
+            "heading_size_1": "h3",
+            "button_label_1": "Take the Quiz",
+            "button_style_1": "link",
+            "text_position_1": "justify-center items-end",
+            "text_alignment_1": "text-center",
+            "color_scheme_1": "scheme-3",
+            "tint_color_1": "#000000",
+            "tint_opacity_1": 20,
+            "link_2": "",
+            "overline_2": "",
+            "heading_2": "Sale",
+            "heading_size_2": "h6",
+            "button_label_2": "",
+            "button_style_2": "btn btn--primary",
+            "text_position_2": "justify-center items-start",
+            "text_alignment_2": "text-center",
+            "color_scheme_2": "scheme-4",
+            "tint_color_2": "#000000",
+            "tint_opacity_2": 0
+          }
+        },
+        "mega_menu_coll_tabs_8B6Ngb": {
+          "type": "mega-menu-coll-tabs",
+          "settings": {
+            "menu_link_title": "",
+            "product_rows": "1",
+            "card_cutout": false,
+            "promo_image_ratio": "1",
+            "link_1": "",
+            "overline_1": "",
+            "heading_1": "",
+            "heading_size_1": "h5",
+            "button_label_1": "",
+            "button_style_1": "btn--primary",
+            "text_position_1": "justify-center items-end",
+            "text_alignment_1": "text-start",
+            "color_scheme_1": "scheme-3",
+            "tint_color_1": "#000000",
+            "tint_opacity_1": 0,
+            "link_2": "",
+            "overline_2": "",
+            "heading_2": "",
+            "heading_size_2": "h5",
+            "button_label_2": "",
+            "button_style_2": "btn--primary",
+            "text_position_2": "justify-center items-end",
+            "text_alignment_2": "text-start",
+            "color_scheme_2": "scheme-3",
+            "tint_color_2": "#000000",
+            "tint_opacity_2": 0,
+            "link_3": "",
+            "overline_3": "",
+            "heading_3": "",
+            "heading_size_3": "h5",
+            "button_label_3": "",
+            "button_style_3": "btn--primary",
+            "text_position_3": "justify-center items-end",
+            "text_alignment_3": "text-start",
+            "color_scheme_3": "scheme-3",
+            "tint_color_3": "#000000",
+            "tint_opacity_3": 0,
+            "link_4": "",
+            "overline_4": "",
+            "heading_4": "",
+            "heading_size_4": "h5",
+            "button_label_4": "",
+            "button_style_4": "btn--primary",
+            "text_position_4": "justify-center items-end",
+            "text_alignment_4": "text-start",
+            "color_scheme_4": "scheme-3",
+            "tint_color_4": "#000000",
+            "tint_opacity_4": 0,
+            "link_5": "",
+            "overline_5": "",
+            "heading_5": "",
+            "heading_size_5": "h5",
+            "button_label_5": "",
+            "button_style_5": "btn--primary",
+            "text_position_5": "justify-center items-end",
+            "text_alignment_5": "text-start",
+            "color_scheme_5": "scheme-3",
+            "tint_color_5": "#000000",
+            "tint_opacity_5": 0
+          }
+        },
+        "mega_menu_coll_cards_eP8zC8": {
+          "type": "mega-menu-coll-cards",
+          "settings": {
+            "menu_link_title": "Collections",
+            "card_style": "text-over",
+            "card_show_count": true,
+            "card_compact": true
+          }
+        },
+        "mega_menu_promos_T3ewdn": {
+          "type": "mega-menu-promos",
+          "settings": {
+            "menu_link_title": "",
+            "promo_image_ratio": "1",
+            "link_1": "",
+            "overline_1": "",
+            "heading_1": "",
+            "heading_size_1": "h3",
+            "button_label_1": "",
+            "button_style_1": "btn btn--primary",
+            "text_position_1": "justify-center items-end",
+            "text_alignment_1": "text-start",
+            "color_scheme_1": "scheme-3",
+            "tint_color_1": "#000000",
+            "tint_opacity_1": 0,
+            "link_2": "",
+            "overline_2": "",
+            "heading_2": "",
+            "heading_size_2": "h3",
+            "button_label_2": "",
+            "button_style_2": "btn btn--primary",
+            "text_position_2": "justify-center items-end",
+            "text_alignment_2": "text-start",
+            "color_scheme_2": "scheme-3",
+            "tint_color_2": "#000000",
+            "tint_opacity_2": 0,
+            "link_3": "",
+            "overline_3": "",
+            "heading_3": "",
+            "heading_size_3": "h3",
+            "button_label_3": "",
+            "button_style_3": "btn btn--primary",
+            "text_position_3": "justify-center items-end",
+            "text_alignment_3": "text-start",
+            "color_scheme_3": "scheme-3",
+            "tint_color_3": "#000000",
+            "tint_opacity_3": 0,
+            "link_4": "",
+            "overline_4": "",
+            "heading_4": "",
+            "heading_size_4": "h3",
+            "button_label_4": "",
+            "button_style_4": "btn btn--primary",
+            "text_position_4": "justify-center items-end",
+            "text_alignment_4": "text-start",
+            "color_scheme_4": "scheme-3",
+            "tint_color_4": "#000000",
+            "tint_opacity_4": 0,
+            "link_5": "",
+            "overline_5": "",
+            "heading_5": "",
+            "heading_size_5": "h3",
+            "button_label_5": "",
+            "button_style_5": "btn btn--primary",
+            "text_position_5": "justify-center items-end",
+            "text_alignment_5": "text-start",
+            "color_scheme_5": "scheme-3",
+            "tint_color_5": "#000000",
+            "tint_opacity_5": 0
+          }
+        }
+      },
+      "block_order": [
+        "mega_menu_columns_gLt3Yk",
+        "mega_menu_coll_tabs_8B6Ngb",
+        "mega_menu_coll_cards_eP8zC8",
+        "mega_menu_promos_T3ewdn"
+      ],
+      "settings": {
+        "enable_sticky": true,
+        "enable_divider_line": true,
+        "logo_position": "middle",
+        "logo": "shopify://shop_images/logourbancare.png",
+        "logo_width": 130,
+        "logo_width_mobile": 120,
+        "logo_h1": true,
+        "enable_transparency": false,
+        "contrast_logo": "shopify://shop_images/logourbancare.png",
+        "menu": "main-menu",
+        "parent_opens_child_mobile": true,
+        "enable_localization": true,
+        "cart_icon": "cart",
+        "enable_search": true,
+        "search_popular_menu": "",
+        "search_popular_products_title": "Popüler Ürünler",
+        "search_popular_products": [],
+        "search_popular_products_card_cutout": false
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

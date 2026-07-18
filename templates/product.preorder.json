@@ -1,0 +1,395 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor-sku": {
+          "type": "vendor-sku",
+          "settings": {
+            "show_vendor": false,
+            "vendor_is_link": false,
+            "show_sku": false,
+            "show_barcode": false
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "vendor_title": false
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_tax_and_shipping": true,
+            "show_percentage_discount": true
+          }
+        },
+        "variant-picker": {
+          "type": "variant-picker",
+          "settings": {
+            "prefix_choose": true,
+            "enable_dynamic_availability": true,
+            "show_backorder_text": true,
+            "swatch_dual_selectors": true,
+            "enable_size_chart": false,
+            "size_chart_variant": "Size",
+            "size_chart_page": ""
+          }
+        },
+        "buy-buttons": {
+          "type": "buy-buttons",
+          "settings": {
+            "show_qty_selector": true,
+            "enable_dynamic_checkout": true,
+            "show_pickup_availability": true,
+            "show_gift_card_recipient": false
+          }
+        },
+        "collapsible_content_awjMdn": {
+          "type": "collapsible-content",
+          "settings": {
+            "heading": "Açıklama",
+            "icon": "none",
+            "text": "<p>{{ product.description }}<\/p>",
+            "page": "",
+            "open": false
+          }
+        },
+        "collapsible_content_WcfmBB": {
+          "type": "collapsible-content",
+          "settings": {
+            "heading": "İçerikler",
+            "icon": "none",
+            "text": "<p>İçerik bilgisi ekleyin<\/p>",
+            "page": "",
+            "open": false
+          }
+        },
+        "collapsible_content_XUgQfE": {
+          "type": "collapsible-content",
+          "settings": {
+            "heading": "Nasıl Kullanılır",
+            "icon": "none",
+            "text": "<p>Kullanım bilgisi ekleyin<\/p>",
+            "page": "",
+            "open": false
+          }
+        },
+        "selling_points_NULgBB": {
+          "type": "selling-points",
+          "settings": {
+            "title": "",
+            "layout": "carousel",
+            "usp_icon_width": 80,
+            "usp_1_icon": "carbon-neutral",
+            "usp_1_text": "",
+            "usp_2_icon": "cruelty-free",
+            "usp_2_text": "",
+            "usp_3_icon": "reuseable-packaging",
+            "usp_3_text": "",
+            "usp_4_icon": "eco-friendly",
+            "usp_4_text": "",
+            "usp_5_icon": "none",
+            "usp_5_text": "",
+            "usp_6_icon": "none",
+            "usp_6_text": ""
+          }
+        },
+        "complementary_AGN3HJ": {
+          "type": "complementary",
+          "settings": {
+            "heading": "Birlikte kullanın",
+            "products_to_show": 4
+          }
+        },
+        "share_NnBbxB": {
+          "type": "share",
+          "settings": {
+            "show_twitter": true,
+            "show_facebook": true,
+            "show_pinterest": true
+          }
+        }
+      },
+      "block_order": [
+        "vendor-sku",
+        "title",
+        "price",
+        "variant-picker",
+        "buy-buttons",
+        "collapsible_content_awjMdn",
+        "collapsible_content_WcfmBB",
+        "collapsible_content_XUgQfE",
+        "selling_points_NULgBB",
+        "complementary_AGN3HJ",
+        "share_NnBbxB"
+      ],
+      "settings": {
+        "media_layout": "stacked",
+        "media_stacked_type": "2-1",
+        "media_size": "medium",
+        "media_ratio": "natural",
+        "media_crop": "none",
+        "enable_video_looping": false,
+        "enable_zoom": true,
+        "enable_lightbox_mobile": false,
+        "hover_zoom": "large",
+        "stick_media": true,
+        "stacked_scroll": "always",
+        "underline_active": false,
+        "enable_video_autoplay": false,
+        "slider_full_width_mobile": true,
+        "media_thumbs": "desktop",
+        "border_color": "#000000",
+        "bg_color": "#f9f7f8",
+        "sticky_atc_panel": true,
+        "sticky_atc_mobile": true,
+        "enable_media_grouping": false,
+        "media_grouping_option": "Color,Colour,Couleur,Farbe"
+      }
+    },
+    "rich_text_KmjBrG": {
+      "type": "rich-text",
+      "blocks": {
+        "subheading_itLVC8": {
+          "type": "subheading",
+          "settings": {
+            "text": "Çok Yakında"
+          }
+        },
+        "heading_MNpE8j": {
+          "type": "heading",
+          "settings": {
+            "heading": "{{ product.title }}",
+            "heading_size": "h1",
+            "heading_h1": false
+          }
+        },
+        "text_P3kYnF": {
+          "type": "text",
+          "settings": {
+            "text": "<p>{{ product.description }}<\/p>",
+            "enlarge_text": false
+          }
+        }
+      },
+      "block_order": [
+        "subheading_itLVC8",
+        "heading_MNpE8j",
+        "text_P3kYnF"
+      ],
+      "name": "Rich text",
+      "settings": {
+        "text_align": "text-start",
+        "text_width_override": true,
+        "text_max_width": 900,
+        "text_column_to_edge": true,
+        "mob_center_text": false,
+        "full_width": true,
+        "color_scheme": "scheme-1",
+        "background_mode": "default",
+        "background_color": "#e8dccc",
+        "background_gradient_stop_1": "#ffffff",
+        "background_gradient_stop_2": "#f7f3ee",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)",
+        "section_join_mode": "default"
+      }
+    },
+    "image_banner_4Hpyey": {
+      "type": "image-banner",
+      "blocks": {
+        "text_MeyzP9": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Yepyeni <em><strong>URBAN Care<\/strong><\/em><\/p>",
+            "enlarge_text": true
+          }
+        },
+        "heading_HPNm6R": {
+          "type": "heading",
+          "settings": {
+            "heading": "Çok yakında!",
+            "heading_size_desktop": "x-large-heading",
+            "heading_size_mobile": "x-large-heading",
+            "heading_h1": false
+          }
+        },
+        "countdown_NF4wYa": {
+          "type": "countdown",
+          "settings": {
+            "end_date": "",
+            "end_time": "",
+            "end_text": "",
+            "hide_on_end": false,
+            "number_size": 40,
+            "number_font": "heading",
+            "show_timer_labels": true
+          }
+        },
+        "button_Qjpqhi": {
+          "type": "button",
+          "settings": {
+            "button_1_label": "Şimdi ön sipariş verin!",
+            "button_1_link": "",
+            "button_1_style": "btn btn--primary",
+            "button_2_label": "",
+            "button_2_link": "",
+            "button_2_style": "btn btn--primary"
+          }
+        }
+      },
+      "block_order": [
+        "text_MeyzP9",
+        "heading_HPNm6R",
+        "countdown_NF4wYa",
+        "button_Qjpqhi"
+      ],
+      "name": "Image banner & countdown",
+      "settings": {
+        "image_desktop": "",
+        "image_mobile": "",
+        "url": "",
+        "height_mode": "fixed",
+        "fixed_height_desktop": 800,
+        "fixed_height_mobile": 480,
+        "mobile_stacked": false,
+        "tint_color": "#000000",
+        "tint_opacity": 10,
+        "overlay_position": "justify-end items-end",
+        "overlay_text_align": "text-end",
+        "overlay_width_override": true,
+        "overlay_max_width": 640,
+        "mob_center_text": false,
+        "color_scheme": "scheme-3",
+        "full_width": true,
+        "enable_top_fade": false,
+        "top_fade_depth": 100,
+        "top_fade_color": "#ffffff",
+        "enable_bottom_fade": false,
+        "bottom_fade_depth": 100,
+        "bottom_fade_color": "#ffffff",
+        "background_mode": "color",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#ffffff",
+        "background_gradient_stop_2": "#f7f4f0",
+        "background_gradient_curve": "ease-up",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)",
+        "section_join_mode": "tight",
+        "scrollanim_image": "",
+        "scrollanim_text": ""
+      }
+    },
+    "parallax_image_with_text_7iRah8": {
+      "type": "parallax-image-with-text",
+      "blocks": {
+        "roundel_EpeUf3": {
+          "type": "roundel",
+          "settings": {
+            "color": "#a6465a",
+            "outer_text": "BEAUTIFUL RESULTS - GUARANTEED -",
+            "outer_text_line_offset": 2.7,
+            "outer_text_letter_spacing": 2.6,
+            "inner_type": "icon_cosmetic",
+            "inner_text_1": "Inner",
+            "inner_text_1_size": 20,
+            "inner_text_2": "Text",
+            "inner_text_2_size": 26,
+            "inner_text_font": "body",
+            "icon": "box",
+            "usp_icon": "nutraceuticals",
+            "roundel_position": "right",
+            "roundel_size": 170,
+            "spin": "scroll",
+            "enable_inner_frame": false,
+            "enable_outer_frame": false
+          }
+        },
+        "pattern_GpNfAp": {
+          "type": "pattern",
+          "settings": {
+            "style": "1",
+            "color": "#efeae0",
+            "opacity": 50
+          }
+        }
+      },
+      "block_order": [
+        "roundel_EpeUf3",
+        "pattern_GpNfAp"
+      ],
+      "name": "Parallax banner",
+      "settings": {
+        "heading_line_1": "Işıltılı bakım",
+        "heading_line_2": "doğal güzellik",
+        "heading_size_desktop": "x-large-heading",
+        "heading_size_mobile": "x-large-heading",
+        "heading_h1": false,
+        "image": "",
+        "image_width_desktop": 440,
+        "image_overlap_desktop": 30,
+        "image_width_mobile": 220,
+        "image_overlap_mobile": 30,
+        "image_link": "",
+        "enable_image_shadow": false,
+        "enable_rounded_corners": true,
+        "image_overlap_mode": "behind",
+        "text": "<h4>Her gün kendinizi <em>özel<\/em> hissedin.<\/h4>",
+        "enlarge_text": true,
+        "button_1_label": "Öne Çıkanlar",
+        "button_1_link": "",
+        "button_1_style": "btn btn--primary",
+        "button_2_label": "Çok Satanlar",
+        "button_2_link": "",
+        "button_2_style": "btn btn--primary",
+        "text_width_override": false,
+        "text_max_width": 640,
+        "color_scheme": "scheme-2",
+        "background_mode": "simple-gradient",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#ffffff",
+        "background_gradient_stop_2": "#f7f4f0",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)"
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "disabled": true,
+      "settings": {
+        "heading": "Bunları da Beğenebilirsiniz",
+        "heading_size": "h4",
+        "heading_align": "text-center",
+        "mob_center_text": true,
+        "color_scheme": "",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)",
+        "products_to_show": 4,
+        "products_per_row": "2",
+        "products_per_row_desktop": "4",
+        "layout": "carousel"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich_text_KmjBrG",
+    "image_banner_4Hpyey",
+    "parallax_image_with_text_7iRah8",
+    "recommendations"
+  ]
+}

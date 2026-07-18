@@ -1,0 +1,52 @@
+# Theme Check configuration for the UrbanCare theme.
+#
+# All checks stay ENABLED. Where the stock Beautify theme trips a check in a way
+# we do not intend to fix (patching vendor code makes theme updates painful), the
+# offending files are listed under that check's `ignore:` instead of switching the
+# check off globally. New and modified files are therefore still fully checked.
+#
+# Re-run `shopify theme check` after removing an entry to confirm it is still needed.
+
+extends: theme-check:recommended
+
+# Beautify renders dynamic HTML tag names, e.g.
+#   <{% if block.settings.heading_h1 %}h1{% else %}h2{% endif %} class="...">
+# Shopify renders this correctly, but Theme Check's HTML parser cannot represent a
+# Liquid tag in the tag-name position and reports a syntax error. Scoped to the
+# known vendor files so genuinely malformed markup elsewhere is still caught.
+LiquidHTMLSyntaxError:
+  enabled: true
+  ignore:
+    - sections/before-after-image-slider.liquid
+    - sections/brands.liquid
+    - sections/collection-list.liquid
+    - sections/contact-form.liquid
+    - sections/faq.liquid
+    - sections/featured-blog.liquid
+    - sections/featured-collection.liquid
+    - sections/get-the-look.liquid
+    - sections/main-list-collections-banner.liquid
+    - sections/main-list-collections.liquid
+    - sections/media-with-text.liquid
+    - sections/newsletter.liquid
+    - sections/product-list.liquid
+    - sections/quiz.liquid
+    - sections/rich-text.liquid
+    - snippets/media-gallery.liquid
+
+# These sections use the deprecated `templates` schema attribute, which Shopify
+# replaced with `enabled_on` / `disabled_on` in January 2023. It still functions,
+# so this is a migration TODO rather than a break. See README "Known baseline".
+ValidSchema:
+  enabled: true
+  ignore:
+    - sections/featured-product.liquid
+    - sections/recently-viewed.liquid
+    - sections/uc-fbt.liquid
+
+# layout/theme.liquid loads a script without defer/async. Deliberate in the vendor
+# theme; revisit if we ever audit render-blocking resources.
+ParserBlockingScript:
+  enabled: true
+  ignore:
+    - layout/theme.liquid

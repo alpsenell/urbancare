@@ -1,0 +1,114 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "aside",
+  "name": "Overlay Group",
+  "sections": {
+    "cart-drawer": {
+      "type": "cart-drawer",
+      "settings": {
+        "show_backorder_text": true,
+        "suggested_products_heading": "Suggested products",
+        "suggested_products": [],
+        "stick_footer": true,
+        "show_order_note": true,
+        "show_tax_and_shipping": true,
+        "show_checkout_button": true,
+        "cart_terms_page": ""
+      }
+    },
+    "pop-up": {
+      "type": "pop-up",
+      "blocks": {
+        "subheading_TMzJCM": {
+          "type": "subheading",
+          "settings": {
+            "text": "Welcome to Beautify"
+          }
+        },
+        "heading_JwxXNd": {
+          "type": "heading",
+          "settings": {
+            "heading": "Sign up and get 30% off your order",
+            "heading_size": "h5"
+          }
+        },
+        "text_8K4HgH": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Bag a <em>beautiful</em> discount on your first order when you sign up to our newsletter.</p>",
+            "text_size": ""
+          }
+        },
+        "newsletter_signup_fRK4N7": {
+          "type": "newsletter-signup",
+          "settings": {}
+        },
+        "button_6CzHWq": {
+          "type": "button",
+          "settings": {
+            "button_1_label": "Maybe later, I wanna shop!",
+            "button_1_style": "btn btn--primary",
+            "button_1_link": "shopify://collections",
+            "button_2_label": "",
+            "button_2_style": "btn btn--secondary",
+            "button_2_link": ""
+          }
+        },
+        "text_ExTX8C": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Entice customers to sign up for your mailing list with discounts or exclusive offers.</p>",
+            "text_size": "small-text"
+          }
+        },
+        "social_ECNLxa": {
+          "type": "social",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "subheading_TMzJCM",
+        "heading_JwxXNd",
+        "text_8K4HgH",
+        "newsletter_signup_fRK4N7",
+        "button_6CzHWq",
+        "text_ExTX8C",
+        "social_ECNLxa"
+      ],
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "delay": 8,
+        "show_to_guests_only": true,
+        "dismiss_days": 30,
+        "show_on_mobile": true,
+        "popup_width": 480,
+        "text_align": "text-center",
+        "image_size": 290,
+        "image_position": "left",
+        "mobile_image_enabled": false,
+        "mobile_image_height": 250,
+        "mobile_image_position": "top",
+        "image_cutout": true,
+        "image_cutout_shadow": false,
+        "cutout_offset": 0,
+        "cutout_radius": 26,
+        "color_scheme": "scheme-1",
+        "tint_color": "#ffffff",
+        "tint_opacity": 0
+      }
+    }
+  },
+  "order": [
+    "cart-drawer",
+    "pop-up"
+  ]
+}

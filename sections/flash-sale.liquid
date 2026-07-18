@@ -1,0 +1,502 @@
+{%- comment -%}
+  urban-care-flash-sale.liquid
+  INO Flash Sale → Urban Care adaptasyonu
+  Brand: #C5006A magenta · #1a1a1a text · beyaz kart
+  Carousel scroll-snap · geri sayım · indirim kodu · ac/kapa
+{%- endcomment -%}
+
+{%- capture cards_html -%}
+  {%- if section.settings.master_enabled -%}
+  {%- for block in section.blocks -%}
+    {%- if block.settings.enabled and block.settings.product != blank -%}
+      {%- assign p = block.settings.product -%}
+      {%- assign v = p.selected_or_first_available_variant -%}
+      {%- if v != blank -%}
+        {%- liquid
+          assign orig = v.price
+          assign sale = v.price
+          assign pct = 0
+          if v.compare_at_price and v.compare_at_price > v.price
+            assign orig = v.compare_at_price
+            assign sale = v.price
+            assign diff = v.compare_at_price | minus: v.price | times: 100.0
+            assign pct = diff | divided_by: v.compare_at_price | round
+          elsif block.settings.discount_percent > 0
+            assign pct = block.settings.discount_percent
+            assign factor = 100 | minus: pct
+            assign sale = v.price | times: factor | divided_by: 100
+            assign orig = v.price
+          endif
+        -%}
+        <div class="uc-flash__card"
+             {{ block.shopify_attributes }}
+             data-variant="{{ v.id }}"
+             data-code="{{ block.settings.discount_code | escape }}"
+             data-start="{{ block.settings.start_at | escape }}"
+             data-end="{{ block.settings.end_at | escape }}"
+             data-countdown="{% if section.settings.show_countdown %}1{% else %}0{% endif %}">
+
+          <a class="uc-flash__media" href="{{ p.url }}">
+            {%- if p.featured_image -%}
+              <img src="{{ p.featured_image | image_url: width: 480 }}"
+                   alt="{{ p.title | escape }}" loading="lazy" width="240" height="240">
+            {%- endif -%}
+            {%- if pct > 0 -%}
+              <span class="uc-flash__badge">%{{ pct }}</span>
+            {%- endif -%}
+          </a>
+
+          <div class="uc-flash__info">
+            <span class="uc-flash__eyebrow">{{ section.settings.badge_text | escape }}</span>
+            <a class="uc-flash__name" href="{{ p.url }}">{{ p.title | escape }}</a>
+
+            {%- if block.settings.subtext != blank -%}
+              <p class="uc-flash__sub">{{ block.settings.subtext | escape }}</p>
+            {%- endif -%}
+
+            <div class="uc-flash__prices">
+              {%- if pct > 0 -%}
+                <span class="uc-flash__orig">{{ orig | money }}</span>
+              {%- endif -%}
+              <span class="uc-flash__sale">{{ sale | money }}</span>
+            </div>
+
+            {%- if section.settings.show_countdown -%}
+              <div class="uc-flash__timer" data-timer hidden>
+                <div class="uc-flash__seg" data-days hidden>
+                  <b data-d>0</b><i>Gün</i>
+                </div>
+                <div class="uc-flash__seg"><b data-h>00</b><i>Saat</i></div>
+                <div class="uc-flash__seg"><b data-m>00</b><i>Dk</i></div>
+                <div class="uc-flash__seg"><b data-s>00</b><i>Sn</i></div>
+              </div>
+            {%- endif -%}
+
+            <button type="button" class="uc-flash__cta" data-add>
+              {{ section.settings.cta_label | escape | default: 'Sepete Ekle' }}
+            </button>
+          </div>
+
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if cards_html contains 'uc-flash__card' -%}
+
+  {%- style -%}
+    #uc-flash-{{ section.id }} {
+      --uc-brand:    #C5006A;
+      --uc-brand-dk: #9e0055;
+      --uc-text:     #1a1a1a;
+      --uc-muted:    #666;
+      --uc-border:   #eedde8;
+      --uc-bg-card:  #ffffff;
+      --uc-bg-soft:  #fdf5f9;
+      --gap: 12px;
+      --peek: 80%;
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+      background: var(--uc-bg-soft);
+    }
+
+    /* Başlık */
+    #uc-flash-{{ section.id }} .uc-flash__head {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--uc-text);
+      margin: 0;
+      letter-spacing: -.02em;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__lightning {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--uc-brand);
+      border-radius: 50%;
+      color: #fff;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* Grid / carousel */
+    #uc-flash-{{ section.id }} .uc-flash__grid {
+      display: flex;
+      gap: var(--gap);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 0 12px;
+      max-width: 1000px;
+      margin-inline: auto;
+      scrollbar-width: none;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__grid::-webkit-scrollbar { display: none; }
+
+    /* Kart */
+    #uc-flash-{{ section.id }} .uc-flash__card {
+      box-sizing: border-box;
+      flex: 0 0 var(--peek);
+      scroll-snap-align: start;
+      background: var(--uc-bg-card);
+      border: 1px solid var(--uc-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 12px rgba(197,0,106,.08);
+      transition: box-shadow .2s ease, transform .2s ease;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__card:only-child { flex-basis: 100%; }
+    #uc-flash-{{ section.id }} .uc-flash__card:hover {
+      box-shadow: 0 6px 20px rgba(197,0,106,.15);
+      transform: translateY(-2px);
+    }
+
+    /* Görsel alanı */
+    #uc-flash-{{ section.id }} .uc-flash__media {
+      display: block;
+      position: relative;
+      aspect-ratio: 1 / 1;
+      background: #f8f0f5;
+      overflow: hidden;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+      display: block;
+      transition: transform .35s ease;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__card:hover .uc-flash__media img {
+      transform: scale(1.04);
+    }
+
+    /* % rozet — görsel üzerinde */
+    #uc-flash-{{ section.id }} .uc-flash__badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--uc-brand);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      padding: 4px 9px;
+      border-radius: 999px;
+      line-height: 1;
+    }
+
+    /* Bilgi alanı */
+    #uc-flash-{{ section.id }} .uc-flash__info {
+      padding: 14px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 6px;
+    }
+
+    #uc-flash-{{ section.id }} .uc-flash__eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--uc-brand);
+    }
+
+    #uc-flash-{{ section.id }} .uc-flash__name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--uc-text);
+      text-decoration: none;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__name:hover { color: var(--uc-brand); }
+
+    #uc-flash-{{ section.id }} .uc-flash__sub {
+      font-size: 12px;
+      color: var(--uc-muted);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* Fiyatlar */
+    #uc-flash-{{ section.id }} .uc-flash__prices {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__orig {
+      font-size: 13px;
+      color: rgba(0,0,0,.38);
+      text-decoration: line-through;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__sale {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--uc-brand);
+      line-height: 1;
+    }
+
+    /* Geri sayım */
+    #uc-flash-{{ section.id }} .uc-flash__timer {
+      display: flex;
+      gap: 5px;
+      align-items: stretch;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__seg {
+      flex: 1;
+      text-align: center;
+      background: var(--uc-brand);
+      color: #fff;
+      border-radius: 8px;
+      padding: 5px 4px 4px;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__seg b {
+      display: block;
+      font-size: 15px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__seg i {
+      display: block;
+      font-style: normal;
+      font-size: 9px;
+      opacity: .8;
+      margin-top: 2px;
+    }
+
+    /* CTA butonu */
+    #uc-flash-{{ section.id }} .uc-flash__cta {
+      margin-top: auto;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 999px;
+      background: var(--uc-brand);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 11px 18px;
+      cursor: pointer;
+      transition: background .15s ease, transform .05s ease;
+      letter-spacing: .01em;
+    }
+    #uc-flash-{{ section.id }} .uc-flash__cta:hover { background: var(--uc-brand-dk); }
+    #uc-flash-{{ section.id }} .uc-flash__cta:active { transform: translateY(1px); }
+    #uc-flash-{{ section.id }} .uc-flash__cta[disabled] { opacity: .65; cursor: default; }
+
+    /* Masaüstü: sabit sütun */
+    @media (min-width: 700px) {
+      #uc-flash-{{ section.id }} { --peek: 100%; }
+      #uc-flash-{{ section.id }} .uc-flash__card {
+        flex-basis: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+      }
+    }
+  {%- endstyle -%}
+
+  <div id="uc-flash-{{ section.id }}"
+       class="uc-flash color-{{ section.settings.color_scheme }}">
+    <div class="page-width">
+
+      {%- if section.settings.heading != blank -%}
+        <div class="uc-flash__head">
+          <span class="uc-flash__lightning">⚡</span>
+          <h2 class="uc-flash__title">{{ section.settings.heading | escape }}</h2>
+          <span class="uc-flash__lightning">⚡</span>
+        </div>
+      {%- endif -%}
+
+      <div class="uc-flash__grid" style="--cols:{{ section.settings.columns_desktop }};">
+        {{ cards_html }}
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var root = document.getElementById('uc-flash-{{ section.id }}');
+    if (!root || root.dataset.inited) return;
+    root.dataset.inited = '1';
+    var design = !!(window.Shopify && Shopify.designMode);
+
+    function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+    var cards = Array.prototype.slice.call(root.querySelectorAll('.uc-flash__card'));
+    var live = cards.length;
+    var pendingStart = [];
+
+    function hideCard(card){
+      if (card.style.display !== 'none'){
+        card.style.display = 'none';
+        live--;
+        if (live <= 0 && !design) root.style.display = 'none';
+      }
+    }
+    function revealCard(card){
+      if (card.style.display === 'none'){
+        card.style.display = '';
+        live++;
+        if (root.style.display === 'none') root.style.display = '';
+      }
+    }
+
+    cards.forEach(function(card){
+      var startStr = card.getAttribute('data-start');
+      var endStr   = card.getAttribute('data-end');
+      var doCount  = card.getAttribute('data-countdown') === '1';
+      var timer    = card.querySelector('[data-timer]');
+      var start    = startStr ? new Date(startStr.replace(' ', 'T')) : null;
+      var end      = endStr   ? new Date(endStr.replace(' ', 'T'))   : null;
+      var hasValidStart = start && !isNaN(start.getTime());
+      var started  = design || !hasValidStart || Date.now() >= start.getTime();
+      var iv;
+
+      function tick(){
+        if (!end || isNaN(end.getTime())) return;
+        var diff = end.getTime() - Date.now();
+        if (diff <= 0){
+          if (iv) clearInterval(iv);
+          if (!design) hideCard(card);
+          return;
+        }
+        var s = Math.floor(diff / 1000);
+        var d = Math.floor(s / 86400); s -= d * 86400;
+        var h = Math.floor(s / 3600);  s -= h * 3600;
+        var m = Math.floor(s / 60);    s -= m * 60;
+        if (timer){
+          timer.hidden = false;
+          var dd = timer.querySelector('[data-days]');
+          if (d > 0){ if (dd){ dd.hidden = false; dd.querySelector('[data-d]').textContent = d; } }
+          else if (dd){ dd.hidden = true; }
+          var hh = timer.querySelector('[data-h]');
+          var mm = timer.querySelector('[data-m]');
+          var ss = timer.querySelector('[data-s]');
+          if (hh) hh.textContent = pad(h);
+          if (mm) mm.textContent = pad(m);
+          if (ss) ss.textContent = pad(s);
+        }
+      }
+
+      function startCountdownIfNeeded(){
+        if (doCount && end && !isNaN(end.getTime())){ tick(); iv = setInterval(tick, 1000); }
+      }
+
+      if (!started){
+        card.style.display = 'none';
+        live--;
+        pendingStart.push({ card: card, start: start, onStart: startCountdownIfNeeded });
+      } else {
+        startCountdownIfNeeded();
+      }
+    });
+
+    if (live <= 0 && !design) root.style.display = 'none';
+
+    if (pendingStart.length){
+      var startIv = setInterval(function(){
+        var now = Date.now();
+        pendingStart = pendingStart.filter(function(item){
+          if (!item.start || isNaN(item.start.getTime()) || now >= item.start.getTime()){
+            revealCard(item.card); item.onStart(); return false;
+          }
+          return true;
+        });
+        if (!pendingStart.length) clearInterval(startIv);
+      }, 1000);
+    }
+
+    root.addEventListener('click', function(e){
+      var b = e.target && e.target.closest ? e.target.closest('[data-add]') : null;
+      if (!b) return;
+      e.preventDefault();
+      var card = b.closest('.uc-flash__card');
+      if (!card) return;
+      var VID  = card.getAttribute('data-variant');
+      var CODE = card.getAttribute('data-code');
+      if (!VID || b.disabled) return;
+      b.disabled = true;
+      var orig = b.textContent;
+      b.textContent = 'Ekleniyor...';
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: [{ id: Number(VID), quantity: 1 }] })
+      })
+      .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+      .then(function(){
+        if (CODE){
+          window.location.href = '/discount/' + encodeURIComponent(CODE) + '?redirect=/cart';
+        } else {
+          b.textContent = 'Eklendi ✓';
+          try { document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true, detail: { open: true } })); } catch(e) {}
+          setTimeout(function(){ b.textContent = orig; b.disabled = false; }, 1800);
+        }
+      })
+      .catch(function(){ b.textContent = orig; b.disabled = false; });
+    });
+  })();
+  </script>
+
+{%- elsif request.design_mode -%}
+  <div class="page-width" style="padding:28px;text-align:center;color:rgba(0,0,0,.45);font-size:13px;border:1px dashed rgba(197,0,106,.25);border-radius:14px;max-width:760px;margin-inline:auto;background:#fdf5f9;">
+    Flash Sale bandı gizli. Göstermek için: (1) <b>"Flash sale bandını yayınla"</b> işaretli olsun, (2) en az bir blokta <b>"Bu ürünü göster"</b> açık ve ürün seçili olsun. Aktif flash yokken bu alan ziyaretçiye görünmez.
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "UC Flash Sale",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "master_enabled",    "label": "Flash sale bandını yayınla (genel aç/kapa)", "default": true, "info": "Kapatırsan tüm band ziyaretçiden gizlenir; blokları silmene gerek kalmaz." },
+    { "type": "text",     "id": "heading",            "label": "Başlık (opsiyonel)",   "default": "Flash Sale" },
+    { "type": "text",     "id": "badge_text",         "label": "Rozet metni",          "default": "FLASH SALE" },
+    { "type": "text",     "id": "cta_label",          "label": "Buton metni",          "default": "Sepete Ekle" },
+    { "type": "checkbox", "id": "show_countdown",     "label": "Geri sayım göster",    "default": true },
+    { "type": "range",    "id": "columns_desktop",    "min": 1, "max": 3, "step": 1,  "label": "Masaüstü sütun sayısı", "default": 3 },
+    { "type": "color_scheme", "id": "color_scheme",  "label": "Renk şeması" },
+    { "type": "range",    "id": "padding_top",        "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Üst boşluk",  "default": 32 },
+    { "type": "range",    "id": "padding_bottom",     "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Alt boşluk",  "default": 32 }
+  ],
+  "blocks": [
+    {
+      "type": "flash_product",
+      "name": "Flash ürünü",
+      "settings": [
+        { "type": "checkbox", "id": "enabled",          "label": "Bu ürünü göster",                   "default": true },
+        { "type": "product",  "id": "product",          "label": "Ürün" },
+        { "type": "number",   "id": "discount_percent", "label": "İndirim yüzdesi (compare-at yoksa kullanılır)", "default": 0 },
+        { "type": "text",     "id": "start_at",         "label": "Başlangıç zamanı (opsiyonel)", "info": "Biçim: 2026-06-30 09:00 (mağaza saati). Boş ise hemen görünür." },
+        { "type": "text",     "id": "end_at",           "label": "Bitiş zamanı",                "info": "Biçim: 2026-06-30 23:59 (mağaza saati). Boş ise geri sayım olmaz." },
+        { "type": "text",     "id": "discount_code",    "label": "İndirim kodu (opsiyonel)",    "info": "Girilirse Sepete Ekle sonrası kod otomatik uygulanır." },
+        { "type": "text",     "id": "subtext",          "label": "Alt metin (opsiyonel)" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    { "name": "UC Flash Sale", "blocks": [ { "type": "flash_product" }, { "type": "flash_product" }, { "type": "flash_product" } ] }
+  ]
+}
+{% endschema %}

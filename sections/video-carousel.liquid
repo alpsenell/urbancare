@@ -1,0 +1,467 @@
+{%- if section.blocks.size > 0 -%}
+  <link rel="stylesheet" href="{{ 'video-carousel.css' | asset_url }}">
+  <link rel="stylesheet" href="{{ 'quick-add.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'product.css' | asset_url }}" media="print" onload="this.media='all'">
+
+  <script src="{{ 'quick-add.js' | asset_url }}" defer></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer></script>
+
+  {%- liquid
+    assign color_scheme = section.settings.color_scheme
+  %}
+
+  {%- style -%}
+    {%- if section.settings.background_mode == 'color' -%}
+      #{{ section.id }} { background: {{ section.settings.background_color }}; }
+    {%- elsif section.settings.background_mode == 'simple-gradient' -%}
+      #{{ section.id }} {
+        background: {% render 'custom-gradient',
+                        type: section.settings.background_gradient_curve,
+                        start_color: section.settings.background_gradient_stop_1,
+                        end_color: section.settings.background_gradient_stop_2
+                    %};
+      }
+    {%- elsif section.settings.background_mode == 'advanced-gradient' -%}
+      #{{ section.id }} { background: {{ section.settings.background_gradient }}; }
+    {%- endif -%}
+
+    /* ── UC video carousel overrides ── */
+    #{{ section.id }} .uc-vc__track {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 4px 0 8px;
+    }
+    #{{ section.id }} .uc-vc__track::-webkit-scrollbar { display: none; }
+    #{{ section.id }} .uc-vc__item {
+      flex: 0 0 var(--vc-w, 300px);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+    }
+    #{{ section.id }} .uc-vc__media {
+      position: relative;
+      aspect-ratio: 9/16;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #1a1a1a;
+      cursor: pointer;
+    }
+    #{{ section.id }} .uc-vc__vid {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #{{ section.id }} .uc-vc__scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.3) 0%, transparent 25%, transparent 60%, rgba(0,0,0,.45));
+      pointer-events: none;
+      z-index: 2;
+    }
+    #{{ section.id }} .uc-vc__top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 3;
+      padding: 12px 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #{{ section.id }} .uc-vc__handle {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-shadow: 0 1px 4px rgba(0,0,0,.5);
+      text-decoration: none;
+    }
+    #{{ section.id }} .uc-vc__ctrlrow {
+      display: flex;
+      gap: 7px;
+    }
+    #{{ section.id }} .uc-vc__cbtn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.32);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1.5px solid rgba(255,255,255,.45);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; padding: 0;
+    }
+    #{{ section.id }} .uc-vc__cbtn svg { width: 15px; height: 15px; }
+    /* product card */
+    #{{ section.id }} .uc-vc__pcard {
+      background: rgba(255,255,255,.97);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 16px;
+      padding: 12px 13px;
+      margin-top: -34px;
+      margin-left: 10px;
+      margin-right: 10px;
+      position: relative;
+      z-index: 4;
+      box-shadow: 0 8px 28px rgba(0,0,0,.15);
+    }
+    #{{ section.id }} .uc-vc__pcard-link {
+      display: flex; align-items: center; gap: 11px;
+      text-decoration: none; color: inherit;
+    }
+    #{{ section.id }} .uc-vc__pcard-link img {
+      width: 52px; height: 52px;
+      object-fit: contain;
+      border-radius: 10px;
+      flex-shrink: 0;
+      background: #f8f0f5;
+    }
+    #{{ section.id }} .uc-vc__pcard-title {
+      font-size: 12.5px; font-weight: 700; line-height: 1.3;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    #{{ section.id }} .uc-vc__pcard-price {
+      font-size: 13px; font-weight: 700;
+      color: #C5006A; margin: 3px 0 0;
+    }
+    #{{ section.id }} .uc-vc__atc {
+      margin-top: 10px; width: 100%;
+      background: none; border: 0;
+      border-top: 1px solid rgba(0,0,0,.08);
+      padding: 10px 0 2px;
+      font: inherit; font-weight: 700; font-size: 13px;
+      color: #C5006A;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+    }
+    #{{ section.id }} .uc-vc__atc span { font-size: 1.1em; transition: transform .2s; }
+    #{{ section.id }} .uc-vc__atc:hover span { transform: translateX(3px); }
+    #{{ section.id }} .uc-vc__atc.is-added { color: #559B60; }
+    @media (max-width: 767px) {
+      #{{ section.id }} .uc-vc__item { --vc-w: 78vw; }
+    }
+    @media (min-width: 768px) {
+      #{{ section.id }} .uc-vc__item { --vc-w: 280px; }
+    }
+    @media (min-width: 1024px) {
+      #{{ section.id }} .uc-vc__item { --vc-w: 300px; }
+    }
+  {%- endstyle -%}
+
+  {%- comment -%} Video meta JSON — JS tarafı buradan okur {%- endcomment -%}
+  <script type="application/json" id="vc-data-{{ section.id }}">
+  [
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign p = block.settings.product
+        assign v = p.selected_or_first_available_variant
+      -%}
+      {
+        "id":      "{{ block.id }}",
+        "handle":  {{ block.settings.tag | default: '' | json }},
+        "tag_url": {{ block.settings.tag_url | default: '' | json }},
+        {%- if block.settings.media != blank -%}
+          "video":   {{ block.settings.media.sources[0].url | default: '' | json }},
+          "poster":  {{ block.settings.media.preview_image | image_url: width: 600 | json }},
+        {%- else -%}
+          "video":   "",
+          "poster":  "",
+        {%- endif -%}
+        {%- if p != blank -%}
+          "product": {
+            "title": {{ p.title | json }},
+            "url":   "{{ p.url }}",
+            "price": "{{ p.price | money }}",
+            "image": "{{ p.featured_image | image_url: width: 200 }}",
+            "vid":   {{ v.id }}
+          }
+        {%- else -%}
+          "product": null
+        {%- endif -%}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+  </script>
+
+  <div id="{{ section.id }}" class="section-background{% if section.settings.background_mode == 'image' %} relative{% endif %}">
+
+    {%- if section.settings.background_mode == 'image' and section.settings.background_image != blank -%}
+      <div class="absolute inset-0">
+        {%- render 'image',
+          image: section.settings.background_image,
+          src_width: 1400,
+          widths: '480, 980, 1200, 1400, 1600, 1920, 2560, 3200',
+          class: 'img-fit cover',
+          sizes: '100vw'
+        -%}
+      </div>
+    {%- endif -%}
+
+    <div class="section md:py-20 pt-16 pb-10 z-3 color-scheme color-scheme--{{ color_scheme }}{% if section.settings.background_mode != 'default' %} color-scheme--no-bg{% endif %}"
+         {%- render 'animation-attrs', attrs: 'data-cc-animate' -%}>
+
+      <div class="container max-w-none">
+        {%- if section.settings.heading != blank -%}
+          <div class="flex{% if section.settings.heading_align == 'text-end' %} flex-row-reverse{% endif %} items-center justify-between mb-8">
+            <h2 class="flex-auto mb-0 {{ section.settings.heading_size }} {{ section.settings.heading_align }}{% if section.settings.mob_center_text %} md-down:text-center{% endif %}">
+              {{ section.settings.heading | escape }}
+            </h2>
+          </div>
+        {%- endif -%}
+
+        <div class="uc-vc__track" id="vc-track-{{ section.id }}">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign p = block.settings.product
+              assign bv = p.selected_or_first_available_variant
+            -%}
+            <div class="uc-vc__item" data-vc-idx="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+              <div class="uc-vc__media" data-vc-open="{{ forloop.index0 }}">
+                <video class="uc-vc__vid"
+                       muted loop playsinline preload="none"
+                       {%- if block.settings.media != blank -%}
+                         poster="{{ block.settings.media.preview_image | image_url: width: 600 }}"
+                         data-src="{{ block.settings.media.sources[0].url }}"
+                       {%- endif -%}>
+                </video>
+                <div class="uc-vc__scrim"></div>
+                <div class="uc-vc__top">
+                  {%- if block.settings.tag != blank -%}
+                    <a class="uc-vc__handle"
+                       href="{{ block.settings.tag_url | default: '#' }}"
+                       target="_blank" rel="noopener"
+                       onclick="event.stopPropagation()">{{ block.settings.tag }}</a>
+                  {%- endif -%}
+                  <div class="uc-vc__ctrlrow">
+                    <button type="button" class="uc-vc__cbtn" data-pp aria-label="Oynat/Durdur">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                    </button>
+                    <button type="button" class="uc-vc__cbtn" data-mm aria-label="Ses">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {%- if block.settings.product_card_enabled and p != blank -%}
+                <div class="uc-vc__pcard">
+                  <a class="uc-vc__pcard-link" href="{{ p.url }}">
+                    <img src="{{ p.featured_image | image_url: width: 120 }}"
+                         alt="{{ p.title | escape }}" width="52" height="52" loading="lazy">
+                    <div>
+                      <p class="uc-vc__pcard-title">{{ p.title }}</p>
+                      <p class="uc-vc__pcard-price">{{ p.price | money }}</p>
+                    </div>
+                  </a>
+                  <button type="button" class="uc-vc__atc"
+                          data-vid="{{ bv.id }}"
+                          data-pname="{{ p.title | escape }}">
+                    {{ section.settings.cta_label | default: 'Sepete Ekle' }} <span>›</span>
+                  </button>
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if settings.slider_show_arrows != 'never' -%}
+          <div class="flex mt-6 gap-x-2 items-center justify-center no-js-hidden">
+            <button type="button" class="slider-nav__btn btn has-ltr-icon" data-vc-prev aria-label="{{ 'general.slider.previous' | t }}">
+              {% render 'icon-chevron-left' %}
+            </button>
+            <button type="button" class="slider-nav__btn btn has-ltr-icon" data-vc-next aria-label="{{ 'general.slider.next' | t }}">
+              {% render 'icon-chevron-right' %}
+            </button>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    var SEC = document.getElementById('{{ section.id }}');
+    if (!SEC || SEC.dataset.ucVcInited) return;
+    SEC.dataset.ucVcInited = '1';
+
+    var track  = document.getElementById('vc-track-{{ section.id }}');
+    var items  = [].slice.call(SEC.querySelectorAll('.uc-vc__item'));
+    var dataEl = document.getElementById('vc-data-{{ section.id }}');
+    var stories = [];
+    try { stories = JSON.parse(dataEl.textContent); } catch (e) {}
+
+    var iPlay  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+    var iPause = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+    var iMute  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>';
+    var iSnd   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19 9a5 5 0 010 6"/><path d="M22 7a9 9 0 010 10"/></svg>';
+
+    /* ── Lazy-load + autoplay visible ── */
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var v = en.target.querySelector('.uc-vc__vid');
+        if (!v) return;
+        if (en.isIntersecting) {
+          if (!v.src && v.dataset.src) { v.src = v.dataset.src; }
+          if (!v.dataset.paused) { v.play().catch(function () {}); }
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+    items.forEach(function (item) { io.observe(item); });
+
+    /* ── Kart kontrolleri ── */
+    items.forEach(function (item) {
+      var v  = item.querySelector('.uc-vc__vid');
+      var pp = item.querySelector('[data-pp]');
+      var mm = item.querySelector('[data-mm]');
+      if (pp) pp.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (v.paused) { v.play().catch(function () {}); v.dataset.paused = ''; pp.innerHTML = iPause; }
+        else          { v.pause(); v.dataset.paused = '1'; pp.innerHTML = iPlay; }
+      });
+      if (mm) mm.addEventListener('click', function (e) {
+        e.stopPropagation();
+        v.muted = !v.muted;
+        mm.innerHTML = v.muted ? iMute : iSnd;
+      });
+    });
+
+    /* ── Nav okları ── */
+    var prevBtn = SEC.querySelector('[data-vc-prev]');
+    var nextBtn = SEC.querySelector('[data-vc-next]');
+    function cardW() {
+      var c = track.querySelector('.uc-vc__item');
+      return c ? c.getBoundingClientRect().width + 14 : 314;
+    }
+    if (prevBtn) prevBtn.addEventListener('click', function () { track.scrollBy({ left: -cardW(), behavior: 'smooth' }); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { track.scrollBy({ left:  cardW(), behavior: 'smooth' }); });
+
+    /* ── Sepete Ekle (inline kart) ── */
+    items.forEach(function (item) {
+      var atc = item.querySelector('.uc-vc__atc');
+      if (!atc) return;
+      atc.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = this.dataset.vid;
+        if (!id) return;
+        var b = this;
+        b.innerHTML = 'Ekleniyor…';
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: parseInt(id, 10), quantity: 1 })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function () {
+          b.innerHTML = 'Eklendi ✓';
+          b.classList.add('is-added');
+          try { document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true, detail: { open: true } })); } catch (er) {}
+          setTimeout(function () { b.classList.remove('is-added'); b.innerHTML = '{{ section.settings.cta_label | default: "Sepete Ekle" | escape }} <span>›</span>'; }, 1800);
+        })
+        .catch(function () { b.innerHTML = 'Hata'; setTimeout(function () { b.innerHTML = '{{ section.settings.cta_label | default: "Sepete Ekle" | escape }} <span>›</span>'; }, 1200); });
+      });
+    });
+  })();
+  </script>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Video carousel",
+  "tag": "section",
+  "class": "cc-video-carousel non-join",
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "select", "id": "heading_size", "label": "Size",
+      "options": [
+        { "value": "h3", "label": "Small" },
+        { "value": "h2", "label": "Medium" },
+        { "value": "h1", "label": "Large" },
+        { "value": "x-large-heading", "label": "Extra large" }
+      ], "default": "h2" },
+    { "type": "select", "id": "heading_align", "label": "Alignment",
+      "options": [
+        { "value": "text-start",  "label": "Left"   },
+        { "value": "text-center", "label": "Center" },
+        { "value": "text-end",    "label": "Right"  }
+      ], "default": "text-center" },
+    { "type": "checkbox", "id": "mob_center_text", "label": "Center text on mobile", "default": true },
+    { "type": "header", "content": "Video carousel" },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay (viewport'a girince)", "default": true },
+    { "type": "header", "content": "Product Card" },
+    { "type": "checkbox", "id": "hover_enabled", "label": "Show product card on hover (Desktop)", "default": false },
+    { "type": "text", "id": "cta_label", "label": "Sepete Ekle butonu metni", "default": "Sepete Ekle" },
+    { "type": "header", "content": "Style" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "select", "id": "background_mode", "label": "Section background",
+      "options": [
+        { "value": "default",           "label": "Default"           },
+        { "value": "color",             "label": "Color"             },
+        { "value": "image",             "label": "Image"             },
+        { "value": "simple-gradient",   "label": "Simple gradient"   },
+        { "value": "advanced-gradient", "label": "Advanced gradient" }
+      ], "default": "default" },
+    { "visible_if": "{{ section.settings.background_mode == 'color' }}",
+      "type": "color", "id": "background_color", "label": "Background color", "default": "#ffffff" },
+    { "visible_if": "{{ section.settings.background_mode == 'image' }}",
+      "type": "image_picker", "id": "background_image", "label": "Background image" },
+    { "visible_if": "{{ section.settings.background_mode == 'simple-gradient' }}",
+      "type": "color", "id": "background_gradient_stop_1", "label": "Gradient start", "default": "#cccccc" },
+    { "visible_if": "{{ section.settings.background_mode == 'simple-gradient' }}",
+      "type": "color", "id": "background_gradient_stop_2", "label": "Gradient end", "default": "#ffffff" },
+    { "visible_if": "{{ section.settings.background_mode == 'simple-gradient' }}",
+      "type": "select", "id": "background_gradient_curve", "label": "Gradient style",
+      "options": [
+        { "value": "linear",    "label": "Linear"    },
+        { "value": "ease-up",   "label": "Ease up"   },
+        { "value": "ease-down", "label": "Ease down" }
+      ], "default": "linear" },
+    { "visible_if": "{{ section.settings.background_mode == 'advanced-gradient' }}",
+      "type": "color_background", "id": "background_gradient", "label": "Advanced gradient",
+      "default": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)" }
+  ],
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "shopify_video",
+      "name": "Video",
+      "settings": [
+        { "type": "paragraph", "content": "9:16 dikey video önerilir (TikTok / Instagram Reels formatı)" },
+        { "type": "video", "id": "media", "label": "Video" },
+        { "type": "checkbox", "id": "video_frame_enabled", "label": "Enable Video Frame", "default": false },
+        { "visible_if": "{{ block.settings.video_frame_enabled }}",
+          "type": "color", "id": "video_frame_color", "label": "Video Frame Color", "default": "#000000" },
+        { "type": "header", "content": "Product" },
+        { "type": "checkbox", "id": "product_card_enabled", "label": "Enable product card", "default": true },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "header", "content": "Social account" },
+        { "type": "text", "id": "tag", "label": "Social handle", "default": "@social_handle" },
+        { "type": "url",  "id": "tag_url", "label": "Social profile link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video carousel",
+      "category": "Video",
+      "blocks": [
+        { "type": "shopify_video", "settings": {} },
+        { "type": "shopify_video", "settings": {} },
+        { "type": "shopify_video", "settings": {} },
+        { "type": "shopify_video", "settings": {} },
+        { "type": "shopify_video", "settings": {} }
+      ]
+    }
+  ]
+}
+{% endschema %}

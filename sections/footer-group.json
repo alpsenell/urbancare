@@ -1,0 +1,62 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer Group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "text-social": {
+          "type": "text",
+          "settings": {
+            "image_width": 150,
+            "text": "",
+            "button_label": "",
+            "button_link": "",
+            "button_style": "btn btn--primary",
+            "enable_follow_on_shop": false,
+            "enable_social_icons": true,
+            "social_icons_color": "#ffffff"
+          }
+        },
+        "menu-footer": {
+          "type": "link_list",
+          "settings": {
+            "menu": "footer-nav"
+          }
+        }
+      },
+      "block_order": [
+        "menu-footer",
+        "text-social"
+      ],
+      "settings": {
+        "color_scheme": "scheme-footer-pink",
+        "image": "shopify://shop_images/urbancaretr_1767871865_3805507484874757517_573872577.jpg",
+        "image_mobile_ratio": "natural",
+        "link_to_home": true,
+        "show_large_store_name": false,
+        "large_store_name": "BEAUTIFY",
+        "large_store_name_size": 19,
+        "large_store_name_letter_spacing": 0,
+        "large_store_name_height": 1,
+        "show_payment_icons": true,
+        "show_copyright": "always",
+        "show_powered_by": false,
+        "secondary_menu": "",
+        "enable_localization": false
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

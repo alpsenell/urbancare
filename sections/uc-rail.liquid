@@ -1,0 +1,849 @@
+{%- comment -%}
+  urban-care-personal-rail.liquid
+  Urban Care — Kişisel Ürün Bandı v1
+  Sekmeler: Son Gezdiklerin · Son Aldıkların · Sana Özel
+  Offer katmanı: customer.tags eşleşmeli, tarih kontrollü, blok bazlı
+  Sepete Ekle → cart drawer tetikler (cart:refresh)
+  Yeni: görsel boyutu, kart stili, buton rengi, sekme rengi schema'dan ayarlanabilir
+{%- endcomment -%}
+
+{%- liquid
+  assign is_logged = false
+  if customer != blank
+    assign is_logged = true
+  endif
+  assign max_items   = section.settings.limit | default: 12
+  assign card_size   = section.settings.card_size | default: 'medium'
+  assign btn_style   = section.settings.btn_style  | default: 'outline'
+  assign show_price  = section.settings.show_price
+  assign show_badge  = section.settings.show_sale_badge
+  assign tab_viewed_label    = section.settings.tab_viewed_label    | default: 'Son Gezdiklerin'
+  assign tab_purchased_label = section.settings.tab_purchased_label | default: 'Son Aldıkların'
+  assign tab_foryou_label    = section.settings.tab_foryou_label    | default: 'Sana Özel'
+  assign last_purchased_id   = ''
+-%}
+
+{%- comment -%} ── OFFER EŞLEŞTIRME (server-side, customer.tags, blok bazlı) ── {%- endcomment -%}
+{%- assign offer_count       = 0 -%}
+{%- assign offer_handles     = '' -%}
+{%- assign offer_badge_label = '' -%}
+
+{%- if is_logged -%}
+  {%- assign now_ts = 'now' | date: '%s' | times: 1 -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type != 'offer' -%}{%- continue -%}{%- endif -%}
+    {%- assign seg_field    = block.settings.segment_tags | strip | default: '' -%}
+    {%- assign scope_field  = block.settings.scope        | default: 'catalog' -%}
+    {%- assign badge_field  = block.settings.badge_text   | strip | default: '' -%}
+    {%- assign starts_field = block.settings.start_date   | strip | default: '' -%}
+    {%- assign ends_field   = block.settings.end_date     | strip | default: '' -%}
+    {%- assign date_ok = true -%}
+    {%- if starts_field != blank -%}
+      {%- assign st = starts_field | date: '%s' | times: 1 -%}
+      {%- if st > now_ts -%}{%- assign date_ok = false -%}{%- endif -%}
+    {%- endif -%}
+    {%- if ends_field != blank -%}
+      {%- assign en = ends_field | append: ' 23:59:59' | date: '%s' | times: 1 -%}
+      {%- if en < now_ts -%}{%- assign date_ok = false -%}{%- endif -%}
+    {%- endif -%}
+    {%- if date_ok and seg_field != blank -%}
+      {%- assign segs    = seg_field | split: ',' -%}
+      {%- assign matched = false -%}
+      {%- for tg in segs -%}
+        {%- assign tg = tg | strip -%}
+        {%- if tg != blank and customer.tags contains tg -%}
+          {%- assign matched = true -%}{%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if matched -%}
+        {%- assign offer_count = offer_count | plus: 1 -%}
+        {%- if offer_badge_label == blank and badge_field != blank -%}
+          {%- assign offer_badge_label = badge_field -%}
+        {%- endif -%}
+        {%- if scope_field == 'products' and block.settings.products != blank -%}
+          {%- for p in block.settings.products -%}
+            {%- assign offer_handles = offer_handles | append: ',' | append: p.handle -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- comment -%} ── OFFER ÜRÜNLERİ HTML (foryou panelinin başına) ── {%- endcomment -%}
+{%- capture offer_cards_html -%}
+  {%- if offer_handles != blank -%}
+    {%- assign oh    = offer_handles | split: ',' -%}
+    {%- assign oseen = ',' -%}
+    {%- for h in oh -%}
+      {%- assign h = h | strip -%}
+      {%- if h == blank -%}{%- continue -%}{%- endif -%}
+      {%- assign hk = ',' | append: h | append: ',' -%}
+      {%- unless oseen contains hk -%}
+        {%- assign oseen = oseen | append: h | append: ',' -%}
+        {%- assign oprod = all_products[h] -%}
+        {%- if oprod != blank and oprod != empty -%}
+          {%- assign ovar = oprod.selected_or_first_available_variant -%}
+          {%- assign has_sale_o = false -%}
+          {%- if ovar.compare_at_price > ovar.price -%}{%- assign has_sale_o = true -%}{%- endif -%}
+          <div class="uc-prail__card uc-prail__card--offer" data-card>
+            <a class="uc-prail__link" href="{{ oprod.url }}">
+              <span class="uc-prail__img-wrap">
+                <span class="uc-prail__offer-badge">{{ offer_badge_label | default: 'Sana Özel' | escape }}</span>
+                {%- if show_badge and has_sale_o -%}
+                  {%- assign diff_o = ovar.compare_at_price | minus: ovar.price | times: 100 | divided_by: ovar.compare_at_price -%}
+                  <span class="uc-prail__sale-badge">%{{ diff_o }}</span>
+                {%- endif -%}
+                {%- if oprod.featured_image -%}
+                  <img src="{{ oprod.featured_image | image_url: width: 400 }}"
+                       alt="{{ oprod.title | escape }}" loading="lazy" width="200" height="200">
+                {%- endif -%}
+              </span>
+              <span class="uc-prail__title">{{ oprod.title | escape }}</span>
+              {%- if show_price -%}
+                <span class="uc-prail__price-wrap">
+                  {%- if has_sale_o -%}
+                    <span class="uc-prail__compare">{{ ovar.compare_at_price | money }}</span>
+                  {%- endif -%}
+                  <span class="uc-prail__price">{{ ovar.price | money }}</span>
+                </span>
+              {%- endif -%}
+            </a>
+            <button type="button" class="uc-prail__btn uc-prail__btn--offer"
+                    data-add data-variant-id="{{ ovar.id }}"
+                    data-handle="{{ oprod.handle }}"
+                    data-label="{{ section.settings.cta_add }}">
+              {{ section.settings.cta_add | escape }}
+            </button>
+          </div>
+        {%- endif -%}
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- comment -%} ── SON SATINALIMLAR HTML ── {%- endcomment -%}
+{%- capture purchased_html -%}
+  {%- if is_logged -%}
+    {%- assign seen = ',' -%}
+    {%- assign pc   = 0 -%}
+    {%- for order in customer.orders limit: 30 -%}
+      {%- for li in order.line_items -%}
+        {%- assign prod = li.product -%}
+        {%- if prod != blank and pc < max_items -%}
+          {%- assign kw = ',' | append: prod.id | append: ',' -%}
+          {%- unless seen contains kw -%}
+            {%- assign seen = seen | append: prod.id | append: ',' -%}
+            {%- if last_purchased_id == '' -%}{%- assign last_purchased_id = prod.id -%}{%- endif -%}
+            {%- assign bvar = li.variant -%}
+            {%- if bvar == blank or bvar.available == false -%}
+              {%- assign bvar = prod.selected_or_first_available_variant -%}
+            {%- endif -%}
+            {%- assign has_sale_p = false -%}
+            {%- if bvar.compare_at_price > bvar.price -%}{%- assign has_sale_p = true -%}{%- endif -%}
+            <div class="uc-prail__card" data-card>
+              <a class="uc-prail__link" href="{{ prod.url }}">
+                <span class="uc-prail__img-wrap">
+                  {%- if show_badge and has_sale_p -%}
+                    {%- assign diff_p = bvar.compare_at_price | minus: bvar.price | times: 100 | divided_by: bvar.compare_at_price -%}
+                    <span class="uc-prail__sale-badge">%{{ diff_p }}</span>
+                  {%- endif -%}
+                  {%- if prod.featured_image -%}
+                    <img src="{{ prod.featured_image | image_url: width: 400 }}"
+                         alt="{{ prod.title | escape }}" loading="lazy" width="200" height="200">
+                  {%- endif -%}
+                </span>
+                <span class="uc-prail__title">{{ prod.title | escape }}</span>
+                {%- if show_price -%}
+                  <span class="uc-prail__price-wrap">
+                    {%- if has_sale_p -%}
+                      <span class="uc-prail__compare">{{ bvar.compare_at_price | money }}</span>
+                    {%- endif -%}
+                    <span class="uc-prail__price">{{ bvar.price | money }}</span>
+                  </span>
+                {%- endif -%}
+              </a>
+              <button type="button" class="uc-prail__btn"
+                      data-add data-variant-id="{{ bvar.id }}"
+                      data-handle="{{ prod.handle }}"
+                      data-label="{{ section.settings.cta_reorder }}">
+                {{ section.settings.cta_reorder | escape }}
+              </button>
+            </div>
+            {%- assign pc = pc | plus: 1 -%}
+          {%- endunless -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign has_purchased = false -%}
+{%- if purchased_html contains 'uc-prail__card' -%}{%- assign has_purchased = true -%}{%- endif -%}
+
+{%- comment -%} ── KART GENİŞLİĞİ ── {%- endcomment -%}
+{%- assign card_w = 140 -%}
+{%- if card_size == 'small'  -%}{%- assign card_w = 116 -%}
+{%- elsif card_size == 'large' -%}{%- assign card_w = 168 -%}
+{%- endif -%}
+
+{%- style -%}
+  #uc-prail-{{ section.id }} {
+    --uc-brand:      #C5006A;
+    --uc-brand-dk:   #9e0055;
+    --uc-offer:      #C5006A;
+    --uc-sale:       #C5006A;
+    --uc-text:       #1a1a1a;
+    --uc-muted:      #666;
+    --uc-border:     #eedde8;
+    --uc-bg:         #fdf5f9;
+    --uc-card-w:     {{ card_w }}px;
+    --uc-radius:     12px;
+    --uc-tab-active: {{ section.settings.tab_active_color | default: '#C5006A' }};
+  }
+
+  /* ── Section wrapper ── */
+  #uc-prail-{{ section.id }} {
+    background: var(--uc-bg);
+    padding-top:    {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  /* ── Başlık ── */
+  #uc-prail-{{ section.id }} .uc-prail__heading {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--uc-text);
+    margin: 0 0 14px;
+  }
+
+  /* ── Sekmeler ── */
+  #uc-prail-{{ section.id }} .uc-prail__tabs {
+    display: flex;
+    gap: 0;
+    margin: 0 0 16px;
+    border-bottom: 2px solid var(--uc-border);
+  }
+  #uc-prail-{{ section.id }} .uc-prail__tab {
+    border: 0;
+    background: transparent;
+    padding: 8px 16px 10px;
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--uc-muted);
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: color .15s ease;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__tab:first-child { padding-left: 0; }
+  #uc-prail-{{ section.id }} .uc-prail__tab.is-active { color: var(--uc-tab-active); }
+  #uc-prail-{{ section.id }} .uc-prail__tab.is-active::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px;
+    background: var(--uc-tab-active);
+    border-radius: 2px 2px 0 0;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__tab:first-child.is-active::after { left: 0; }
+
+  /* Offer rozeti sekme içinde */
+  #uc-prail-{{ section.id }} .uc-prail__tbadge {
+    background: var(--uc-brand);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 17px;
+    height: 17px;
+    line-height: 17px;
+    border-radius: 9px;
+    padding: 0 5px;
+    text-align: center;
+  }
+
+  /* ── Panel ── */
+  #uc-prail-{{ section.id }} .uc-prail__panel[hidden] { display: none; }
+
+  /* ── Track (yatay scroll) ── */
+  #uc-prail-{{ section.id }} .uc-prail__track {
+    display: flex;
+    gap: {{ section.settings.card_gap }}px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0 10px;
+    scrollbar-width: none;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__track::-webkit-scrollbar { display: none; }
+
+  /* ── Kart ── */
+  #uc-prail-{{ section.id }} .uc-prail__card {
+    flex: 0 0 160px;
+    width: 160px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--uc-border);
+    border-radius: var(--uc-radius);
+    padding: 8px;
+    box-shadow: 0 1px 6px rgba(197,0,106,.06);
+    transition: box-shadow .2s ease, transform .2s ease;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__card:hover {
+    box-shadow: 0 4px 16px rgba(197,0,106,.13);
+    transform: translateY(-2px);
+  }
+
+  /* ── Görsel ── */
+  #uc-prail-{{ section.id }} .uc-prail__link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__img-wrap {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9f5f7;
+    position: relative;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__img-wrap img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+    display: block;
+    transition: transform .3s ease;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__card:hover .uc-prail__img-wrap img {
+    transform: scale(1.04);
+  }
+
+  @media (min-width: 768px) {
+    #uc-prail-{{ section.id }} .uc-prail__card { flex: 0 0 150px; width: 150px; }
+  }
+  @media (min-width: 1024px) {
+    #uc-prail-{{ section.id }} .uc-prail__card { flex: 0 0 160px; width: 160px; }
+  }
+
+  /* ── Offer rozeti (görsel üstü) ── */
+  #uc-prail-{{ section.id }} .uc-prail__offer-badge {
+    position: absolute;
+    top: 6px; left: 6px;
+    z-index: 2;
+    background: var(--uc-offer);
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 999px;
+    letter-spacing: .2px;
+  }
+
+  /* ── İndirim % rozeti ── */
+  #uc-prail-{{ section.id }} .uc-prail__sale-badge {
+    position: absolute;
+    top: 6px; right: 6px;
+    z-index: 2;
+    background: var(--uc-sale);
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 999px;
+  }
+
+  /* ── Ürün adı — 2 satır sabit ── */
+  #uc-prail-{{ section.id }} .uc-prail__title {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    height: calc(12px * 1.4 * 2); /* 2 satır sabit yükseklik */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--uc-text);
+    margin-top: 6px;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__card:hover .uc-prail__title {
+    color: var(--uc-brand);
+  }
+
+  /* ── Fiyat ── */
+  #uc-prail-{{ section.id }} .uc-prail__price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__price {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--uc-brand);
+  }
+  #uc-prail-{{ section.id }} .uc-prail__compare {
+    font-size: 11px;
+    color: rgba(0,0,0,.38);
+    text-decoration: line-through;
+  }
+
+  /* ── CTA butonu — outline ── */
+  #uc-prail-{{ section.id }} .uc-prail__btn {
+    margin-top: auto;
+    width: 100%;
+    border-radius: 999px;
+    padding: 8px 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+    letter-spacing: .01em;
+    {%- if btn_style == 'filled' -%}
+      background: var(--uc-brand);
+      color: #fff;
+      border: none;
+    {%- else -%}
+      background: transparent;
+      color: var(--uc-brand);
+      border: 1.5px solid var(--uc-brand);
+    {%- endif -%}
+  }
+  {%- if btn_style == 'filled' -%}
+  #uc-prail-{{ section.id }} .uc-prail__btn:hover { background: var(--uc-brand-dk); }
+  {%- else -%}
+  #uc-prail-{{ section.id }} .uc-prail__btn:hover { background: var(--uc-brand); color: #fff; }
+  {%- endif -%}
+  #uc-prail-{{ section.id }} .uc-prail__btn.is-added {
+    background: var(--uc-brand);
+    color: #fff;
+    border-color: var(--uc-brand);
+  }
+  #uc-prail-{{ section.id }} .uc-prail__btn[disabled] { opacity: .7; cursor: default; }
+
+  /* Offer kartı butonu — her zaman filled */
+  #uc-prail-{{ section.id }} .uc-prail__btn--offer {
+    background: var(--uc-brand);
+    color: #fff;
+    border: none;
+  }
+  #uc-prail-{{ section.id }} .uc-prail__btn--offer:hover { background: var(--uc-brand-dk); }
+
+  /* ── Boş durum ── */
+  #uc-prail-{{ section.id }} .uc-prail__empty {
+    font-size: 13px;
+    color: var(--uc-muted);
+    padding: 8px 0;
+    font-style: italic;
+  }
+
+{%- endstyle -%}
+
+<div id="uc-prail-{{ section.id }}"
+     class="uc-prail color-{{ section.settings.color_scheme }}"
+     data-logged="{% if is_logged %}true{% else %}false{% endif %}"
+     data-last-purchased="{{ last_purchased_id }}"
+     data-offer-count="{{ offer_count }}"
+     data-offer-badge="{{ offer_badge_label | escape }}"
+     data-img-fit="{{ section.settings.image_fit | default: 'contain' }}"
+     data-img-pad="{{ section.settings.image_padding | default: 6 }}"
+     hidden>
+  <div class="page-width">
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="uc-prail__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <div class="uc-prail__tabs" data-tabs>
+      <button type="button" class="uc-prail__tab" data-tab="viewed" hidden>
+        {{ tab_viewed_label | escape }}
+      </button>
+      {%- if has_purchased -%}
+        <button type="button" class="uc-prail__tab" data-tab="purchased">
+          {{ tab_purchased_label | escape }}
+        </button>
+      {%- endif -%}
+      {%- if is_logged -%}
+        <button type="button" class="uc-prail__tab" data-tab="foryou" hidden>
+          {{ tab_foryou_label | escape }}
+          {%- if offer_count > 0 -%}
+            <span class="uc-prail__tbadge" data-foryou-badge>{{ offer_count }}</span>
+          {%- endif -%}
+        </button>
+      {%- endif -%}
+    </div>
+
+    <div class="uc-prail__panels">
+      <div class="uc-prail__panel" data-panel="viewed" hidden>
+        <div class="uc-prail__track" data-track="viewed"></div>
+      </div>
+      {%- if has_purchased -%}
+        <div class="uc-prail__panel" data-panel="purchased" hidden>
+          <div class="uc-prail__track">{{ purchased_html }}</div>
+        </div>
+      {%- endif -%}
+      {%- if is_logged -%}
+        <div class="uc-prail__panel" data-panel="foryou" hidden>
+          <div class="uc-prail__track" data-track="foryou">{{ offer_cards_html }}</div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <p class="uc-prail__empty" data-empty hidden>
+      {{ section.settings.empty_text | escape }}
+    </p>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var root = document.getElementById('uc-prail-{{ section.id }}');
+  if (!root || root.dataset.inited) return;
+  root.dataset.inited = '1';
+
+  var design       = !!(window.Shopify && Shopify.designMode);
+  var isLogged     = root.getAttribute('data-logged') === 'true';
+  var offerCount   = parseInt(root.getAttribute('data-offer-count'), 10) || 0;
+  var offerBadge   = root.getAttribute('data-offer-badge') || '';
+  var imgFit       = root.getAttribute('data-img-fit') || 'contain';
+  var imgPad       = root.getAttribute('data-img-pad') || '6';
+  var ctaAdd       = {{ section.settings.cta_add       | json }};
+  var ctaReorder   = {{ section.settings.cta_reorder   | json }};
+  var showPrice    = {{ section.settings.show_price    | json }};
+  var btnFilled    = {{ section.settings.btn_style     | json }} === 'filled';
+
+  /* Offer sayısını header event olarak yayınla */
+  try {
+    document.dispatchEvent(new CustomEvent('ino:offers', {
+      bubbles: true,
+      detail: { count: offerCount, label: offerBadge }
+    }));
+    window.__inoOfferCount = offerCount;
+  } catch (e) {}
+
+  /* ── Para formatı ── */
+  function fmt(cents) {
+    return (parseInt(cents, 10) / 100).toLocaleString('tr-TR', {
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+    }) + ' TL';
+  }
+
+  /* ── JS kart oluştur (Son Gezdiklerin + Sana Özel öneri dolgusu) ── */
+  function buildCard(o) {
+    var wrap = document.createElement('div');
+    wrap.className = 'uc-prail__card' + (o.offer ? ' uc-prail__card--offer' : '');
+    wrap.setAttribute('data-card', '');
+
+    var offerBadgeHtml = o.offer
+      ? '<span class="uc-prail__offer-badge">' + (o.offerLabel || 'Sana Özel') + '</span>'
+      : '';
+    var saleBadgeHtml = (o.salePct && o.salePct > 0)
+      ? '<span class="uc-prail__sale-badge">%' + o.salePct + '</span>'
+      : '';
+    var imgHtml = o.image
+      ? '<img src="' + o.image + '" alt="" loading="lazy" width="200" height="200" style="object-fit:' + imgFit + ';padding:' + imgPad + 'px;">'
+      : '';
+
+    var priceHtml = '';
+    if (showPrice && o.price) {
+      priceHtml = '<span class="uc-prail__price-wrap">';
+      if (o.comparePrice) {
+        priceHtml += '<span class="uc-prail__compare">' + o.comparePrice + '</span>';
+      }
+      priceHtml += '<span class="uc-prail__price">' + o.price + '</span></span>';
+    }
+
+    var a = document.createElement('a');
+    a.className = 'uc-prail__link';
+    a.href = o.url || '#';
+    a.innerHTML =
+      '<span class="uc-prail__img-wrap">' + offerBadgeHtml + saleBadgeHtml + imgHtml + '</span>' +
+      '<span class="uc-prail__title"></span>' +
+      priceHtml;
+    a.querySelector('.uc-prail__title').textContent = o.title || '';
+    wrap.appendChild(a);
+
+    var btnLabel = o.btn || ctaAdd;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'uc-prail__btn' + (o.offer ? ' uc-prail__btn--offer' : '');
+    b.setAttribute('data-add', '');
+    b.setAttribute('data-label', btnLabel);
+    if (o.variantId) b.setAttribute('data-variant-id', o.variantId);
+    if (o.handle)    b.setAttribute('data-handle', o.handle);
+    b.textContent = btnLabel;
+    wrap.appendChild(b);
+
+    return wrap;
+  }
+
+  /* ── Sekme / panel yardımcıları ── */
+  var tabs = Array.prototype.slice.call(root.querySelectorAll('.uc-prail__tab'));
+  function tabEl(name)   { return root.querySelector('.uc-prail__tab[data-tab="' + name + '"]'); }
+  function panelEl(name) { return root.querySelector('.uc-prail__panel[data-panel="' + name + '"]'); }
+  function showTab(name, show) { var t = tabEl(name); if (t) t.hidden = !show; }
+
+  function activate(name) {
+    tabs.forEach(function (t) {
+      t.classList.toggle('is-active', t.getAttribute('data-tab') === name);
+    });
+    ['viewed', 'purchased', 'foryou'].forEach(function (n) {
+      var p = panelEl(n);
+      if (p) p.hidden = (n !== name);
+    });
+  }
+
+  function firstVisibleTab() {
+    for (var i = 0; i < tabs.length; i++) {
+      if (!tabs[i].hidden) return tabs[i].getAttribute('data-tab');
+    }
+    return null;
+  }
+
+  /* ── Son Gezdiklerin (localStorage) ── */
+  var viewed = [];
+  try { viewed = JSON.parse(localStorage.getItem('uc_recently_viewed') || '[]'); } catch (e) {}
+  /* INO uyumluluğu: eski key */
+  if (!viewed.length) {
+    try { viewed = JSON.parse(localStorage.getItem('ino_recently_viewed') || '[]'); } catch (e) {}
+  }
+  if (!Array.isArray(viewed)) viewed = [];
+
+  var vTrack = root.querySelector('[data-track="viewed"]');
+  if (viewed.length && vTrack) {
+    viewed.slice(0, 12).forEach(function (o) {
+      vTrack.appendChild(buildCard({
+        url: o.url, image: o.image, title: o.title,
+        price: o.price, handle: o.handle, btn: ctaAdd
+      }));
+    });
+  }
+  showTab('viewed', viewed.length > 0);
+
+  /* ── Öneri tohumu ── */
+  var seed    = root.getAttribute('data-last-purchased') ||
+                (viewed[0] && viewed[0].id) || '';
+  var fTrack  = root.querySelector('[data-track="foryou"]');
+  var hasOfferCards = fTrack && fTrack.querySelector('.uc-prail__card--offer');
+
+  /* ── Sekme tıklaması ── */
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () { activate(t.getAttribute('data-tab')); });
+  });
+
+  /* ── Sepete Ekle ── */
+  function refreshCart() {
+    try {
+      document.dispatchEvent(new CustomEvent('cart:refresh', {
+        bubbles: true, detail: { open: true }
+      }));
+    } catch (e) {}
+  }
+  function flashBtn(b) {
+    var orig = b.getAttribute('data-label') || b.textContent;
+    b.textContent = 'Eklendi ✓';
+    b.disabled = true;
+    b.classList.add('is-added');
+    setTimeout(function () {
+      b.textContent = orig;
+      b.disabled = false;
+      b.classList.remove('is-added');
+    }, 1800);
+  }
+  function addByVariant(vid) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: Number(vid), quantity: 1 }] })
+    }).then(function (r) { if (!r.ok) throw 0; return r.json(); });
+  }
+  function addByHandle(h) {
+    return fetch('/products/' + h + '.js')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (p) {
+        if (!p || !p.variants) throw 0;
+        var v = null;
+        for (var i = 0; i < p.variants.length; i++) {
+          if (p.variants[i].available) { v = p.variants[i]; break; }
+        }
+        if (!v) v = p.variants[0];
+        if (!v) throw 0;
+        return addByVariant(v.id);
+      });
+  }
+
+  root.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('[data-add]') : null;
+    if (!b) return;
+    e.preventDefault();
+    if (b.disabled) return;
+    b.disabled = true;
+    var vid = b.getAttribute('data-variant-id');
+    var h   = b.getAttribute('data-handle');
+    var ok  = function () { flashBtn(b); refreshCart(); };
+    var bad = function () { b.disabled = false; };
+    if (vid) {
+      addByVariant(vid).then(ok).catch(function () {
+        if (h) addByHandle(h).then(ok).catch(bad); else bad();
+      });
+    } else if (h) {
+      addByHandle(h).then(ok).catch(bad);
+    } else {
+      bad();
+    }
+  });
+
+  /* ── Sana Özel: Shopify öneri API ── */
+  function finalize() {
+    var f = firstVisibleTab();
+    if (!f) {
+      if (design) {
+        root.hidden = false;
+        var emp = root.querySelector('[data-empty]');
+        if (emp) emp.hidden = false;
+      } else {
+        root.hidden = true;
+      }
+      return;
+    }
+    root.hidden = false;
+    activate(f);
+  }
+
+  if (isLogged && fTrack && seed) {
+    var inDom = {};
+    Array.prototype.slice.call(fTrack.querySelectorAll('[data-handle]')).forEach(function (b) {
+      inDom[b.getAttribute('data-handle')] = 1;
+    });
+    fetch('/recommendations/products.json?product_id=' + seed + '&intent=related&limit=12')
+      .then(function (r) { return r.ok ? r.json() : { products: [] }; })
+      .then(function (d) {
+        var ps = (d && d.products) || [];
+        ps.forEach(function (p) {
+          if (inDom[p.handle]) return;
+          var v = null;
+          if (p.variants) {
+            for (var i = 0; i < p.variants.length; i++) {
+              if (p.variants[i].available) { v = p.variants[i]; break; }
+            }
+            if (!v) v = p.variants[0];
+          }
+          var salePct = 0;
+          if (v && v.compare_at_price && v.compare_at_price > v.price) {
+            salePct = Math.round((v.compare_at_price - v.price) * 100 / v.compare_at_price);
+          }
+          fTrack.appendChild(buildCard({
+            url: p.url,
+            image: p.featured_image,
+            title: p.title,
+            price: fmt(p.price),
+            comparePrice: (v && v.compare_at_price > v.price) ? fmt(v.compare_at_price) : null,
+            salePct: salePct,
+            variantId: v ? v.id : '',
+            handle: p.handle,
+            btn: ctaAdd
+          }));
+        });
+        showTab('foryou', !!(hasOfferCards || ps.length > 0));
+      })
+      .catch(function () { showTab('foryou', !!hasOfferCards); })
+      .then(finalize);
+  } else {
+    showTab('foryou', !!hasOfferCards);
+    finalize();
+  }
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "UC Personal Rail",
+  "tag": "section",
+  "settings": [
+    { "type": "header",   "content": "İçerik" },
+    { "type": "text",     "id": "heading",             "label": "Başlık",                          "default": "Senin İçin" },
+    { "type": "range",    "id": "heading_size",        "min": 14, "max": 28, "step": 1, "unit": "px", "label": "Başlık boyutu", "default": 18 },
+    { "type": "range",    "id": "limit",               "min": 4, "max": 20, "step": 1,             "label": "Maks ürün (her sekme)", "default": 12 },
+    { "type": "text",     "id": "empty_text",          "label": "Boş durum metni",                 "default": "Sayfaları gezdikçe burada öneriler belirecek." },
+
+    { "type": "header",   "content": "Sekmeler" },
+    { "type": "text",     "id": "tab_viewed_label",    "label": "Son Gezdiklerin etiketi",          "default": "Son Gezdiklerin" },
+    { "type": "text",     "id": "tab_purchased_label", "label": "Son Aldıkların etiketi",           "default": "Son Aldıkların" },
+    { "type": "text",     "id": "tab_foryou_label",    "label": "Sana Özel etiketi",                "default": "Sana Özel" },
+    { "type": "color",    "id": "tab_active_color",    "label": "Aktif sekme rengi",                "default": "#C5006A" },
+
+    { "type": "header",   "content": "Kartlar" },
+    { "type": "select",   "id": "card_size",           "label": "Kart genişliği",                  "default": "medium",
+      "options": [
+        { "value": "small",  "label": "Küçük (~116px)"  },
+        { "value": "medium", "label": "Orta (~140px)"   },
+        { "value": "large",  "label": "Büyük (~168px)"  }
+      ]
+    },
+    { "type": "range",    "id": "card_gap",            "min": 6, "max": 20, "step": 2, "unit": "px", "label": "Kartlar arası boşluk", "default": 12 },
+    { "type": "select",   "id": "image_fit",           "label": "Görsel kırpma",                   "default": "contain",
+      "options": [
+        { "value": "contain", "label": "Tamamını göster (contain)" },
+        { "value": "cover",   "label": "Kırp (cover)" }
+      ]
+    },
+    { "type": "range",    "id": "image_padding",       "min": 0, "max": 20, "step": 2, "unit": "px", "label": "Görsel iç boşluk", "default": 6 },
+    { "type": "checkbox", "id": "show_price",          "label": "Fiyat göster",                    "default": true },
+    { "type": "checkbox", "id": "show_sale_badge",     "label": "İndirim % rozeti göster",         "default": true },
+    { "type": "select",   "id": "btn_style",           "label": "Buton stili",                     "default": "outline",
+      "options": [
+        { "value": "outline", "label": "Çerçeveli (outline)" },
+        { "value": "filled",  "label": "Dolu (filled)"       }
+      ]
+    },
+    { "type": "text",     "id": "cta_add",             "label": "Sepete Ekle butonu metni",         "default": "Sepete Ekle" },
+    { "type": "text",     "id": "cta_reorder",         "label": "Tekrar Al butonu metni",           "default": "Tekrar Al" },
+
+    { "type": "header",   "content": "Offer / Kampanya" },
+    { "type": "paragraph","content": "Her kampanya için aşağıda 'Add block → Offer' ile blok ekleyin. Müşteri etiketleri Shopify Admin → Customers'da yönetilir." },
+
+    { "type": "header",   "content": "Yerleşim" },
+    { "type": "color_scheme", "id": "color_scheme",   "label": "Renk şeması" },
+    { "type": "range",    "id": "padding_top",        "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Üst boşluk",  "default": 28 },
+    { "type": "range",    "id": "padding_bottom",     "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Alt boşluk",  "default": 12 }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "Offer (Kampanya)",
+      "settings": [
+        { "type": "text",         "id": "segment_tags",  "label": "Segment etiketleri (virgülle ayır)", "info": "Örnek: crm-vip,tier-gold. Müşteri bu etiketlerden birine sahipse offer gösterilir." },
+        { "type": "select",       "id": "scope",         "label": "Kapsam", "default": "catalog",
+          "options": [
+            { "value": "catalog",  "label": "Tüm katalog (AI öneri)" },
+            { "value": "products", "label": "Belirli ürünler" }
+          ]
+        },
+        { "type": "product_list", "id": "products",      "label": "Ürünler",          "info": "Sadece kapsam 'Belirli ürünler' ise kullanılır.", "limit": 12 },
+        { "type": "text",         "id": "badge_text",    "label": "Rozet metni",       "default": "Sana Özel" },
+        { "type": "text",         "id": "start_date",    "label": "Başlangıç (YYYY-AA-GG, opsiyonel)", "info": "Boş ise hemen aktif olur." },
+        { "type": "text",         "id": "end_date",      "label": "Bitiş (YYYY-AA-GG, opsiyonel)",    "info": "Boş ise süresiz aktif kalır." }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [{ "name": "UC Personal Rail" }]
+}
+{% endschema %}

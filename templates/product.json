@@ -1,0 +1,263 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "product_labels": {
+          "type": "product-labels",
+          "settings": {
+            "show_sale_label": true
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "vendor_title": false
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_tax_and_shipping": false,
+            "show_percentage_discount": false
+          }
+        },
+        "variant-picker": {
+          "type": "variant-picker",
+          "settings": {
+            "prefix_choose": true,
+            "enable_dynamic_availability": true,
+            "show_backorder_text": true,
+            "swatch_dual_selectors": true,
+            "enable_size_chart": false,
+            "size_chart_variant": "Size",
+            "size_chart_page": ""
+          }
+        },
+        "buy-buttons": {
+          "type": "buy-buttons",
+          "settings": {
+            "show_qty_selector": true,
+            "enable_dynamic_checkout": true,
+            "show_pickup_availability": false,
+            "show_gift_card_recipient": false
+          }
+        },
+        "selling_points_jMkBR3": {
+          "type": "selling-points",
+          "settings": {
+            "title": "",
+            "layout": "carousel",
+            "usp_icon_width": 48,
+            "usp_1_icon": "cruelty-free",
+            "usp_1_text": "Hayvan Dostu",
+            "usp_2_icon": "eco-friendly",
+            "usp_2_text": "Vegan Formül",
+            "usp_3_icon": "none",
+            "usp_3_text": "",
+            "usp_4_icon": "return",
+            "usp_4_text": "",
+            "usp_5_icon": "none",
+            "usp_5_text": "",
+            "usp_6_icon": "none",
+            "usp_6_text": ""
+          }
+        },
+        "uc_fbt_block": {
+          "type": "custom-liquid",
+          "settings": {
+            "custom_liquid": "{% render 'uc-fbt' %}",
+            "variant_content": false
+          }
+        },
+        "collapsible_content_1": {
+          "type": "collapsible-content",
+          "settings": {
+            "heading": "Açıklama",
+            "icon": "none",
+            "text": "",
+            "page": "",
+            "custom_liquid": "{% assign claims = product.metafields.custom.product_claims.value %}{% if claims and claims.size > 0 %}<div style=\"display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;\">{% for claim in claims %}<span style=\"display:inline-block;background:#e8f5e9;color:#2e7d32;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:500;\">{{ claim }}</span>{% endfor %}</div>{% endif %}{% assign desc = product.metafields.custom.short_description.value %}{% if desc != blank %}<div style=\"line-height:1.7;\">{{ desc | newline_to_br }}</div>{% else %}{{ product.description }}{% endif %}",
+            "variant_content": false,
+            "open": true
+          }
+        },
+        "collapsible_content_2": {
+          "type": "collapsible-content",
+          "settings": {
+            "heading": "Özel İçerikler",
+            "icon": "none",
+            "text": "<p>Add your content here</p>",
+            "page": "",
+            "custom_liquid": "{% assign ingredients = product.metafields.custom.key_ingredients.value %}{% if ingredients and ingredients.size > 0 %}<div style=\"display:grid;gap:16px;\">{% for item in ingredients %}<div style=\"padding:16px;background:#fafafa;border-radius:12px;border-left:3px solid #7c9a5e;\"><div style=\"font-weight:600;font-size:15px;margin-bottom:6px;color:#2e7d32;\">{{ item.name }}</div><div style=\"font-size:14px;line-height:1.6;color:#555;\">{{ item.benefit }}</div></div>{% endfor %}</div>{% else %}<script>document.currentScript.closest('details-disclosure').style.display='none'</script>{% endif %}",
+            "variant_content": false,
+            "open": false
+          }
+        },
+        "collapsible_content_3": {
+          "type": "collapsible-content",
+          "settings": {
+            "heading": "Nasıl Kullanılır",
+            "icon": "none",
+            "text": "",
+            "page": "",
+            "custom_liquid": "{% assign howto = product.metafields.custom.how_to_use.value %}{% if howto != blank %}<div style=\"line-height:1.7;font-size:14px;\">{{ howto | newline_to_br }}</div>{% else %}<p style=\"color:#888;font-size:14px;\">Kullanım bilgisi için ürün ambalajını inceleyiniz.</p>{% endif %}",
+            "variant_content": false,
+            "open": false
+          }
+        },
+        "complementary": {
+          "type": "complementary",
+          "settings": {
+            "heading": "Bakım Rutininizi Tamamlayın",
+            "products_to_show": 3
+          }
+        }
+      },
+      "block_order": [
+        "product_labels",
+        "title",
+        "price",
+        "variant-picker",
+        "buy-buttons",
+        "selling_points_jMkBR3",
+        "uc_fbt_block",
+        "collapsible_content_1",
+        "collapsible_content_2",
+        "collapsible_content_3",
+        "complementary"
+      ],
+      "settings": {
+        "stick_media": true,
+        "media_layout": "stacked",
+        "media_stacked_type": "2-1",
+        "media_size": "edge",
+        "media_ratio": "0.75",
+        "media_crop": "none",
+        "stacked_scroll": "always",
+        "underline_active": false,
+        "enable_video_looping": false,
+        "enable_video_autoplay": false,
+        "enable_video_controls": true,
+        "slider_full_width_mobile": true,
+        "media_thumbs": "always",
+        "enable_zoom": true,
+        "enable_lightbox_mobile": true,
+        "hover_zoom": "large",
+        "border_color": "rgba(0,0,0,0)",
+        "bg_color": "#f7f4f0",
+        "sticky_atc_panel": true,
+        "sticky_atc_mobile": true,
+        "enable_media_grouping": true,
+        "media_grouping_option": "Color,Colour,Couleur,Farbe"
+      }
+    },
+    "icons_with_text_4C4RBN": {
+      "type": "icons-with-text",
+      "blocks": {
+        "item_3EwkEi": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "usp_icon": "none",
+            "heading": "Ücretsiz Kargo",
+            "text": "<p>Tüm siparişlerde</p>"
+          }
+        },
+        "item_d3in8W": {
+          "type": "item",
+          "settings": {
+            "icon": "leaf",
+            "usp_icon": "vegan",
+            "heading": "Vegan Formül",
+            "text": ""
+          }
+        },
+        "item_jcrnwQ": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "usp_icon": "cruelty-free",
+            "heading": "Hayvan Dostu",
+            "text": ""
+          }
+        },
+        "item_KghhHz": {
+          "type": "item",
+          "settings": {
+            "icon": "award",
+            "usp_icon": "clean-beauty",
+            "heading": "Dermatolog Testli",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_3EwkEi",
+        "item_d3in8W",
+        "item_jcrnwQ",
+        "item_KghhHz"
+      ],
+      "name": "Güven Rozetleri",
+      "settings": {
+        "heading": "",
+        "heading_size": "x-large-heading",
+        "icon_size": 48,
+        "icon_position": "beside",
+        "height": "py-6",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "Bunları da Beğenebilirsiniz",
+        "heading_size": "h4",
+        "heading_align": "text-start",
+        "mob_center_text": false,
+        "color_scheme": "",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)",
+        "products_to_show": 8,
+        "products_per_row": "2",
+        "products_per_row_desktop": "4",
+        "layout": "carousel"
+      }
+    },
+    "rich_content_image": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "{% assign rc_img = product.metafields.custom.rich_content_image.value %}{% if rc_img != blank %}<div style=\"max-width:1200px;margin:0 auto;\"><img src=\"{{ rc_img | image_url: width: 1200 }}\" alt=\"{{ product.title | escape }} - Detaylı Bilgi\" loading=\"lazy\" width=\"1200\" style=\"width:100%;height:auto;display:block;border-radius:12px;\" srcset=\"{{ rc_img | image_url: width: 600 }} 600w, {{ rc_img | image_url: width: 900 }} 900w, {{ rc_img | image_url: width: 1200 }} 1200w\" sizes=\"(max-width: 768px) 100vw, 1200px\"></div>{% endif %}",
+        "theme_styles": true,
+        "full_width": false,
+        "color_scheme": "",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)",
+        "section_join_mode": "tight"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "icons_with_text_4C4RBN",
+    "recommendations",
+    "rich_content_image"
+  ]
+}
