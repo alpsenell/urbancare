@@ -1,47 +1,79 @@
-{%- comment -%} URBAN Care - concern-based navigation cards {%- endcomment -%}
-<div class="section-background">
-  <div class="flex container">
-    <div class="section section--standard section--border-radius color-scheme color-scheme--{{ section.settings.color_scheme | default: 'scheme-1' }}">
-      <div class="container container--text text-center">
-        {%- if section.settings.subheading != blank -%}<p class="subheading">{{ section.settings.subheading | escape }}</p>{%- endif -%}
-        {%- if section.settings.heading != blank -%}<h2 class="h1">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+{%- comment -%}
+  URBAN Care — endişe/ihtiyaç bazlı navigasyon kartları
+
+  Tasarım: eyebrow + başlık ortalanmış, altında kartlar.
+  Mobil: 2×2 ızgara, 44px ikon dairesi.
+  Masaüstü (≥1024px): 4'lü sıra, 56px ikon dairesi, hover'da kart yükselir.
+
+  Her kartın kendi vurgu rengi var (accent) ve ikon dairesi o rengin
+  açık tonuyla doluyor.
+{%- endcomment -%}
+
+<div id="uc-concern-{{ section.id }}"
+     class="uc-concern color-scheme color-scheme--{{ section.settings.color_scheme | default: 'scheme-1' }}">
+  <div class="uc-concern-inner">
+    {%- if section.settings.subheading != blank or section.settings.heading != blank -%}
+      <div class="uc-concern-head">
+        {%- if section.settings.subheading != blank -%}
+          <p class="uc-concern-eyebrow">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="uc-concern-heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
       </div>
-      <div class="uc-concern-grid">
-        {%- for block in section.blocks -%}
-          <a class="uc-concern-card uc-accent--{{ block.settings.accent }}" href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>
-            <span class="uc-concern-ic">
-              {%- case block.settings.icon -%}
-                {%- when 'drop' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11Z"/></svg>
-                {%- when 'spark' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>
-                {%- when 'wind' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a3 3 0 1 0-3-3M3 16h14a3 3 0 1 1-3 3M3 12h7"/></svg>
-                {%- when 'sun' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
-                {%- else -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/></svg>
-              {%- endcase -%}
-            </span>
-            <span class="uc-concern-tt">{{ block.settings.title | escape }}</span>
-            {%- if block.settings.desc != blank -%}<span class="uc-concern-ds">{{ block.settings.desc | escape }}</span>{%- endif -%}
-            <span class="uc-concern-go">Keşfet &rarr;</span>
-          </a>
-        {%- endfor -%}
-      </div>
+    {%- endif -%}
+
+    <div class="uc-concern-grid">
+      {%- for block in section.blocks -%}
+        <a class="uc-concern-card uc-accent--{{ block.settings.accent }}" href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>
+          <span class="uc-concern-ic">
+            {%- case block.settings.icon -%}
+              {%- when 'drop' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11Z"/></svg>
+              {%- when 'spark' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>
+              {%- when 'wind' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a3 3 0 1 0-3-3M3 16h14a3 3 0 1 1-3 3M3 12h7"/></svg>
+              {%- when 'sun' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+              {%- else -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/></svg>
+            {%- endcase -%}
+          </span>
+          <span class="uc-concern-tt">{{ block.settings.title | escape }}</span>
+          {%- if block.settings.desc != blank -%}<span class="uc-concern-ds">{{ block.settings.desc | escape }}</span>{%- endif -%}
+          <span class="uc-concern-go">{{ section.settings.cta_label | default: 'Keşfet →' | escape }}</span>
+        </a>
+      {%- endfor -%}
     </div>
   </div>
 </div>
 
 {% style %}
-#shopify-section-{{ section.id }} .uc-concern-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-@media(min-width:768px){#shopify-section-{{ section.id }} .uc-concern-grid{grid-template-columns:repeat(4,1fr);gap:20px}}
-#shopify-section-{{ section.id }} .uc-concern-card{display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:20px;border-radius:16px;background:#fff;border:1px solid rgba(0,0,0,.08);text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease;height:100%}
-#shopify-section-{{ section.id }} .uc-concern-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.09)}
-#shopify-section-{{ section.id }} .uc-concern-ic{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:var(--acc-soft);color:var(--acc)}
-#shopify-section-{{ section.id }} .uc-concern-ic svg{width:24px;height:24px}
-#shopify-section-{{ section.id }} .uc-concern-tt{font-weight:700;font-size:1.02rem;line-height:1.25}
-#shopify-section-{{ section.id }} .uc-concern-ds{font-size:.86rem;opacity:.72;line-height:1.4}
-#shopify-section-{{ section.id }} .uc-concern-go{margin-top:auto;font-weight:600;font-size:.85rem;color:var(--acc)}
-#shopify-section-{{ section.id }} .uc-accent--green{--acc:#3f9d6b;--acc-soft:#e7f4ec}
-#shopify-section-{{ section.id }} .uc-accent--pink{--acc:#d81b8c;--acc-soft:#fbe5f2}
-#shopify-section-{{ section.id }} .uc-accent--blue{--acc:#3f74b8;--acc-soft:#e6eefb}
-#shopify-section-{{ section.id }} .uc-accent--orange{--acc:#d98032;--acc-soft:#fbeede}
+#uc-concern-{{ section.id }}{padding:30px 16px}
+#uc-concern-{{ section.id }} .uc-concern-head{margin-bottom:18px;text-align:center}
+#uc-concern-{{ section.id }} .uc-concern-eyebrow{margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d81b8c}
+#uc-concern-{{ section.id }} .uc-concern-heading{margin:0;font-family:var(--heading-font-family);font-weight:600;font-size:22px;letter-spacing:-.02em;color:#1a1a1a}
+#uc-concern-{{ section.id }} .uc-concern-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+#uc-concern-{{ section.id }} .uc-concern-card{display:flex;flex-direction:column;align-items:flex-start;gap:9px;height:100%;padding:18px;border:1px solid rgba(0,0,0,.08);border-radius:16px;background:#fff;text-decoration:none;color:inherit;transition:transform .16s ease,box-shadow .16s ease}
+#uc-concern-{{ section.id }} .uc-concern-ic{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--acc-soft);color:var(--acc)}
+#uc-concern-{{ section.id }} .uc-concern-ic svg{width:24px;height:24px}
+#uc-concern-{{ section.id }} .uc-concern-tt{font-size:15px;font-weight:700;line-height:1.25;color:#1a1a1a}
+#uc-concern-{{ section.id }} .uc-concern-ds{font-size:12.5px;line-height:1.4;opacity:.72}
+#uc-concern-{{ section.id }} .uc-concern-go{margin-top:2px;font-size:13px;font-weight:600;color:var(--acc)}
+#uc-concern-{{ section.id }} .uc-accent--green{--acc:#3f9d6b;--acc-soft:#e7f4ec}
+#uc-concern-{{ section.id }} .uc-accent--pink{--acc:#d81b8c;--acc-soft:#fbe5f2}
+#uc-concern-{{ section.id }} .uc-accent--blue{--acc:#3f74b8;--acc-soft:#e6eefb}
+#uc-concern-{{ section.id }} .uc-accent--orange{--acc:#d98032;--acc-soft:#fbeede}
+@media(min-width:1024px){
+#uc-concern-{{ section.id }}{padding:60px 40px}
+#uc-concern-{{ section.id }} .uc-concern-inner{max-width:1280px;margin:0 auto}
+#uc-concern-{{ section.id }} .uc-concern-head{margin-bottom:36px}
+#uc-concern-{{ section.id }} .uc-concern-eyebrow{margin:0 0 8px;font-size:12px;letter-spacing:.16em}
+#uc-concern-{{ section.id }} .uc-concern-heading{font-size:32px}
+#uc-concern-{{ section.id }} .uc-concern-grid{grid-template-columns:repeat(4,1fr);gap:22px}
+#uc-concern-{{ section.id }} .uc-concern-card{gap:14px;padding:28px;border-radius:20px}
+#uc-concern-{{ section.id }} .uc-concern-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.09)}
+#uc-concern-{{ section.id }} .uc-concern-ic{width:56px;height:56px}
+#uc-concern-{{ section.id }} .uc-concern-tt{font-size:19px}
+#uc-concern-{{ section.id }} .uc-concern-ds{font-size:14px;line-height:1.5}
+#uc-concern-{{ section.id }} .uc-concern-go{margin-top:auto;font-size:14px}
+}
 {% endstyle %}
 
 {% schema %}
@@ -51,6 +83,7 @@
   "settings": [
     { "type": "text", "id": "subheading", "label": "Üst etiket", "default": "SAÇINLA KONUŞ" },
     { "type": "text", "id": "heading", "label": "Başlık", "default": "Hangi derdine çözüm arıyorsun?" },
+    { "type": "text", "id": "cta_label", "label": "Kart bağlantı metni", "default": "Keşfet →" },
     { "type": "color_scheme", "id": "color_scheme", "label": "Renk şeması", "default": "scheme-1" }
   ],
   "blocks": [

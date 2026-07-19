@@ -1,0 +1,239 @@
+{%- comment -%}
+  URBAN Care — tasarıma birebir ürün ızgarası / karuseli
+
+  Temanın stok product-card bileşeni koleksiyon ve arama sayfalarında da
+  kullanıldığı için ona dokunmuyoruz; ana sayfa tasarımındaki kart bu bölümde
+  ayrıca kuruluyor.
+
+  Yerleşim:
+  - "grid"     : mobil 2 sütun, masaüstü N sütun (Çok Satanlar).
+  - "carousel" : mobilde yatay kaydırma (kart %66), masaüstünde ızgara (Setler).
+
+  Sepete Ekle: tek varyantlı ürün doğrudan sepete eklenir; çok varyantlı ürün
+  seçim gerektirdiği için ürün sayfasına götürür (yanlış varyant eklenmesin).
+{%- endcomment -%}
+
+{%- liquid
+  assign collection = collections[section.settings.collection]
+  assign limit = section.settings.products_to_show | default: 8
+  assign layout = section.settings.layout | default: 'grid'
+  assign ratio = section.settings.image_ratio | default: '4/5'
+  assign cols = section.settings.columns_desktop | default: 4
+-%}
+
+{%- if collection.products.size > 0 -%}
+<div id="uc-products-{{ section.id }}" class="ucp ucp--{{ layout }}">
+  <div class="ucp__inner">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="ucp__head">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="ucp__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="ucp__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <p class="ucp__sub">{{ section.settings.text | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="ucp__list">
+      {%- for product in collection.products limit: limit -%}
+        {%- liquid
+          assign v = product.selected_or_first_available_variant
+          assign on_sale = false
+          if v.compare_at_price > v.price
+            assign on_sale = true
+          endif
+          assign single = false
+          if product.variants.size == 1
+            assign single = true
+          endif
+        -%}
+        <div class="ucp__card">
+          <a class="ucp__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+            {%- if product.featured_media -%}
+              <img src="{{ product.featured_media | image_url: width: 600 }}"
+                   srcset="{{ product.featured_media | image_url: width: 300 }} 300w,
+                           {{ product.featured_media | image_url: width: 600 }} 600w"
+                   sizes="(min-width: 1024px) {{ 100 | divided_by: cols }}vw, 50vw"
+                   width="{{ product.featured_media.width }}"
+                   height="{{ product.featured_media.height }}"
+                   alt="{{ product.title | escape }}"
+                   loading="lazy">
+            {%- endif -%}
+            {%- if on_sale and section.settings.show_sale_badge -%}
+              <span class="ucp__badge">{{ section.settings.sale_badge_text | escape }}</span>
+            {%- endif -%}
+          </a>
+
+          <a class="ucp__name" href="{{ product.url }}">{{ product.title | escape }}</a>
+
+          <div class="ucp__prices">
+            {%- if on_sale -%}
+              <span class="ucp__orig">{{ v.compare_at_price | money }}</span>
+            {%- endif -%}
+            <span class="ucp__price">{{ v.price | money }}</span>
+          </div>
+
+          {%- if v.available == false -%}
+            <button type="button" class="ucp__btn" disabled>{{ section.settings.soldout_label | escape }}</button>
+          {%- elsif single -%}
+            <button type="button" class="ucp__btn" data-ucp-add data-variant="{{ v.id }}">
+              {{- section.settings.button_label | escape -}}
+            </button>
+          {%- else -%}
+            <a class="ucp__btn" href="{{ product.url }}">{{ section.settings.options_label | escape }}</a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.view_all_label != blank -%}
+      <div class="ucp__more">
+        <a class="ucp__view-all" href="{{ collection.url | default: '#' }}">{{ section.settings.view_all_label | escape }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% style %}
+#uc-products-{{ section.id }}{padding:8px 16px 32px}
+#uc-products-{{ section.id }} .ucp__head{margin-bottom:18px;text-align:center}
+#uc-products-{{ section.id }} .ucp__eyebrow{margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d81b8c}
+#uc-products-{{ section.id }} .ucp__heading{margin:0;font-family:var(--heading-font-family);font-weight:600;font-size:24px;letter-spacing:-.02em;color:#1a1a1a}
+#uc-products-{{ section.id }} .ucp__sub{margin:6px 0 0;font-size:13px;color:#6b6b6b}
+
+#uc-products-{{ section.id }} .ucp__list{display:grid;grid-template-columns:repeat({{ section.settings.columns_mobile | default: 2 }},1fr);gap:14px}
+#uc-products-{{ section.id }}.ucp--carousel .ucp__list{display:flex;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:4px;scrollbar-width:none;-ms-overflow-style:none}
+#uc-products-{{ section.id }}.ucp--carousel .ucp__list::-webkit-scrollbar{width:0;height:0}
+#uc-products-{{ section.id }}.ucp--carousel .ucp__card{flex:0 0 66%;scroll-snap-align:start}
+
+#uc-products-{{ section.id }} .ucp__card{display:flex;flex-direction:column}
+#uc-products-{{ section.id }} .ucp__media{position:relative;display:block;aspect-ratio:{{ ratio }};border-radius:10px;overflow:hidden;background:#faf1f6}
+#uc-products-{{ section.id }} .ucp__media img{width:100%;height:100%;object-fit:{{ section.settings.image_fit | default: 'cover' }};display:block;transition:transform .2s ease}
+#uc-products-{{ section.id }} .ucp__badge{position:absolute;top:8px;left:8px;padding:2px 7px;border:1px solid #d81b8c;border-radius:999px;background:#fff;color:#d81b8c;font-size:10px;font-weight:700;line-height:1.6}
+#uc-products-{{ section.id }} .ucp__name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;height:36px;margin:9px 0 5px;font-size:13px;font-weight:500;line-height:1.35;color:#1a1a1a;text-decoration:none}
+#uc-products-{{ section.id }} .ucp__name:hover{color:#d81b8c}
+#uc-products-{{ section.id }} .ucp__prices{display:flex;align-items:baseline;gap:6px;margin-bottom:8px}
+#uc-products-{{ section.id }} .ucp__orig{font-size:11px;color:rgba(0,0,0,.38);text-decoration:line-through}
+#uc-products-{{ section.id }} .ucp__price{font-size:14px;font-weight:700;color:#d81b8c}
+#uc-products-{{ section.id }} .ucp__btn{margin-top:auto;display:flex;align-items:center;justify-content:center;width:100%;padding:9px;border:0;border-radius:999px;background:#d81b8c;color:#fff;font-family:inherit;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;transition:background-color .15s ease}
+#uc-products-{{ section.id }} .ucp__btn:hover{background:#9e0055;color:#fff}
+#uc-products-{{ section.id }} .ucp__btn[disabled]{background:#e6dae1;color:#8a7d84;cursor:default}
+#uc-products-{{ section.id }} .ucp__more{margin-top:22px;text-align:center}
+#uc-products-{{ section.id }} .ucp__view-all{display:inline-block;padding:11px 26px;border:1.5px solid #d81b8c;border-radius:999px;color:#d81b8c;font-size:13px;font-weight:700;text-decoration:none;transition:background-color .15s ease,color .15s ease}
+#uc-products-{{ section.id }} .ucp__view-all:hover{background:#d81b8c;color:#fff}
+
+@media(min-width:1024px){
+#uc-products-{{ section.id }}{padding:0 40px 60px}
+#uc-products-{{ section.id }} .ucp__inner{max-width:1280px;margin:0 auto}
+#uc-products-{{ section.id }} .ucp__head{margin-bottom:36px}
+#uc-products-{{ section.id }} .ucp__eyebrow{margin:0 0 8px;font-size:12px;letter-spacing:.16em}
+#uc-products-{{ section.id }} .ucp__heading{font-size:36px}
+#uc-products-{{ section.id }} .ucp__sub{margin:8px 0 0;font-size:15px}
+#uc-products-{{ section.id }} .ucp__list,
+#uc-products-{{ section.id }}.ucp--carousel .ucp__list{display:grid;grid-template-columns:repeat({{ cols }},1fr);gap:26px;overflow:visible;padding-bottom:0}
+#uc-products-{{ section.id }}.ucp--carousel .ucp__card{flex:none}
+{%- if section.settings.image_ratio_desktop != blank -%}
+#uc-products-{{ section.id }} .ucp__media{aspect-ratio:{{ section.settings.image_ratio_desktop }}}
+{%- endif -%}
+#uc-products-{{ section.id }} .ucp__media{border-radius:14px}
+#uc-products-{{ section.id }} .ucp__card:hover .ucp__media img{transform:scale(1.02)}
+#uc-products-{{ section.id }} .ucp__badge{top:12px;left:12px;padding:3px 10px;font-size:11px}
+#uc-products-{{ section.id }} .ucp__name{height:auto;min-height:42px;margin:13px 0 6px;font-size:15px;line-height:1.4}
+#uc-products-{{ section.id }} .ucp__prices{gap:8px;margin-bottom:12px}
+#uc-products-{{ section.id }} .ucp__orig{font-size:13px}
+#uc-products-{{ section.id }} .ucp__price{font-size:17px}
+#uc-products-{{ section.id }} .ucp__btn{padding:12px;font-size:14px}
+#uc-products-{{ section.id }} .ucp__more{margin-top:40px}
+#uc-products-{{ section.id }} .ucp__view-all{padding:14px 40px;font-size:15px}
+}
+{% endstyle %}
+
+<script>
+(function(){
+  var root = document.getElementById('uc-products-{{ section.id }}');
+  if (!root || root.dataset.ucpReady) return;
+  root.dataset.ucpReady = '1';
+
+  root.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('[data-ucp-add]') : null;
+    if (!btn || btn.disabled) return;
+    var vid = btn.getAttribute('data-variant');
+    if (!vid) return;
+
+    btn.disabled = true;
+    var label = btn.textContent;
+    btn.textContent = 'Ekleniyor...';
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: Number(vid), quantity: 1 }] })
+    })
+    .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(){
+      btn.textContent = 'Eklendi ✓';
+      try { document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true, detail: { open: true } })); } catch (err) {}
+      setTimeout(function(){ btn.textContent = label; btn.disabled = false; }, 1800);
+    })
+    .catch(function(){ btn.textContent = label; btn.disabled = false; });
+  });
+})();
+</script>
+
+{%- elsif request.design_mode -%}
+  <div class="page-width" style="padding:28px;text-align:center;color:rgba(0,0,0,.45);font-size:13px;border:1px dashed rgba(197,0,106,.25);border-radius:14px;max-width:760px;margin-inline:auto;background:#fdf5f9;">
+    Ürün ızgarası gizli. Görünmesi için ürünü olan bir koleksiyon seç.
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Ürün Izgarası",
+  "tag": "section",
+  "class": "cc-uc-products",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Koleksiyon" },
+    { "type": "range", "id": "products_to_show", "min": 2, "max": 12, "step": 1, "label": "Gösterilecek ürün sayısı", "default": 8 },
+    { "type": "header", "content": "Başlık" },
+    { "type": "text", "id": "eyebrow", "label": "Üst etiket", "default": "EN ÇOK TERCİH EDİLENLER" },
+    { "type": "text", "id": "heading", "label": "Başlık", "default": "Çok Satanlar" },
+    { "type": "text", "id": "text", "label": "Açıklama (opsiyonel)" },
+    { "type": "header", "content": "Yerleşim" },
+    { "type": "select", "id": "layout", "label": "Mobil yerleşim", "default": "grid", "options": [
+      { "value": "grid", "label": "Izgara" },
+      { "value": "carousel", "label": "Yatay kaydırma" }
+    ] },
+    { "type": "range", "id": "columns_mobile", "min": 1, "max": 3, "step": 1, "label": "Mobil sütun sayısı", "default": 2, "info": "Yalnızca ızgara yerleşiminde geçerli." },
+    { "type": "range", "id": "columns_desktop", "min": 2, "max": 5, "step": 1, "label": "Masaüstü sütun sayısı", "default": 4 },
+    { "type": "select", "id": "image_ratio", "label": "Görsel oranı", "default": "4/5", "options": [
+      { "value": "4/5", "label": "Dikey (4:5)" },
+      { "value": "1/1", "label": "Kare (1:1)" },
+      { "value": "4/3", "label": "Yatay (4:3)" }
+    ] },
+    { "type": "select", "id": "image_ratio_desktop", "label": "Görsel oranı (masaüstü)", "default": "", "options": [
+      { "value": "", "label": "Mobille aynı" },
+      { "value": "4/5", "label": "Dikey (4:5)" },
+      { "value": "1/1", "label": "Kare (1:1)" },
+      { "value": "4/3", "label": "Yatay (4:3)" }
+    ] },
+    { "type": "select", "id": "image_fit", "label": "Görsel yerleşimi", "default": "cover", "options": [
+      { "value": "cover", "label": "Kırparak doldur" },
+      { "value": "contain", "label": "Tamamını sığdır" }
+    ], "info": "Ürün görselleri kare ve yan panelliyse \"Tamamını sığdır\" kırpılmayı önler." },
+    { "type": "header", "content": "Kart" },
+    { "type": "checkbox", "id": "show_sale_badge", "label": "İndirim rozeti göster", "default": true },
+    { "type": "text", "id": "sale_badge_text", "label": "İndirim rozeti metni", "default": "İNDİRİM" },
+    { "type": "text", "id": "button_label", "label": "Sepete ekle butonu", "default": "Sepete Ekle" },
+    { "type": "text", "id": "options_label", "label": "Çok varyantlı ürün butonu", "default": "Seçenekleri Gör", "info": "Varyant seçimi gerektiren ürünlerde yanlış varyant eklenmemesi için ürün sayfasına yönlendirir." },
+    { "type": "text", "id": "soldout_label", "label": "Tükendi metni", "default": "Tükendi" },
+    { "type": "header", "content": "Tümünü gör" },
+    { "type": "text", "id": "view_all_label", "label": "Buton metni", "default": "Tüm Ürünleri Gör", "info": "Boş bırakılırsa buton gizlenir." }
+  ],
+  "presets": [ { "name": "Ürün Izgarası" } ],
+  "disabled_on": { "groups": ["header","footer","aside"] }
+}
+{% endschema %}

@@ -88,17 +88,20 @@
 
   {%- style -%}
     #uc-flash-{{ section.id }} {
-      --uc-brand:    #C5006A;
+      --uc-brand:    #d81b8c;
       --uc-brand-dk: #9e0055;
       --uc-text:     #1a1a1a;
       --uc-muted:    #666;
       --uc-border:   #eedde8;
       --uc-bg-card:  #ffffff;
       --uc-bg-soft:  #fdf5f9;
-      --gap: 12px;
+      --gap: 14px;
       --peek: 80%;
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
+      /* Kart çerçevesi kalkınca içerik ekran kenarına yapışmasın diye
+         yan boşluğu burada veriyoruz (.page-width bu temada 0 dönüyor). */
+      padding-inline: 16px;
       background: var(--uc-bg-soft);
     }
 
@@ -111,8 +114,9 @@
       margin-bottom: 18px;
     }
     #uc-flash-{{ section.id }} .uc-flash__title {
+      font-family: var(--heading-font-family);
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--uc-text);
       margin: 0;
       letter-spacing: -.02em;
@@ -121,12 +125,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       background: var(--uc-brand);
       border-radius: 50%;
       color: #fff;
-      font-size: 14px;
+      font-size: 13px;
       flex-shrink: 0;
     }
 
@@ -138,50 +142,39 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       padding: 4px 0 12px;
-      max-width: 1000px;
+      max-width: 1280px;
       margin-inline: auto;
       scrollbar-width: none;
+      -ms-overflow-style: none;
     }
     #uc-flash-{{ section.id }} .uc-flash__grid::-webkit-scrollbar { display: none; }
 
-    /* Kart */
+    /* Kart — ana sayfadaki Ürün Izgarası kartıyla birebir aynı ölçüler.
+       Kart çerçevesi/gölgesi yok; görsel, ad, fiyat ve buton aynı skalada. */
     #uc-flash-{{ section.id }} .uc-flash__card {
       box-sizing: border-box;
       flex: 0 0 var(--peek);
       scroll-snap-align: start;
-      background: var(--uc-bg-card);
-      border: 1px solid var(--uc-border);
-      border-radius: 16px;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 2px 12px rgba(197,0,106,.08);
-      transition: box-shadow .2s ease, transform .2s ease;
     }
     #uc-flash-{{ section.id }} .uc-flash__card:only-child { flex-basis: 100%; }
-    #uc-flash-{{ section.id }} .uc-flash__card:hover {
-      box-shadow: 0 6px 20px rgba(197,0,106,.15);
-      transform: translateY(-2px);
-    }
 
     /* Görsel alanı */
     #uc-flash-{{ section.id }} .uc-flash__media {
       display: block;
       position: relative;
-      aspect-ratio: 1 / 1;
-      background: #f8f0f5;
+      aspect-ratio: {{ section.settings.image_ratio | default: '4/5' }};
+      border-radius: 10px;
+      background: #faf1f6;
       overflow: hidden;
     }
     #uc-flash-{{ section.id }} .uc-flash__media img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      padding: 8px;
+      object-fit: {{ section.settings.image_fit | default: 'cover' }};
       display: block;
-      transition: transform .35s ease;
-    }
-    #uc-flash-{{ section.id }} .uc-flash__card:hover .uc-flash__media img {
-      transform: scale(1.04);
+      transition: transform .2s ease;
     }
 
     /* % rozet — görsel üzerinde */
@@ -201,14 +194,15 @@
 
     /* Bilgi alanı */
     #uc-flash-{{ section.id }} .uc-flash__info {
-      padding: 14px 14px 16px;
+      padding: 0;
       display: flex;
       flex-direction: column;
       flex: 1;
-      gap: 6px;
+      gap: 0;
     }
 
     #uc-flash-{{ section.id }} .uc-flash__eyebrow {
+      margin: 9px 0 3px;
       font-size: 10px;
       font-weight: 700;
       letter-spacing: .1em;
@@ -217,8 +211,10 @@
     }
 
     #uc-flash-{{ section.id }} .uc-flash__name {
-      font-size: 14px;
-      font-weight: 600;
+      height: 36px;
+      margin: 0 0 5px;
+      font-size: 13px;
+      font-weight: 500;
       color: var(--uc-text);
       text-decoration: none;
       line-height: 1.35;
@@ -240,19 +236,19 @@
     #uc-flash-{{ section.id }} .uc-flash__prices {
       display: flex;
       align-items: baseline;
-      gap: 8px;
+      gap: 6px;
+      margin-bottom: 8px;
       flex-wrap: wrap;
     }
     #uc-flash-{{ section.id }} .uc-flash__orig {
-      font-size: 13px;
+      font-size: 11px;
       color: rgba(0,0,0,.38);
       text-decoration: line-through;
     }
     #uc-flash-{{ section.id }} .uc-flash__sale {
-      font-size: 20px;
-      font-weight: 800;
+      font-size: 14px;
+      font-weight: 700;
       color: var(--uc-brand);
-      line-height: 1;
     }
 
     /* Geri sayım */
@@ -294,9 +290,9 @@
       border-radius: 999px;
       background: var(--uc-brand);
       color: #fff;
-      font-size: 13.5px;
+      font-size: 12px;
       font-weight: 700;
-      padding: 11px 18px;
+      padding: 9px;
       cursor: pointer;
       transition: background .15s ease, transform .05s ease;
       letter-spacing: .01em;
@@ -305,12 +301,39 @@
     #uc-flash-{{ section.id }} .uc-flash__cta:active { transform: translateY(1px); }
     #uc-flash-{{ section.id }} .uc-flash__cta[disabled] { opacity: .65; cursor: default; }
 
-    /* Masaüstü: sabit sütun */
-    @media (min-width: 700px) {
-      #uc-flash-{{ section.id }} { --peek: 100%; }
-      #uc-flash-{{ section.id }} .uc-flash__card {
-        flex-basis: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+    /* Ara genişlikler: hâlâ kaydırmalı, ama kart daha dar */
+    @media (min-width: 700px) and (max-width: 1023.98px) {
+      #uc-flash-{{ section.id }} { --peek: 48%; }
+    }
+
+    /* Masaüstü: gerçek ızgara, kaydırma yok (tasarım: 3 sütun) */
+    @media (min-width: 1024px) {
+      #uc-flash-{{ section.id }} { padding-top: 52px; padding-bottom: 52px; padding-inline: 40px; }
+      #uc-flash-{{ section.id }} .uc-flash__head { gap: 11px; margin-bottom: 30px; }
+      #uc-flash-{{ section.id }} .uc-flash__title { font-size: 28px; }
+      #uc-flash-{{ section.id }} .uc-flash__lightning { width: 30px; height: 30px; font-size: 15px; }
+
+      #uc-flash-{{ section.id }} .uc-flash__grid {
+        display: grid;
+        grid-template-columns: repeat(var(--cols), 1fr);
+        gap: 26px;
+        overflow: visible;
+        padding: 0;
       }
+      #uc-flash-{{ section.id }} .uc-flash__card { flex: none; }
+      {%- if section.settings.image_ratio_desktop != blank -%}
+      #uc-flash-{{ section.id }} .uc-flash__media { aspect-ratio: {{ section.settings.image_ratio_desktop }}; }
+      {%- endif -%}
+      #uc-flash-{{ section.id }} .uc-flash__media { border-radius: 14px; }
+      #uc-flash-{{ section.id }} .uc-flash__card:hover .uc-flash__media img { transform: scale(1.02); }
+      #uc-flash-{{ section.id }} .uc-flash__badge { top: 12px; right: 12px; font-size: 11px; padding: 3px 10px; }
+      #uc-flash-{{ section.id }} .uc-flash__info { padding: 0; gap: 0; }
+      #uc-flash-{{ section.id }} .uc-flash__eyebrow { margin: 13px 0 4px; font-size: 11px; letter-spacing: .12em; }
+      #uc-flash-{{ section.id }} .uc-flash__name { height: auto; min-height: 42px; margin: 0 0 6px; font-size: 15px; line-height: 1.4; }
+      #uc-flash-{{ section.id }} .uc-flash__prices { gap: 8px; margin-bottom: 12px; }
+      #uc-flash-{{ section.id }} .uc-flash__orig { font-size: 13px; }
+      #uc-flash-{{ section.id }} .uc-flash__sale { font-size: 17px; }
+      #uc-flash-{{ section.id }} .uc-flash__cta { padding: 12px; font-size: 14px; }
     }
   {%- endstyle -%}
 
@@ -475,6 +498,21 @@
     { "type": "text",     "id": "cta_label",          "label": "Buton metni",          "default": "Sepete Ekle" },
     { "type": "checkbox", "id": "show_countdown",     "label": "Geri sayım göster",    "default": true },
     { "type": "range",    "id": "columns_desktop",    "min": 1, "max": 3, "step": 1,  "label": "Masaüstü sütun sayısı", "default": 3 },
+    { "type": "select", "id": "image_ratio", "label": "Görsel oranı", "default": "4/5", "options": [
+      { "value": "4/5", "label": "Dikey (4:5)" },
+      { "value": "1/1", "label": "Kare (1:1)" },
+      { "value": "4/3", "label": "Yatay (4:3)" }
+    ] },
+    { "type": "select", "id": "image_ratio_desktop", "label": "Görsel oranı (masaüstü)", "default": "", "options": [
+      { "value": "", "label": "Mobille aynı" },
+      { "value": "4/5", "label": "Dikey (4:5)" },
+      { "value": "1/1", "label": "Kare (1:1)" },
+      { "value": "4/3", "label": "Yatay (4:3)" }
+    ] },
+    { "type": "select", "id": "image_fit", "label": "Görsel yerleşimi", "default": "cover", "options": [
+      { "value": "cover", "label": "Kırparak doldur" },
+      { "value": "contain", "label": "Tamamını sığdır" }
+    ], "info": "Ürün görselleri kare ve yan panelliyse \"Tamamını sığdır\" kırpılmayı önler." },
     { "type": "color_scheme", "id": "color_scheme",  "label": "Renk şeması" },
     { "type": "range",    "id": "padding_top",        "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Üst boşluk",  "default": 32 },
     { "type": "range",    "id": "padding_bottom",     "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Alt boşluk",  "default": 32 }

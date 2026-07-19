@@ -335,46 +335,24 @@
       }
     },
     "bestsellers": {
-      "type": "featured-collection",
-      "blocks": {
-        "heading_best": {
-          "type": "heading",
-          "settings": {
-            "heading": "Çok Satanlar",
-            "heading_size": "h2",
-            "heading_h1": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_best"
-      ],
-      "name": "Çok Satanlar",
+      "type": "uc-products",
       "settings": {
         "collection": "cok-satanlar",
-        "layout": "grid",
-        "carousel_effect": "slide",
-        "products_per_row": "2",
-        "products_per_row_desktop": "4",
         "products_to_show": 8,
-        "card_cutout": false,
-        "show_view_all": true,
-        "view_all_text": "Tüm Ürünleri Gör",
-        "view_all_style": "link",
-        "text_align": "text-center",
-        "text_width_override": false,
-        "text_max_width": 640,
-        "text_column_to_edge": false,
-        "mob_center_text": true,
-        "full_width": false,
-        "color_scheme": "scheme-1",
-        "background_mode": "default",
-        "background_color": "#ffffff",
-        "background_gradient_stop_1": "#cccccc",
-        "background_gradient_stop_2": "#ffffff",
-        "background_gradient_curve": "linear",
-        "background_gradient": "",
-        "section_join_mode": "tight"
+        "eyebrow": "EN ÇOK TERCİH EDİLENLER",
+        "heading": "Çok Satanlar",
+        "text": "",
+        "layout": "grid",
+        "columns_mobile": 2,
+        "columns_desktop": 4,
+        "image_ratio": "4/5",
+        "image_ratio_desktop": "",
+        "show_sale_badge": true,
+        "sale_badge_text": "İNDİRİM",
+        "button_label": "Sepete Ekle",
+        "options_label": "Seçenekleri Gör",
+        "soldout_label": "Tükendi",
+        "view_all_label": "Tüm Ürünleri Gör"
       }
     },
     "uc_bundle": {
@@ -500,46 +478,24 @@
       }
     },
     "sets": {
-      "type": "featured-collection",
-      "blocks": {
-        "heading_sets": {
-          "type": "heading",
-          "settings": {
-            "heading": "Setler & Rutinler",
-            "heading_size": "h2",
-            "heading_h1": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_sets"
-      ],
-      "name": "Setler & Rutinler",
+      "type": "uc-products",
       "settings": {
         "collection": "sac-bakim-setleri",
-        "layout": "grid",
-        "carousel_effect": "slide",
-        "products_per_row": "2",
-        "products_per_row_desktop": "3",
         "products_to_show": 6,
-        "card_cutout": false,
-        "show_view_all": true,
-        "view_all_text": "Tüm Setler",
-        "view_all_style": "link",
-        "text_align": "text-center",
-        "text_width_override": false,
-        "text_max_width": 640,
-        "text_column_to_edge": false,
-        "mob_center_text": true,
-        "full_width": false,
-        "color_scheme": "scheme-1",
-        "background_mode": "default",
-        "background_color": "#ffffff",
-        "background_gradient_stop_1": "#cccccc",
-        "background_gradient_stop_2": "#ffffff",
-        "background_gradient_curve": "linear",
-        "background_gradient": "",
-        "section_join_mode": "tight"
+        "eyebrow": "TAM BAKIM",
+        "heading": "Setler & Rutinler",
+        "text": "Birlikte kullanılınca etkisi 3 kat artar.",
+        "layout": "carousel",
+        "columns_mobile": 2,
+        "columns_desktop": 3,
+        "image_ratio": "4/5",
+        "image_ratio_desktop": "4/3",
+        "show_sale_badge": true,
+        "sale_badge_text": "İNDİRİM",
+        "button_label": "Sepete Ekle",
+        "options_label": "Seçenekleri Gör",
+        "soldout_label": "Tükendi",
+        "view_all_label": "Tüm Setler"
       }
     },
     "uc_categories": {
