@@ -20,7 +20,19 @@
             "grad_to": "#d81b8c",
             "slide_1_title": "Yeni Gelenler",
             "slide_1_text": "Bu haftanın lansmanları",
-            "slide_1_cta": "Keşfet →"
+            "slide_1_product": "",
+            "slide_1_cta": "Keşfet →",
+            "slide_1_link": "",
+            "slide_2_title": "",
+            "slide_2_text": "",
+            "slide_2_product": "",
+            "slide_2_cta": "",
+            "slide_2_link": "",
+            "slide_3_title": "",
+            "slide_3_text": "",
+            "slide_3_product": "",
+            "slide_3_cta": "",
+            "slide_3_link": ""
           }
         },
         "story_flash": {
@@ -31,7 +43,19 @@
             "grad_to": "#d81b8c",
             "slide_1_title": "%40'a Varan İndirim",
             "slide_1_text": "Sadece bugün geçerli",
-            "slide_1_cta": "Fırsatları Gör →"
+            "slide_1_product": "",
+            "slide_1_cta": "Fırsatları Gör →",
+            "slide_1_link": "",
+            "slide_2_title": "",
+            "slide_2_text": "",
+            "slide_2_product": "",
+            "slide_2_cta": "",
+            "slide_2_link": "",
+            "slide_3_title": "",
+            "slide_3_text": "",
+            "slide_3_product": "",
+            "slide_3_cta": "",
+            "slide_3_link": ""
           }
         },
         "story_rutin": {
@@ -42,13 +66,19 @@
             "grad_to": "#d81b8c",
             "slide_1_title": "1 · Temizle",
             "slide_1_text": "Saç tipine uygun şampuanla başla",
+            "slide_1_product": "",
             "slide_1_cta": "Ürünleri Gör →",
+            "slide_1_link": "",
             "slide_2_title": "2 · Onar",
             "slide_2_text": "Maske ve bakım kremiyle besle",
+            "slide_2_product": "",
             "slide_2_cta": "Ürünleri Gör →",
+            "slide_2_link": "",
             "slide_3_title": "3 · Koru",
             "slide_3_text": "Serum ve ısı koruyucuyla bitir",
-            "slide_3_cta": "Ürünleri Gör →"
+            "slide_3_product": "",
+            "slide_3_cta": "Ürünleri Gör →",
+            "slide_3_link": ""
           }
         },
         "story_coksatan": {
@@ -59,7 +89,19 @@
             "grad_to": "#c5006a",
             "slide_1_title": "Haftanın favorisi",
             "slide_1_text": "En çok tercih edilen ürün",
-            "slide_1_cta": "Sepete Ekle"
+            "slide_1_product": "",
+            "slide_1_cta": "Sepete Ekle",
+            "slide_1_link": "",
+            "slide_2_title": "",
+            "slide_2_text": "",
+            "slide_2_product": "",
+            "slide_2_cta": "",
+            "slide_2_link": "",
+            "slide_3_title": "",
+            "slide_3_text": "",
+            "slide_3_product": "",
+            "slide_3_cta": "",
+            "slide_3_link": ""
           }
         },
         "story_sacbakim": {
@@ -70,7 +112,19 @@
             "grad_to": "#d81b8c",
             "slide_1_title": "Saç Bakım Dünyası",
             "slide_1_text": "Şampuan, maske, serum ve fazlası",
-            "slide_1_cta": "Kategoriyi Gör →"
+            "slide_1_product": "",
+            "slide_1_cta": "Kategoriyi Gör →",
+            "slide_1_link": "",
+            "slide_2_title": "",
+            "slide_2_text": "",
+            "slide_2_product": "",
+            "slide_2_cta": "",
+            "slide_2_link": "",
+            "slide_3_title": "",
+            "slide_3_text": "",
+            "slide_3_product": "",
+            "slide_3_cta": "",
+            "slide_3_link": ""
           }
         },
         "story_vucut": {
@@ -81,7 +135,19 @@
             "grad_to": "#d81b8c",
             "slide_1_title": "Vücut Bakım",
             "slide_1_text": "Duş jeli ve nemlendiriciler",
-            "slide_1_cta": "Kategoriyi Gör →"
+            "slide_1_product": "",
+            "slide_1_cta": "Kategoriyi Gör →",
+            "slide_1_link": "",
+            "slide_2_title": "",
+            "slide_2_text": "",
+            "slide_2_product": "",
+            "slide_2_cta": "",
+            "slide_2_link": "",
+            "slide_3_title": "",
+            "slide_3_text": "",
+            "slide_3_product": "",
+            "slide_3_cta": "",
+            "slide_3_link": ""
           }
         },
         "story_vegan": {
@@ -92,7 +158,19 @@
             "grad_to": "#3f9d6b",
             "slide_1_title": "%100 Vegan Formül",
             "slide_1_text": "Hayvanlar üzerinde test edilmez",
-            "slide_1_cta": "Daha Fazla →"
+            "slide_1_product": "",
+            "slide_1_cta": "Daha Fazla →",
+            "slide_1_link": "",
+            "slide_2_title": "",
+            "slide_2_text": "",
+            "slide_2_product": "",
+            "slide_2_cta": "",
+            "slide_2_link": "",
+            "slide_3_title": "",
+            "slide_3_text": "",
+            "slide_3_product": "",
+            "slide_3_cta": "",
+            "slide_3_link": ""
           }
         }
       },
@@ -135,6 +213,8 @@
         "icon": "⚡",
         "text": "Flash İndirim bitişine",
         "end_at": "",
+        "link_label": "",
+        "link": "",
         "bg_from": "#fff0f7",
         "bg_to": "#ffe3f0",
         "text_color": "#c5006a"
@@ -143,11 +223,48 @@
     "uc_flash": {
       "type": "flash-sale",
       "blocks": {
-        "flash_1": { "type": "flash_product", "settings": { "enabled": true, "discount_percent": 40 } },
-        "flash_2": { "type": "flash_product", "settings": { "enabled": true, "discount_percent": 35 } },
-        "flash_3": { "type": "flash_product", "settings": { "enabled": true, "discount_percent": 31 } }
+        "flash_1": {
+          "type": "flash_product",
+          "settings": {
+            "enabled": true,
+            "product": "argan-oil-keratin-besleyici-ve-kirilma-karsiti-4lu-sac-bakim-seti",
+            "discount_percent": 40,
+            "start_at": "",
+            "end_at": "",
+            "discount_code": "",
+            "subtext": ""
+          }
+        },
+        "flash_2": {
+          "type": "flash_product",
+          "settings": {
+            "enabled": true,
+            "product": "argan-oil-keratin-besleyici-ve-kirilma-karsiti-sac-bakim-sampuani-350-ml-vegan",
+            "discount_percent": 35,
+            "start_at": "",
+            "end_at": "",
+            "discount_code": "",
+            "subtext": ""
+          }
+        },
+        "flash_3": {
+          "type": "flash_product",
+          "settings": {
+            "enabled": true,
+            "product": "argan-oil-keratin-besleyici-ve-kirilma-karsiti-sac-bakim-sampuani-seti-350ml-x3",
+            "discount_percent": 31,
+            "start_at": "",
+            "end_at": "",
+            "discount_code": "",
+            "subtext": ""
+          }
+        }
       },
-      "block_order": ["flash_1", "flash_2", "flash_3"],
+      "block_order": [
+        "flash_1",
+        "flash_2",
+        "flash_3"
+      ],
       "settings": {
         "master_enabled": true,
         "heading": "Flash Sale",
@@ -155,6 +272,7 @@
         "cta_label": "Sepete Ekle",
         "show_countdown": true,
         "columns_desktop": 3,
+        "color_scheme": "",
         "padding_top": 32,
         "padding_bottom": 32
       }
@@ -167,6 +285,7 @@
           "settings": {
             "title": "Saç Dökülmesi",
             "desc": "Biotin & kafein ile güçlendirici rutinler",
+            "link": "",
             "accent": "green",
             "icon": "drop"
           }
@@ -176,6 +295,7 @@
           "settings": {
             "title": "Mat & Cansız",
             "desc": "Glycolic & retinol ile parlaklık",
+            "link": "",
             "accent": "pink",
             "icon": "spark"
           }
@@ -185,6 +305,7 @@
           "settings": {
             "title": "Hacimsiz Saç",
             "desc": "Hyaluronic & collagen ile dolgunluk",
+            "link": "",
             "accent": "blue",
             "icon": "wind"
           }
@@ -194,6 +315,7 @@
           "settings": {
             "title": "Yıpranmış Uçlar",
             "desc": "Argan & keratin ile onarım",
+            "link": "",
             "accent": "orange",
             "icon": "sun"
           }
@@ -257,11 +379,33 @@
     "uc_bundle": {
       "type": "uc-bundle",
       "blocks": {
-        "bundle_1": { "type": "bundle_product", "settings": {} },
-        "bundle_2": { "type": "bundle_product", "settings": {} },
-        "bundle_3": { "type": "bundle_product", "settings": {} }
+        "bundle_1": {
+          "type": "bundle_product",
+          "settings": {
+            "product": "",
+            "label": ""
+          }
+        },
+        "bundle_2": {
+          "type": "bundle_product",
+          "settings": {
+            "product": "",
+            "label": ""
+          }
+        },
+        "bundle_3": {
+          "type": "bundle_product",
+          "settings": {
+            "product": "",
+            "label": ""
+          }
+        }
       },
-      "block_order": ["bundle_1", "bundle_2", "bundle_3"],
+      "block_order": [
+        "bundle_1",
+        "bundle_2",
+        "bundle_3"
+      ],
       "settings": {
         "pill_text": "SET AL, %[pct] KAZAN",
         "heading": "Birlikte Daha Güçlü",
@@ -278,18 +422,34 @@
       "blocks": {
         "trust_kargo": {
           "type": "badge",
-          "settings": { "title": "Ücretsiz Kargo", "subtitle": "Tüm siparişlerde", "icon": "truck" }
+          "settings": {
+            "title": "Ücretsiz Kargo",
+            "subtitle": "Tüm siparişlerde",
+            "icon": "truck"
+          }
         },
         "trust_vegan": {
           "type": "badge",
-          "settings": { "title": "Vegan Formül", "subtitle": "", "icon": "leaf" }
+          "settings": {
+            "title": "Vegan Formül",
+            "subtitle": "",
+            "icon": "leaf"
+          }
         },
         "trust_hayvan": {
           "type": "badge",
-          "settings": { "title": "Hayvan Dostu", "subtitle": "", "icon": "heart" }
+          "settings": {
+            "title": "Hayvan Dostu",
+            "subtitle": "",
+            "icon": "heart"
+          }
         }
       },
-      "block_order": ["trust_kargo", "trust_vegan", "trust_hayvan"],
+      "block_order": [
+        "trust_kargo",
+        "trust_vegan",
+        "trust_hayvan"
+      ],
       "settings": {
         "bg_color": "#fff5f9",
         "icon_color": "#d81b8c"
@@ -298,11 +458,39 @@
     "uc_routine": {
       "type": "uc-routine",
       "blocks": {
-        "step_1": { "type": "step", "settings": { "label": "1 · Temizle" } },
-        "step_2": { "type": "step", "settings": { "label": "2 · Bakım" } },
-        "step_3": { "type": "step", "settings": { "label": "3 · Koruma" } }
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "label": "1 · Temizle",
+            "product_1": "",
+            "product_2": "",
+            "product_3": ""
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "label": "2 · Bakım",
+            "product_1": "",
+            "product_2": "",
+            "product_3": ""
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "label": "3 · Koruma",
+            "product_1": "",
+            "product_2": "",
+            "product_3": ""
+          }
+        }
       },
-      "block_order": ["step_1", "step_2", "step_3"],
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ],
       "settings": {
         "eyebrow": "3 ADIMDA RUTİN",
         "heading": "Kendi Rutinini Oluştur",
@@ -361,6 +549,7 @@
           "settings": {
             "collection": "sac-bakim",
             "title": "Saç Bakım",
+            "image": "shopify://shop_images/5_a6276f18-3961-41db-b550-4ecc2463ae55.jpg",
             "grad_from": "#f857a6",
             "grad_to": "#c5006a"
           }
@@ -370,6 +559,7 @@
           "settings": {
             "collection": "",
             "title": "Vücut Bakım",
+            "image": "shopify://shop_images/3_6134cac3-d249-490e-b401-18940c8e2b48.jpg",
             "grad_from": "#b06ab3",
             "grad_to": "#8e2de2"
           }
@@ -390,13 +580,70 @@
     "uc_reels": {
       "type": "video-carousel",
       "blocks": {
-        "reel_1": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } },
-        "reel_2": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } },
-        "reel_3": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } },
-        "reel_4": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } },
-        "reel_5": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } }
+        "reel_1": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/yasminozdemirkaraa_1771949968_3839716042062978488_3724795457.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "",
+            "tag": "@urbancare",
+            "tag_url": ""
+          }
+        },
+        "reel_2": {
+          "type": "shopify_video",
+          "settings": {
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "",
+            "tag": "@urbancare",
+            "tag_url": ""
+          }
+        },
+        "reel_3": {
+          "type": "shopify_video",
+          "settings": {
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "",
+            "tag": "@urbancare",
+            "tag_url": ""
+          }
+        },
+        "reel_4": {
+          "type": "shopify_video",
+          "settings": {
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "",
+            "tag": "@urbancare",
+            "tag_url": ""
+          }
+        },
+        "reel_5": {
+          "type": "shopify_video",
+          "settings": {
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "",
+            "tag": "@urbancare",
+            "tag_url": ""
+          }
+        }
       },
-      "block_order": ["reel_1", "reel_2", "reel_3", "reel_4", "reel_5"],
+      "block_order": [
+        "reel_1",
+        "reel_2",
+        "reel_3",
+        "reel_4",
+        "reel_5"
+      ],
       "settings": {
         "heading": "Toplulukta Trend",
         "heading_size": "h2",
@@ -407,7 +654,11 @@
         "cta_label": "Sepete Ekle",
         "color_scheme": "scheme-1",
         "background_mode": "color",
-        "background_color": "#fdf5f9"
+        "background_color": "#fdf5f9",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)"
       }
     },
     "uc_quiz": {
@@ -428,22 +679,43 @@
       "blocks": {
         "tab_home": {
           "type": "tab",
-          "settings": { "label": "Anasayfa", "link": "/", "icon": "home" }
+          "settings": {
+            "label": "Anasayfa",
+            "link": "/",
+            "icon": "home"
+          }
         },
         "tab_categories": {
           "type": "tab",
-          "settings": { "label": "Kategoriler", "link": "/collections", "icon": "grid" }
+          "settings": {
+            "label": "Kategoriler",
+            "link": "/collections",
+            "icon": "grid"
+          }
         },
         "tab_quiz": {
           "type": "tab",
-          "settings": { "label": "Saç Testi", "link": "shopify://pages/sac-testi", "icon": "quiz" }
+          "settings": {
+            "label": "Saç Testi",
+            "link": "shopify://pages/sac-testi",
+            "icon": "quiz"
+          }
         },
         "tab_cart": {
           "type": "tab",
-          "settings": { "label": "Sepet", "icon": "cart" }
+          "settings": {
+            "label": "Sepet",
+            "link": "",
+            "icon": "cart"
+          }
         }
       },
-      "block_order": ["tab_home", "tab_categories", "tab_quiz", "tab_cart"],
+      "block_order": [
+        "tab_home",
+        "tab_categories",
+        "tab_quiz",
+        "tab_cart"
+      ],
       "settings": {
         "aria_label": "Alt gezinme"
       }
