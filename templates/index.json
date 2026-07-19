@@ -195,7 +195,7 @@
       "type": "uc-hero-banner",
       "settings": {
         "pill_text": "✨ Yeni Sezon",
-        "badge_text": "%40",
+        "badge_text": "",
         "heading": "Dolgun saçlar için yeni seri",
         "heading_desktop": "Hyaluronic Collagen ile dolgun saçlar",
         "text": "<p>Hyaluronic Collagen sette <strong>%40'a varan</strong> indirim.</p>",
@@ -204,7 +204,8 @@
         "button_1_link": "shopify://collections/cok-satanlar",
         "button_2_label": "Setleri Gör",
         "button_2_link": "shopify://collections/sac-bakim-setleri",
-        "scrim_color": "#fff0f7"
+        "image": "shopify://shop_images/7.jpg",
+        "scrim_color": "#F0F0FF"
       }
     },
     "uc_offer_strip": {
