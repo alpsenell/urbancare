@@ -1,0 +1,92 @@
+{%- comment -%}
+  URBAN Care — kampanya geri sayım bandı
+
+  Açık pembe ince bir bant; bitiş zamanına kadar HH:MM:SS sayar.
+  Bitiş zamanı geçtiğinde bant kendini gizler (tasarım modunda görünür kalır).
+  Bitiş zamanı boşsa yalnızca metin gösterilir.
+{%- endcomment -%}
+
+<div id="uc-strip-{{ section.id }}" class="ucstrip" data-end="{{ section.settings.end_at | escape }}">
+  <div class="ucstrip__inner">
+    {%- if section.settings.icon != blank -%}
+      <span class="ucstrip__icon">{{ section.settings.icon | escape }}</span>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <span class="ucstrip__text">{{ section.settings.text | escape }}</span>
+    {%- endif -%}
+    {%- if section.settings.end_at != blank -%}
+      <span class="ucstrip__clock" data-ucstrip-clock>--:--:--</span>
+    {%- endif -%}
+    {%- if section.settings.link_label != blank -%}
+      <a class="ucstrip__link" href="{{ section.settings.link | default: '#' }}">{{ section.settings.link_label | escape }}</a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% style %}
+#uc-strip-{{ section.id }}{background:linear-gradient(90deg,{{ section.settings.bg_from }},{{ section.settings.bg_to }},{{ section.settings.bg_from }})}
+#uc-strip-{{ section.id }} .ucstrip__inner{display:flex;align-items:center;justify-content:center;gap:10px;max-width:1280px;margin:0 auto;padding:10px 16px;font-size:13px;font-weight:600;color:{{ section.settings.text_color }}}
+#uc-strip-{{ section.id }} .ucstrip__icon{font-size:15px;line-height:1}
+#uc-strip-{{ section.id }} .ucstrip__clock{font-variant-numeric:tabular-nums;font-weight:700;letter-spacing:.02em}
+#uc-strip-{{ section.id }} .ucstrip__link{color:inherit;text-decoration:underline;text-underline-offset:3px}
+@media(min-width:1024px){
+#uc-strip-{{ section.id }} .ucstrip__inner{gap:12px;padding:12px 40px;font-size:14px}
+#uc-strip-{{ section.id }} .ucstrip__icon{font-size:17px}
+#uc-strip-{{ section.id }} .ucstrip__clock{padding:3px 10px;border-radius:6px;background:#d81b8c;color:#fff;font-weight:800;letter-spacing:.03em}
+}
+{% endstyle %}
+
+{%- if section.settings.end_at != blank -%}
+<script>
+(function(){
+  var root = document.getElementById('uc-strip-{{ section.id }}');
+  if (!root || root.dataset.ucstripReady) return;
+  root.dataset.ucstripReady = '1';
+
+  var clock  = root.querySelector('[data-ucstrip-clock]');
+  var design = {{ request.design_mode | default: false | json }};
+  var end    = new Date((root.dataset.end || '').replace(' ', 'T'));
+  if (!clock || isNaN(end.getTime())) return;
+
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+  function tick(){
+    var diff = end.getTime() - Date.now();
+    if (diff <= 0) {
+      clock.textContent = '00:00:00';
+      if (!design) root.style.display = 'none';
+      clearInterval(iv);
+      return;
+    }
+    var s = Math.floor(diff / 1000);
+    var h = Math.floor(s / 3600); s -= h * 3600;
+    var m = Math.floor(s / 60);   s -= m * 60;
+    clock.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+  }
+
+  var iv = setInterval(tick, 1000);
+  tick();
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Geri Sayım Bandı",
+  "tag": "section",
+  "class": "cc-uc-strip",
+  "settings": [
+    { "type": "text", "id": "icon", "label": "İkon (emoji)", "default": "⚡" },
+    { "type": "text", "id": "text", "label": "Metin", "default": "Flash İndirim bitişine" },
+    { "type": "text", "id": "end_at", "label": "Bitiş zamanı", "info": "Biçim: 2026-06-30 23:59 (mağaza saati). Boş ise geri sayım gösterilmez." },
+    { "type": "text", "id": "link_label", "label": "Bağlantı metni (opsiyonel)" },
+    { "type": "url", "id": "link", "label": "Bağlantı" },
+    { "type": "header", "content": "Renkler" },
+    { "type": "color", "id": "bg_from", "label": "Zemin degrade başlangıcı", "default": "#fff0f7" },
+    { "type": "color", "id": "bg_to", "label": "Zemin degrade bitişi", "default": "#ffe3f0" },
+    { "type": "color", "id": "text_color", "label": "Metin rengi", "default": "#c5006a" }
+  ],
+  "presets": [ { "name": "Geri Sayım Bandı" } ],
+  "disabled_on": { "groups": ["header","footer","aside"] }
+}
+{% endschema %}

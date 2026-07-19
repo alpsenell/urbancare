@@ -1,28 +1,51 @@
 {%- comment -%}
-  URBAN Care — saç testi tanıtım bandı
+  URBAN Care — tanıtım / saç testi bandı
 
-  Tasarımda mobil ve masaüstü sürümleri bilerek farklı:
-  - Masaüstü: koyu (#1a1a1a) geniş bant, beyaz Poppins 300 başlık, pembe buton.
-  - Mobil: açık pembe (#fff5f9) kart, koyu başlık, siyah buton.
-
-  Aynı işaretleme, medya sorgusuyla iki görünüm.
+  Üç görünüm ("style" ayarı):
+  - "auto"     : mobilde açık pembe kart, masaüstünde koyu geniş bant (özgün davranış).
+  - "dark"     : her iki kırılımda koyu bant.
+  - "gradient" : pembe degrade kart — saç testi teaser'ı. Masaüstünde 2 sütun,
+                 sağda opsiyonel görsel alanı.
 {%- endcomment -%}
 
-<div id="uc-promo-{{ section.id }}" class="uc-promo">
+{%- liquid
+  assign style = section.settings.style | default: 'auto'
+  assign image = section.settings.image
+-%}
+
+<div id="uc-promo-{{ section.id }}" class="uc-promo uc-promo--{{ style }}">
   <div class="uc-promo__inner">
     <div class="uc-promo__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="uc-promo__eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
       {%- if section.settings.heading != blank -%}
         <span class="uc-promo__heading">{{ section.settings.heading | escape }}</span>
       {%- endif -%}
       {%- if section.settings.text != blank -%}
         <span class="uc-promo__text">{{ section.settings.text | escape }}</span>
       {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a class="uc-promo__btn" href="{{ section.settings.button_link | default: '#' }}">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      {%- endif -%}
     </div>
 
-    {%- if section.settings.button_label != blank -%}
-      <a class="uc-promo__btn" href="{{ section.settings.button_link | default: '#' }}">
-        {{- section.settings.button_label | escape -}}
-      </a>
+    {%- if style == 'gradient' -%}
+      <div class="uc-promo__media">
+        {%- if image -%}
+          <img src="{{ image | image_url: width: 900 }}"
+               srcset="{{ image | image_url: width: 450 }} 450w,
+                       {{ image | image_url: width: 900 }} 900w"
+               sizes="(min-width: 1024px) 40vw, 100vw"
+               width="{{ image.width }}"
+               height="{{ image.height }}"
+               alt="{{ image.alt | default: section.settings.heading | escape }}"
+               loading="lazy">
+        {%- endif -%}
+      </div>
     {%- endif -%}
   </div>
 </div>
@@ -30,32 +53,80 @@
 {% style %}
 #uc-promo-{{ section.id }} .uc-promo__inner{display:flex;flex-direction:column;gap:6px;margin:16px;padding:18px;border-radius:16px;background:#fff5f9}
 #uc-promo-{{ section.id }} .uc-promo__copy{display:flex;flex-direction:column;gap:6px}
+#uc-promo-{{ section.id }} .uc-promo__eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d81b8c}
 #uc-promo-{{ section.id }} .uc-promo__heading{font-family:var(--heading-font-family);font-weight:400;font-size:17px;color:#1a1a1a}
 #uc-promo-{{ section.id }} .uc-promo__text{font-size:13px;color:#8a7d84}
 #uc-promo-{{ section.id }} .uc-promo__btn{align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:8px;padding:9px 16px;border-radius:8px;background:#1a1a1a;color:#fff;font-weight:600;font-size:13px;text-decoration:none;transition:background-color .15s ease}
 #uc-promo-{{ section.id }} .uc-promo__btn:hover{background:#000;color:#fff}
+#uc-promo-{{ section.id }} .uc-promo__media{display:none}
+
+/* Koyu bant */
+#uc-promo-{{ section.id }}.uc-promo--dark .uc-promo__inner{background:#1a1a1a}
+#uc-promo-{{ section.id }}.uc-promo--dark .uc-promo__heading{color:#fff}
+#uc-promo-{{ section.id }}.uc-promo--dark .uc-promo__text{color:#cbb9c4}
+#uc-promo-{{ section.id }}.uc-promo--dark .uc-promo__btn{background:#d81b8c}
+#uc-promo-{{ section.id }}.uc-promo--dark .uc-promo__btn:hover{background:#b01571}
+
+/* Degrade kart (saç testi teaser) */
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__inner{position:relative;overflow:hidden;margin:30px 16px 34px;padding:28px 22px;border-radius:22px;background:linear-gradient(135deg,{{ section.settings.grad_from }},{{ section.settings.grad_to }});color:#fff}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__inner::before{content:"";position:absolute;top:-30px;right:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.09)}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__copy{position:relative;gap:8px}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__eyebrow{opacity:.85;color:#fff}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__heading{max-width:16ch;font-weight:600;font-size:23px;line-height:1.2;letter-spacing:-.02em;color:#fff}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__text{max-width:30ch;font-size:13.5px;line-height:1.45;color:rgba(255,255,255,.9)}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__btn{margin-top:10px;padding:12px 24px;border-radius:999px;background:#fff;color:{{ section.settings.grad_from }};font-weight:700;font-size:14px}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__btn:hover{background:#fff5f9;color:{{ section.settings.grad_to }}}
+
 @media(min-width:768px){
-#uc-promo-{{ section.id }} .uc-promo__inner{flex-direction:row;align-items:center;justify-content:space-between;gap:24px;margin:0 40px 40px;padding:40px;border-radius:18px;background:#1a1a1a}
-#uc-promo-{{ section.id }} .uc-promo__copy{gap:8px}
-#uc-promo-{{ section.id }} .uc-promo__heading{font-weight:300;font-size:28px;color:#fff}
-#uc-promo-{{ section.id }} .uc-promo__text{font-size:15px;color:#cbb9c4}
-#uc-promo-{{ section.id }} .uc-promo__btn{align-self:auto;min-height:50px;margin-top:0;padding:14px 28px;background:#d81b8c;font-size:15px;white-space:nowrap}
-#uc-promo-{{ section.id }} .uc-promo__btn:hover{background:#b01571}
+#uc-promo-{{ section.id }}.uc-promo--auto .uc-promo__inner{flex-direction:row;align-items:center;justify-content:space-between;gap:24px;margin:0 40px 40px;padding:40px;border-radius:18px;background:#1a1a1a}
+#uc-promo-{{ section.id }}.uc-promo--auto .uc-promo__copy{gap:8px}
+#uc-promo-{{ section.id }}.uc-promo--auto .uc-promo__heading{font-weight:300;font-size:28px;color:#fff}
+#uc-promo-{{ section.id }}.uc-promo--auto .uc-promo__text{font-size:15px;color:#cbb9c4}
+#uc-promo-{{ section.id }}.uc-promo--auto .uc-promo__btn{align-self:auto;min-height:50px;margin-top:0;padding:14px 28px;background:#d81b8c;font-size:15px;white-space:nowrap}
+#uc-promo-{{ section.id }}.uc-promo--auto .uc-promo__btn:hover{background:#b01571}
+#uc-promo-{{ section.id }}.uc-promo--dark .uc-promo__inner{flex-direction:row;align-items:center;justify-content:space-between;gap:24px;margin:0 40px 40px;padding:40px;border-radius:18px}
+#uc-promo-{{ section.id }}.uc-promo--dark .uc-promo__heading{font-weight:300;font-size:28px}
+#uc-promo-{{ section.id }}.uc-promo--dark .uc-promo__btn{align-self:auto;min-height:50px;margin-top:0;padding:14px 28px;font-size:15px;white-space:nowrap}
+}
+
+@media(min-width:1024px){
+#uc-promo-{{ section.id }}.uc-promo--gradient{padding:60px 40px}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__inner{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center;max-width:1280px;margin:0 auto;padding:56px;border-radius:28px}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__inner::before{top:-50px;right:-50px;width:220px;height:220px;background:rgba(255,255,255,.08)}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__eyebrow{font-size:12px;letter-spacing:.16em}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__heading{max-width:none;font-size:36px;line-height:1.15}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__text{max-width:44ch;font-size:16px;line-height:1.5}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__btn{margin-top:14px;padding:15px 34px;font-size:16px}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__media{position:relative;display:block;aspect-ratio:4/3;border-radius:20px;overflow:hidden;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25)}
+#uc-promo-{{ section.id }}.uc-promo--gradient .uc-promo__media img{width:100%;height:100%;object-fit:cover;display:block}
 }
 {% endstyle %}
 
 {% schema %}
 {
-  "name": "UC Tanıtım Bandı",
+  "name": "Tanıtım Bandı",
   "tag": "section",
   "class": "cc-uc-promo",
   "settings": [
+    { "type": "select", "id": "style", "label": "Görünüm", "default": "auto", "options": [
+      { "value": "auto", "label": "Otomatik (mobil pembe / masaüstü koyu)" },
+      { "value": "dark", "label": "Koyu bant" },
+      { "value": "gradient", "label": "Pembe degrade kart" }
+    ] },
+    { "type": "text", "id": "eyebrow", "label": "Üst etiket (opsiyonel)" },
     { "type": "text", "id": "heading", "label": "Başlık", "default": "Saç testini çöz, rutinini bul" },
     { "type": "text", "id": "text", "label": "Açıklama", "default": "60 saniyede sana özel bakım önerisi." },
     { "type": "text", "id": "button_label", "label": "Buton metni", "default": "Teste Başla" },
-    { "type": "url", "id": "button_link", "label": "Buton bağlantısı" }
+    { "type": "url", "id": "button_link", "label": "Buton bağlantısı" },
+    { "type": "header", "content": "Degrade görünümü" },
+    { "visible_if": "{{ section.settings.style == 'gradient' }}",
+      "type": "image_picker", "id": "image", "label": "Görsel (yalnızca masaüstü)" },
+    { "visible_if": "{{ section.settings.style == 'gradient' }}",
+      "type": "color", "id": "grad_from", "label": "Degrade başlangıcı", "default": "#d81b8c" },
+    { "visible_if": "{{ section.settings.style == 'gradient' }}",
+      "type": "color", "id": "grad_to", "label": "Degrade bitişi", "default": "#9e0055" }
   ],
-  "presets": [ { "name": "UC Tanıtım Bandı" } ],
+  "presets": [ { "name": "Tanıtım Bandı" } ],
   "disabled_on": { "groups": ["header","footer","aside"] }
 }
 {% endschema %}

@@ -1,0 +1,138 @@
+{%- comment -%}
+  URBAN Care — mobil alt gezinme çubuğu
+
+  Yalnızca mobilde görünür; masaüstünde tamamen gizlenir.
+  "Sepet" tipindeki sekme sepet çekmecesini açar ve ürün sayısını rozette gösterir.
+  Sayfa içeriğinin çubuğun altında kalmaması için aynı yükseklikte bir boşluk bırakılır.
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+<div id="uc-bar-{{ section.id }}" class="ucbar">
+  <div class="ucbar__spacer" aria-hidden="true"></div>
+  <nav class="ucbar__nav" aria-label="{{ section.settings.aria_label | default: 'Alt gezinme' | escape }}">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign is_cart = false
+        if block.settings.icon == 'cart'
+          assign is_cart = true
+        endif
+
+        assign url = block.settings.link | default: '#'
+        assign is_active = false
+        if url != '#' and request.path == url
+          assign is_active = true
+        endif
+      -%}
+
+      {%- capture tab_inner -%}
+        <span class="ucbar__icon">
+          {%- case block.settings.icon -%}
+            {%- when 'home' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+            {%- when 'grid' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            {%- when 'quiz' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+            {%- when 'search' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            {%- when 'account' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            {%- when 'cart' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+            {%- else -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/></svg>
+          {%- endcase -%}
+          {%- if is_cart -%}
+            <span class="ucbar__badge" data-ucbar-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+          {%- endif -%}
+        </span>
+        <span class="ucbar__label">{{ block.settings.label | escape }}</span>
+      {%- endcapture -%}
+
+      {%- if is_cart -%}
+        <a class="ucbar__tab" href="{{ routes.cart_url }}" data-ucbar-cart {{ block.shopify_attributes }}>{{ tab_inner }}</a>
+      {%- else -%}
+        <a class="ucbar__tab{% if is_active %} is-active{% endif %}" href="{{ url }}" {{ block.shopify_attributes }}>{{ tab_inner }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+  </nav>
+</div>
+
+{% style %}
+#uc-bar-{{ section.id }} .ucbar__spacer{height:62px}
+#uc-bar-{{ section.id }} .ucbar__nav{position:fixed;left:0;right:0;bottom:0;z-index:35;display:grid;grid-template-columns:repeat({{ section.blocks.size | at_least: 1 }},1fr);padding:8px 4px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid #eedde8}
+#uc-bar-{{ section.id }} .ucbar__tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:2px;font-size:10px;font-weight:600;text-decoration:none;color:#6b6b6b}
+#uc-bar-{{ section.id }} .ucbar__tab.is-active{color:#d81b8c}
+#uc-bar-{{ section.id }} .ucbar__icon{position:relative;display:block}
+#uc-bar-{{ section.id }} .ucbar__icon svg{width:22px;height:22px;display:block}
+#uc-bar-{{ section.id }} .ucbar__badge{position:absolute;top:-4px;right:-9px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:#d81b8c;color:#fff;font-size:9px;font-weight:700;line-height:15px;text-align:center}
+#uc-bar-{{ section.id }} .ucbar__badge[hidden]{display:none}
+@media(min-width:1024px){
+#uc-bar-{{ section.id }}{display:none}
+}
+{% endstyle %}
+
+<script>
+(function(){
+  var root = document.getElementById('uc-bar-{{ section.id }}');
+  if (!root || root.dataset.ucbarReady) return;
+  root.dataset.ucbarReady = '1';
+
+  var badge = root.querySelector('[data-ucbar-count]');
+  var cartTab = root.querySelector('[data-ucbar-cart]');
+
+  function paint(count){
+    if (!badge) return;
+    badge.textContent = count;
+    badge.hidden = count < 1;
+  }
+
+  function sync(){
+    fetch('/cart.js', { headers: { 'Accept': 'application/json' } })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(cart){ if (cart) paint(cart.item_count); })
+      .catch(function(){});
+  }
+
+  // Sepet çekmecesi açıksa oraya yönlendir, yoksa /cart sayfasına git.
+  if (cartTab) {
+    cartTab.addEventListener('click', function(e){
+      if (!document.querySelector('cart-drawer, #cart-drawer')) return;
+      e.preventDefault();
+      try { document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true, detail: { open: true } })); } catch (err) {}
+    });
+  }
+
+  document.addEventListener('cart:refresh', function(){ setTimeout(sync, 300); });
+  document.addEventListener('cart:updated', sync);
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Mobil Alt Çubuk",
+  "tag": "section",
+  "class": "cc-uc-bar",
+  "settings": [
+    { "type": "paragraph", "content": "Bu bölüm yalnızca mobilde görünür. Şablonun en altına yerleştir." },
+    { "type": "text", "id": "aria_label", "label": "Erişilebilirlik etiketi", "default": "Alt gezinme" }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Sekme",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Etiket", "default": "Anasayfa" },
+        { "type": "url", "id": "link", "label": "Bağlantı" },
+        { "type": "select", "id": "icon", "label": "İkon", "default": "home", "options": [
+          { "value": "home", "label": "Anasayfa" },
+          { "value": "grid", "label": "Kategoriler" },
+          { "value": "quiz", "label": "Test" },
+          { "value": "search", "label": "Arama" },
+          { "value": "account", "label": "Hesap" },
+          { "value": "cart", "label": "Sepet" }
+        ], "info": "\"Sepet\" seçilirse sepet çekmecesini açar ve ürün sayısını gösterir." }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "presets": [
+    { "name": "Mobil Alt Çubuk", "blocks": [ {"type":"tab"}, {"type":"tab"}, {"type":"tab"}, {"type":"tab"} ] }
+  ],
+  "disabled_on": { "groups": ["header","footer","aside"] }
+}
+{% endschema %}

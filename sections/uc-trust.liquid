@@ -1,0 +1,85 @@
+{%- comment -%}
+  URBAN Care — güven rozetleri bandı
+
+  Açık pembe zemin üzerinde çizgi ikon + başlık (+ opsiyonel alt metin).
+  Mobil: ikon üstte, ortalanmış sütunlar.
+  Masaüstü: ikon solda, yatay yerleşim.
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+<div id="uc-trust-{{ section.id }}" class="uctrust">
+  <div class="uctrust__inner">
+    {%- for block in section.blocks -%}
+      <div class="uctrust__item" {{ block.shopify_attributes }}>
+        <span class="uctrust__icon">
+          {%- case block.settings.icon -%}
+            {%- when 'truck' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h11v9H2zM13 10h4l3 3v3h-7z"/><circle cx="6.5" cy="18" r="1.7"/><circle cx="17" cy="18" r="1.7"/></svg>
+            {%- when 'leaf' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15 3 18 2 21 2c0 3-1 6-4.1 11.2A7 7 0 0 1 11 20z"/><path d="M2 22c2-2 4-3.5 8-5"/></svg>
+            {%- when 'heart' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg>
+            {%- when 'shield' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+            {%- when 'return' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+            {%- else -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg>
+          {%- endcase -%}
+        </span>
+        <div class="uctrust__copy">
+          <span class="uctrust__title">{{ block.settings.title | escape }}</span>
+          {%- if block.settings.subtitle != blank -%}
+            <span class="uctrust__sub">{{ block.settings.subtitle | escape }}</span>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% style %}
+#uc-trust-{{ section.id }}{background:{{ section.settings.bg_color }}}
+#uc-trust-{{ section.id }} .uctrust__inner{display:grid;grid-template-columns:repeat({{ section.blocks.size | at_least: 1 | at_most: 3 }},1fr);gap:8px;padding:20px 16px}
+#uc-trust-{{ section.id }} .uctrust__item{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center}
+#uc-trust-{{ section.id }} .uctrust__icon{color:{{ section.settings.icon_color }};flex-shrink:0}
+#uc-trust-{{ section.id }} .uctrust__icon svg{width:26px;height:26px;display:block}
+#uc-trust-{{ section.id }} .uctrust__copy{display:flex;flex-direction:column;gap:2px}
+#uc-trust-{{ section.id }} .uctrust__title{font-size:12.5px;font-weight:700;line-height:1.2;color:#1a1a1a}
+#uc-trust-{{ section.id }} .uctrust__sub{font-size:11px;color:#6b6b6b}
+@media(min-width:1024px){
+#uc-trust-{{ section.id }} .uctrust__inner{max-width:1000px;margin:0 auto;gap:24px;padding:34px 40px}
+#uc-trust-{{ section.id }} .uctrust__item{flex-direction:row;align-items:center;justify-content:center;gap:14px;text-align:left}
+#uc-trust-{{ section.id }} .uctrust__title{font-size:16px}
+#uc-trust-{{ section.id }} .uctrust__sub{font-size:13px}
+}
+{% endstyle %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Güven Rozetleri",
+  "tag": "section",
+  "class": "cc-uc-trust",
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Zemin rengi", "default": "#fff5f9" },
+    { "type": "color", "id": "icon_color", "label": "İkon rengi", "default": "#d81b8c" }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Rozet",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Başlık", "default": "Ücretsiz Kargo" },
+        { "type": "text", "id": "subtitle", "label": "Alt metin (opsiyonel)" },
+        { "type": "select", "id": "icon", "label": "İkon", "default": "truck", "options": [
+          { "value": "truck", "label": "Kargo" },
+          { "value": "leaf", "label": "Yaprak (vegan)" },
+          { "value": "heart", "label": "Kalp (hayvan dostu)" },
+          { "value": "shield", "label": "Kalkan (güvenli ödeme)" },
+          { "value": "return", "label": "İade" }
+        ] }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    { "name": "Güven Rozetleri", "blocks": [ {"type":"badge"}, {"type":"badge"}, {"type":"badge"} ] }
+  ],
+  "disabled_on": { "groups": ["header","footer","aside"] }
+}
+{% endschema %}

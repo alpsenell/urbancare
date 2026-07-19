@@ -9,67 +9,206 @@
  */
 {
   "sections": {
-    "uc_hero": {
-      "type": "uc-hero",
-      "settings": {
-        "eyebrow": "YENİ SEZON · %20 İNDİRİM",
-        "heading": "Daha güçlü,\ndolgun saçlar",
-        "text": "Biotin & kafein ile köklerden güçlendiren, sülfatsız & vegan günlük bakım.",
-        "button_1_label": "Fırsatları Keşfet",
-        "button_1_link": "shopify://collections/cok-satanlar",
-        "button_2_label": "Saç Testi",
-        "button_2_link": "shopify://pages/sac-testi",
-        "bg_color": "#fff5f9"
-      }
-    },
-    "uc_categories": {
-      "type": "uc-categories",
+    "uc_stories": {
+      "type": "uc-stories",
       "blocks": {
-        "cat_sac_bakim": {
-          "type": "category",
+        "story_yeni": {
+          "type": "story",
           "settings": {
-            "collection": "sac-bakim",
-            "title": "Saç Bakım"
+            "label": "Yeni",
+            "grad_from": "#ff9ecb",
+            "grad_to": "#d81b8c",
+            "slide_1_title": "Yeni Gelenler",
+            "slide_1_text": "Bu haftanın lansmanları",
+            "slide_1_cta": "Keşfet →"
           }
         },
-        "cat_sampuan": {
-          "type": "category",
+        "story_flash": {
+          "type": "story",
           "settings": {
-            "collection": "sampuan",
-            "title": "Şampuan"
+            "label": "Flash",
+            "grad_from": "#ff6a3d",
+            "grad_to": "#d81b8c",
+            "slide_1_title": "%40'a Varan İndirim",
+            "slide_1_text": "Sadece bugün geçerli",
+            "slide_1_cta": "Fırsatları Gör →"
           }
         },
-        "cat_serum": {
-          "type": "category",
+        "story_rutin": {
+          "type": "story",
           "settings": {
-            "collection": "sac-serumu",
-            "title": "Serum"
+            "label": "Saç Rutini",
+            "grad_from": "#b06ab3",
+            "grad_to": "#d81b8c",
+            "slide_1_title": "1 · Temizle",
+            "slide_1_text": "Saç tipine uygun şampuanla başla",
+            "slide_1_cta": "Ürünleri Gör →",
+            "slide_2_title": "2 · Onar",
+            "slide_2_text": "Maske ve bakım kremiyle besle",
+            "slide_2_cta": "Ürünleri Gör →",
+            "slide_3_title": "3 · Koru",
+            "slide_3_text": "Serum ve ısı koruyucuyla bitir",
+            "slide_3_cta": "Ürünleri Gör →"
           }
         },
-        "cat_setler": {
-          "type": "category",
+        "story_coksatan": {
+          "type": "story",
           "settings": {
-            "collection": "sac-bakim-setleri",
-            "title": "Setler"
+            "label": "Çok Satan",
+            "grad_from": "#f857a6",
+            "grad_to": "#c5006a",
+            "slide_1_title": "Haftanın favorisi",
+            "slide_1_text": "En çok tercih edilen ürün",
+            "slide_1_cta": "Sepete Ekle"
           }
         },
-        "cat_maske": {
-          "type": "category",
+        "story_sacbakim": {
+          "type": "story",
           "settings": {
-            "collection": "sac-maskesi",
-            "title": "Maske"
+            "label": "Saç Bakım",
+            "grad_from": "#c471ed",
+            "grad_to": "#d81b8c",
+            "slide_1_title": "Saç Bakım Dünyası",
+            "slide_1_text": "Şampuan, maske, serum ve fazlası",
+            "slide_1_cta": "Kategoriyi Gör →"
+          }
+        },
+        "story_vucut": {
+          "type": "story",
+          "settings": {
+            "label": "Vücut",
+            "grad_from": "#ff8fab",
+            "grad_to": "#d81b8c",
+            "slide_1_title": "Vücut Bakım",
+            "slide_1_text": "Duş jeli ve nemlendiriciler",
+            "slide_1_cta": "Kategoriyi Gör →"
+          }
+        },
+        "story_vegan": {
+          "type": "story",
+          "settings": {
+            "label": "Vegan",
+            "grad_from": "#43cea2",
+            "grad_to": "#3f9d6b",
+            "slide_1_title": "%100 Vegan Formül",
+            "slide_1_text": "Hayvanlar üzerinde test edilmez",
+            "slide_1_cta": "Daha Fazla →"
           }
         }
       },
       "block_order": [
-        "cat_sac_bakim",
-        "cat_sampuan",
-        "cat_serum",
-        "cat_setler",
-        "cat_maske"
+        "story_yeni",
+        "story_flash",
+        "story_rutin",
+        "story_coksatan",
+        "story_sacbakim",
+        "story_vucut",
+        "story_vegan"
       ],
       "settings": {
-        "tile_color": "#fff5f9"
+        "eyebrow": "BUGÜNÜN HİKÂYELERİ",
+        "heading": "Cildine ve saçına iyi gelen her şey",
+        "text": "Bir hikâyeye dokun, kampanyaları ve rutinleri keşfet.",
+        "duration": 4,
+        "bg_color": "#fff5f9"
+      }
+    },
+    "uc_hero_banner": {
+      "type": "uc-hero-banner",
+      "settings": {
+        "pill_text": "✨ Yeni Sezon",
+        "badge_text": "%40",
+        "heading": "Dolgun saçlar için yeni seri",
+        "heading_desktop": "Hyaluronic Collagen ile dolgun saçlar",
+        "text": "<p>Hyaluronic Collagen sette <strong>%40'a varan</strong> indirim.</p>",
+        "text_desktop": "<p>Nemlendiren, güçlendiren ve hacim veren yeni bakım serisiyle tanış. Tüm sette <strong>%40'a varan</strong> indirim.</p>",
+        "button_1_label": "Hemen Keşfet →",
+        "button_1_link": "shopify://collections/cok-satanlar",
+        "button_2_label": "Setleri Gör",
+        "button_2_link": "shopify://collections/sac-bakim-setleri",
+        "scrim_color": "#fff0f7"
+      }
+    },
+    "uc_offer_strip": {
+      "type": "uc-offer-strip",
+      "settings": {
+        "icon": "⚡",
+        "text": "Flash İndirim bitişine",
+        "end_at": "",
+        "bg_from": "#fff0f7",
+        "bg_to": "#ffe3f0",
+        "text_color": "#c5006a"
+      }
+    },
+    "uc_flash": {
+      "type": "flash-sale",
+      "blocks": {
+        "flash_1": { "type": "flash_product", "settings": { "enabled": true, "discount_percent": 40 } },
+        "flash_2": { "type": "flash_product", "settings": { "enabled": true, "discount_percent": 35 } },
+        "flash_3": { "type": "flash_product", "settings": { "enabled": true, "discount_percent": 31 } }
+      },
+      "block_order": ["flash_1", "flash_2", "flash_3"],
+      "settings": {
+        "master_enabled": true,
+        "heading": "Flash Sale",
+        "badge_text": "FLASH SALE",
+        "cta_label": "Sepete Ekle",
+        "show_countdown": true,
+        "columns_desktop": 3,
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "uc_concern": {
+      "type": "uc-concern",
+      "blocks": {
+        "concern_dokulme": {
+          "type": "card",
+          "settings": {
+            "title": "Saç Dökülmesi",
+            "desc": "Biotin & kafein ile güçlendirici rutinler",
+            "accent": "green",
+            "icon": "drop"
+          }
+        },
+        "concern_mat": {
+          "type": "card",
+          "settings": {
+            "title": "Mat & Cansız",
+            "desc": "Glycolic & retinol ile parlaklık",
+            "accent": "pink",
+            "icon": "spark"
+          }
+        },
+        "concern_hacim": {
+          "type": "card",
+          "settings": {
+            "title": "Hacimsiz Saç",
+            "desc": "Hyaluronic & collagen ile dolgunluk",
+            "accent": "blue",
+            "icon": "wind"
+          }
+        },
+        "concern_yipranmis": {
+          "type": "card",
+          "settings": {
+            "title": "Yıpranmış Uçlar",
+            "desc": "Argan & keratin ile onarım",
+            "accent": "orange",
+            "icon": "sun"
+          }
+        }
+      },
+      "block_order": [
+        "concern_dokulme",
+        "concern_mat",
+        "concern_hacim",
+        "concern_yipranmis"
+      ],
+      "settings": {
+        "subheading": "SAÇINLA KONUŞ",
+        "heading": "Hangi derdine çözüm arıyorsun?",
+        "color_scheme": "scheme-1"
       }
     },
     "bestsellers": {
@@ -97,13 +236,13 @@
         "products_to_show": 8,
         "card_cutout": false,
         "show_view_all": true,
-        "view_all_text": "Tümünü gör →",
+        "view_all_text": "Tüm Ürünleri Gör",
         "view_all_style": "link",
-        "text_align": "text-start",
+        "text_align": "text-center",
         "text_width_override": false,
         "text_max_width": 640,
         "text_column_to_edge": false,
-        "mob_center_text": false,
+        "mob_center_text": true,
         "full_width": false,
         "color_scheme": "scheme-1",
         "background_mode": "default",
@@ -115,20 +254,215 @@
         "section_join_mode": "tight"
       }
     },
-    "uc_promo": {
+    "uc_bundle": {
+      "type": "uc-bundle",
+      "blocks": {
+        "bundle_1": { "type": "bundle_product", "settings": {} },
+        "bundle_2": { "type": "bundle_product", "settings": {} },
+        "bundle_3": { "type": "bundle_product", "settings": {} }
+      },
+      "block_order": ["bundle_1", "bundle_2", "bundle_3"],
+      "settings": {
+        "pill_text": "SET AL, %[pct] KAZAN",
+        "heading": "Birlikte Daha Güçlü",
+        "text": "Bu ürünler bir arada kullanılınca etkisi katlanır. Tek tek almak yerine sette al, kazan.",
+        "button_label": "Seti Sepete Ekle",
+        "discount_percent": 28,
+        "discount_code": "",
+        "bg_from": "#fff0f7",
+        "bg_to": "#fde4ef"
+      }
+    },
+    "uc_trust": {
+      "type": "uc-trust",
+      "blocks": {
+        "trust_kargo": {
+          "type": "badge",
+          "settings": { "title": "Ücretsiz Kargo", "subtitle": "Tüm siparişlerde", "icon": "truck" }
+        },
+        "trust_vegan": {
+          "type": "badge",
+          "settings": { "title": "Vegan Formül", "subtitle": "", "icon": "leaf" }
+        },
+        "trust_hayvan": {
+          "type": "badge",
+          "settings": { "title": "Hayvan Dostu", "subtitle": "", "icon": "heart" }
+        }
+      },
+      "block_order": ["trust_kargo", "trust_vegan", "trust_hayvan"],
+      "settings": {
+        "bg_color": "#fff5f9",
+        "icon_color": "#d81b8c"
+      }
+    },
+    "uc_routine": {
+      "type": "uc-routine",
+      "blocks": {
+        "step_1": { "type": "step", "settings": { "label": "1 · Temizle" } },
+        "step_2": { "type": "step", "settings": { "label": "2 · Bakım" } },
+        "step_3": { "type": "step", "settings": { "label": "3 · Koruma" } }
+      },
+      "block_order": ["step_1", "step_2", "step_3"],
+      "settings": {
+        "eyebrow": "3 ADIMDA RUTİN",
+        "heading": "Kendi Rutinini Oluştur",
+        "total_label": "RUTİN TOPLAMI",
+        "button_label": "Rutini Sepete Ekle"
+      }
+    },
+    "sets": {
+      "type": "featured-collection",
+      "blocks": {
+        "heading_sets": {
+          "type": "heading",
+          "settings": {
+            "heading": "Setler & Rutinler",
+            "heading_size": "h2",
+            "heading_h1": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_sets"
+      ],
+      "name": "Setler & Rutinler",
+      "settings": {
+        "collection": "sac-bakim-setleri",
+        "layout": "grid",
+        "carousel_effect": "slide",
+        "products_per_row": "2",
+        "products_per_row_desktop": "3",
+        "products_to_show": 6,
+        "card_cutout": false,
+        "show_view_all": true,
+        "view_all_text": "Tüm Setler",
+        "view_all_style": "link",
+        "text_align": "text-center",
+        "text_width_override": false,
+        "text_max_width": 640,
+        "text_column_to_edge": false,
+        "mob_center_text": true,
+        "full_width": false,
+        "color_scheme": "scheme-1",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "",
+        "section_join_mode": "tight"
+      }
+    },
+    "uc_categories": {
+      "type": "uc-categories",
+      "blocks": {
+        "cat_sac_bakim": {
+          "type": "category",
+          "settings": {
+            "collection": "sac-bakim",
+            "title": "Saç Bakım",
+            "grad_from": "#f857a6",
+            "grad_to": "#c5006a"
+          }
+        },
+        "cat_vucut_bakim": {
+          "type": "category",
+          "settings": {
+            "collection": "",
+            "title": "Vücut Bakım",
+            "grad_from": "#b06ab3",
+            "grad_to": "#8e2de2"
+          }
+        }
+      },
+      "block_order": [
+        "cat_sac_bakim",
+        "cat_vucut_bakim"
+      ],
+      "settings": {
+        "layout": "banner",
+        "heading": "",
+        "columns_desktop": 2,
+        "cta_label": "Keşfet →",
+        "tile_color": "#fff5f9"
+      }
+    },
+    "uc_reels": {
+      "type": "video-carousel",
+      "blocks": {
+        "reel_1": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } },
+        "reel_2": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } },
+        "reel_3": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } },
+        "reel_4": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } },
+        "reel_5": { "type": "shopify_video", "settings": { "product_card_enabled": true, "tag": "@urbancare" } }
+      },
+      "block_order": ["reel_1", "reel_2", "reel_3", "reel_4", "reel_5"],
+      "settings": {
+        "heading": "Toplulukta Trend",
+        "heading_size": "h2",
+        "heading_align": "text-center",
+        "mob_center_text": true,
+        "autoplay": true,
+        "hover_enabled": false,
+        "cta_label": "Sepete Ekle",
+        "color_scheme": "scheme-1",
+        "background_mode": "color",
+        "background_color": "#fdf5f9"
+      }
+    },
+    "uc_quiz": {
       "type": "uc-promo-band",
       "settings": {
-        "heading": "Saç testini çöz, rutinini bul",
-        "text": "60 saniyede sana özel bakım önerisi.",
-        "button_label": "Teste Başla",
-        "button_link": "shopify://pages/sac-testi"
+        "style": "gradient",
+        "eyebrow": "2 DAKİKALIK TEST",
+        "heading": "Saçına özel rutini keşfet",
+        "text": "Birkaç soruyla saç tipini analiz edelim, sana en uygun ürünleri önerelim.",
+        "button_label": "Saç Testine Başla →",
+        "button_link": "shopify://pages/sac-testi",
+        "grad_from": "#d81b8c",
+        "grad_to": "#9e0055"
+      }
+    },
+    "uc_mobile_bar": {
+      "type": "uc-mobile-bar",
+      "blocks": {
+        "tab_home": {
+          "type": "tab",
+          "settings": { "label": "Anasayfa", "link": "/", "icon": "home" }
+        },
+        "tab_categories": {
+          "type": "tab",
+          "settings": { "label": "Kategoriler", "link": "/collections", "icon": "grid" }
+        },
+        "tab_quiz": {
+          "type": "tab",
+          "settings": { "label": "Saç Testi", "link": "shopify://pages/sac-testi", "icon": "quiz" }
+        },
+        "tab_cart": {
+          "type": "tab",
+          "settings": { "label": "Sepet", "icon": "cart" }
+        }
+      },
+      "block_order": ["tab_home", "tab_categories", "tab_quiz", "tab_cart"],
+      "settings": {
+        "aria_label": "Alt gezinme"
       }
     }
   },
   "order": [
-    "uc_hero",
-    "uc_categories",
+    "uc_stories",
+    "uc_hero_banner",
+    "uc_offer_strip",
+    "uc_flash",
+    "uc_concern",
     "bestsellers",
-    "uc_promo"
+    "uc_bundle",
+    "uc_trust",
+    "uc_routine",
+    "sets",
+    "uc_categories",
+    "uc_reels",
+    "uc_quiz",
+    "uc_mobile_bar"
   ]
 }
