@@ -22,6 +22,126 @@
     },
     {
       "type": "header",
+      "content": "🎁 Ücretsiz Hediye Ayarları"
+    },
+    {
+      "type": "select",
+      "id": "gift_mode",
+      "label": "Hediye modu",
+      "options": [
+        { "value": "highest", "label": "Sadece en yüksek tier (öncekini çıkar)" },
+        { "value": "cumulative", "label": "Kümülatif (tüm eşikleri topla)" }
+      ],
+      "default": "highest",
+      "info": "Kümülatif modda ₺500 ve ₺1000 eşiğini geçen müşteri her iki hediyeyi de alır."
+    },
+    {
+      "type": "header",
+      "content": "Tier 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "gift_tier_1_active",
+      "label": "Tier 1 aktif",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "gift_tier_1_amount",
+      "label": "Minimum sepet tutarı (₺)",
+      "default": 500
+    },
+    {
+      "type": "product",
+      "id": "gift_tier_1_product",
+      "label": "Hediye ürün"
+    },
+    {
+      "type": "header",
+      "content": "Tier 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "gift_tier_2_active",
+      "label": "Tier 2 aktif",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "gift_tier_2_amount",
+      "label": "Minimum sepet tutarı (₺)",
+      "default": 1000
+    },
+    {
+      "type": "product",
+      "id": "gift_tier_2_product",
+      "label": "Hediye ürün"
+    },
+    {
+      "type": "header",
+      "content": "Tier 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "gift_tier_3_active",
+      "label": "Tier 3 aktif",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "gift_tier_3_amount",
+      "label": "Minimum sepet tutarı (₺)",
+      "default": 1500
+    },
+    {
+      "type": "product",
+      "id": "gift_tier_3_product",
+      "label": "Hediye ürün"
+    },
+    {
+      "type": "header",
+      "content": "Tier 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "gift_tier_4_active",
+      "label": "Tier 4 aktif",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "gift_tier_4_amount",
+      "label": "Minimum sepet tutarı (₺)",
+      "default": 2000
+    },
+    {
+      "type": "product",
+      "id": "gift_tier_4_product",
+      "label": "Hediye ürün"
+    },
+    {
+      "type": "header",
+      "content": "Tier 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "gift_tier_5_active",
+      "label": "Tier 5 aktif",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "gift_tier_5_amount",
+      "label": "Minimum sepet tutarı (₺)",
+      "default": 2500
+    },
+    {
+      "type": "product",
+      "id": "gift_tier_5_product",
+      "label": "Hediye ürün"
+    },
+    {
+      "type": "header",
       "content": "Suggested products"
     },
     {
