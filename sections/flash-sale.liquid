@@ -433,24 +433,79 @@
       }, 1000);
     }
 
-    /* ── CART DRAWER AÇMA ── */
+    /* ── CART DRAWER AÇMA ──
+       Önce cart'ı /cart.js ile fetch edip güncel state'i al,
+       sonra drawer'ı o state ile aç. Beautify race condition'ını önler. */
     function openCartDrawer(){
-      // 1. Beautify custom element
-      var drawerEl = document.querySelector('cart-drawer') || document.querySelector('cart-notification');
-      if (drawerEl && typeof drawerEl.open === 'function'){ drawerEl.open(); return; }
-      // 2. Beautify global theme object
-      if (window.theme && window.theme.cart && typeof window.theme.cart.open === 'function'){
-        window.theme.cart.open(); return;
-      }
-      // 3. Yaygın custom event'ler
-      ['cart:open','theme:cart:open','cart:refresh','cart:updated'].forEach(function(name){
-        try { document.dispatchEvent(new CustomEvent(name, { bubbles: true, detail: { open: true } })); } catch(e){}
-      });
-      // 4. Son çare: /cart linkine tıkla
-      setTimeout(function(){
-        var cartLink = document.querySelector('a[href="/cart"]');
-        if (cartLink) cartLink.click();
-      }, 150);
+      fetch('/cart.js', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function(r){ return r.json(); })
+        .then(function(cartData){
+          // Beautify teması: section render yöntemi (en güvenilir)
+          var cartSection = document.querySelector('[id^="shopify-section"][id*="cart"]')
+                         || document.querySelector('[id*="cart-drawer"]');
+
+          // Yöntem 1: Beautify'ın kendi cart-drawer custom element'i
+          var drawerEl = document.querySelector('cart-drawer');
+          if (drawerEl){
+            // Önce içeriği güncelle, sonra aç
+            if (typeof drawerEl.renderContents === 'function'){
+              drawerEl.renderContents(cartData);
+            }
+            if (typeof drawerEl.open === 'function'){
+              drawerEl.open(); return;
+            }
+          }
+
+          // Yöntem 2: Beautify global theme objesi
+          if (window.theme && window.theme.cart){
+            if (typeof window.theme.cart.open === 'function'){
+              window.theme.cart.open(cartData); return;
+            }
+          }
+
+          // Yöntem 3: Shopify section render API ile cart drawer HTML'ini güncelle
+          var sectionId = null;
+          var allSections = document.querySelectorAll('[id^="shopify-section-"]');
+          for (var i = 0; i < allSections.length; i++){
+            if (/cart/i.test(allSections[i].id)){ sectionId = allSections[i].id.replace('shopify-section-',''); break; }
+          }
+          if (sectionId){
+            fetch('/?section_id=' + sectionId)
+              .then(function(r){ return r.text(); })
+              .then(function(html){
+                var tmp = document.createElement('div');
+                tmp.innerHTML = html;
+                var newContent = tmp.querySelector('[id^="shopify-section"]') || tmp.firstElementChild;
+                var existing = document.getElementById('shopify-section-' + sectionId);
+                if (existing && newContent) existing.innerHTML = newContent.innerHTML;
+                // Event'leri fırlat
+                ['cart:open','theme:cart:open'].forEach(function(name){
+                  try { document.dispatchEvent(new CustomEvent(name, { bubbles: true })); } catch(ex){}
+                });
+              });
+            return;
+          }
+
+          // Yöntem 4: Sadece event + /cart redirect fallback
+          var fired = false;
+          ['cart:open','theme:cart:open','cart:refresh','cart:updated'].forEach(function(name){
+            try {
+              var ev = new CustomEvent(name, { bubbles: true, detail: { open: true, cart: cartData } });
+              document.dispatchEvent(ev);
+              fired = true;
+            } catch(ex){}
+          });
+          // Hiçbir şey çalışmazsa direkt cart'a git
+          if (!fired){
+            setTimeout(function(){ window.location.href = '/cart'; }, 200);
+          }
+        })
+        .catch(function(){
+          // /cart.js hata verirse direkt event dene
+          ['cart:open','theme:cart:open','cart:refresh'].forEach(function(name){
+            try { document.dispatchEvent(new CustomEvent(name, { bubbles: true })); } catch(ex){}
+          });
+        });
     }
 
     /* ── SEPETE EKLE ── */
@@ -486,9 +541,11 @@
       })
       .then(function(){
         if (CODE){
+          // İndirim kodu varsa önce ekle, sonra koda yönlendir
           window.location.href = '/discount/' + encodeURIComponent(CODE) + '?redirect=/cart';
         } else {
           b.textContent = 'Eklendi ✓';
+          // Ekleme tamamlandıktan SONRA drawer'ı aç
           openCartDrawer();
           setTimeout(function(){ b.textContent = orig; b.disabled = false; }, 1800);
         }
