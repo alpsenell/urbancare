@@ -23,14 +23,16 @@
     assign tier_active_key  = 'gift_tier_' | append: i | append: '_active'
     assign tier_amount_key  = 'gift_tier_' | append: i | append: '_amount'
     assign tier_product_key = 'gift_tier_' | append: i | append: '_product'
+    assign tier_code_key    = 'gift_tier_' | append: i | append: '_code'
 
     assign tier_active  = section.settings[tier_active_key]
     assign tier_amount  = section.settings[tier_amount_key]
     assign tier_product = section.settings[tier_product_key]
+    assign tier_code    = section.settings[tier_code_key] | default: ''
 
     if tier_active and tier_product != blank and tier_amount > 0
       assign variant_id = tier_product.selected_or_first_available_variant.id
-      assign tier_entry = '{"tier":' | append: i | append: ',"threshold":' | append: tier_amount | append: '00,"variantId":' | append: variant_id | append: '}'
+      assign tier_entry = '{"tier":' | append: i | append: ',"threshold":' | append: tier_amount | append: '00,"variantId":' | append: variant_id | append: ',"code":"' | append: tier_code | append: '"}'
       if gift_tier_count == 0
         assign gift_tiers_arr = tier_entry
       else
@@ -371,6 +373,28 @@
             properties: { '_free_gift': 'true' }
           })
         });
+      }
+
+      // ── Discount kodu uygula ──────────────────────────────
+      // Aktif tier'lardan koda sahip olanı bul, /discount/KOD ile uygula.
+      // NOT: Shopify tek seferde tek kod tutar — en yüksek aktif tier'ın
+      // kodu uygulanır. Kümülatif modda birden fazla kod aynı anda
+      // uygulanamaz (Shopify sınırı), en yüksek tier'ınki geçerli olur.
+      let codeToApply = '';
+      // shouldBeActive eşiğe göre artan sıralı; sonu = en yüksek tier
+      for (let k = shouldBeActive.length - 1; k >= 0; k--) {
+        if (shouldBeActive[k].code) { codeToApply = shouldBeActive[k].code; break; }
+      }
+
+      if (codeToApply) {
+        try {
+          // /discount/KOD çağrısı discount cookie'sini set eder
+          await fetch('/discount/' + encodeURIComponent(codeToApply), {
+            method: 'GET',
+            credentials: 'same-origin',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          });
+        } catch(e) { /* sessiz geç */ }
       }
 
       // Drawer'ı güncelle
