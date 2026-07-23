@@ -434,46 +434,27 @@
     }
 
     /* ── CART DRAWER AÇMA ──
-       Beautify: cart section HTML'ini yeniden render et, sonra drawer'ı aç.
-       Bu sayede eklenen ürün drawer açılmadan önce DOM'a yazılmış olur. */
+       Beautify: cart-drawer custom element'in refresh() + open() metodlarını kullan */
     function openCartDrawer(){
-      // Beautify'ın cart drawer section id'sini bul
-      var cartSectionEl = null;
-      var cartSectionId = null;
-      document.querySelectorAll('[id^="shopify-section-"]').forEach(function(el){
-        if (/cart/i.test(el.id) && !cartSectionEl){ cartSectionEl = el; cartSectionId = el.id.replace('shopify-section-',''); }
-      });
-
-      function doOpen(){
-        var btn = document.querySelector('.js-open-cart-drawer');
-        if (btn){ btn.click(); }
-        else { window.location.href = '/cart'; }
+      var drawerEl = document.querySelector('cart-drawer');
+      if (drawerEl){
+        // refresh() içeriği güncel cart ile yeniden çeker
+        if (typeof drawerEl.refresh === 'function'){
+          drawerEl.refresh();
+          // refresh async, kısa bekleyip open() çağır
+          setTimeout(function(){
+            if (typeof drawerEl.open === 'function') drawerEl.open();
+          }, 300);
+          return;
+        }
+        if (typeof drawerEl.open === 'function'){
+          drawerEl.open(); return;
+        }
       }
-
-      if (cartSectionId){
-        // Shopify section render API — Beautify'ın cart drawer HTML'ini güncel cart ile yeniden çek
-        fetch('/?section_id=' + encodeURIComponent(cartSectionId), {
-          headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(function(r){ return r.text(); })
-        .then(function(html){
-          var tmp = document.createElement('div');
-          tmp.innerHTML = html;
-          // Render edilen section içeriğini DOM'a yaz
-          var inner = tmp.querySelector('[id="shopify-section-' + cartSectionId + '"]');
-          if (inner && cartSectionEl){
-            cartSectionEl.innerHTML = inner.innerHTML;
-            // Beautify'ın yeni DOM üzerinde event listener'larını yeniden bağlaması için
-            // kısa gecikme sonra drawer'ı aç
-            setTimeout(doOpen, 50);
-          } else {
-            doOpen();
-          }
-        })
-        .catch(function(){ doOpen(); });
-      } else {
-        doOpen();
-      }
+      // Fallback: header cart butonuna tıkla
+      var btn = document.querySelector('.js-open-cart-drawer');
+      if (btn){ btn.click(); return; }
+      window.location.href = '/cart';
     }
 
     /* ── SEPETE EKLE ── */
