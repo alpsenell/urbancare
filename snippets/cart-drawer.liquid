@@ -14,25 +14,41 @@
   endif
 %}
 
-{%- comment %} ── FREE GIFT: Aktif tier'ları topla ── {%- endcomment %}
+{%- comment %} ── FREE GIFT: Aktif tier'ları topla (her tier max 3 ürün) ── {%- endcomment %}
 {%- liquid
   assign gift_tiers_arr = ''
   assign gift_tier_count = 0
 
   for i in (1..5)
-    assign tier_active_key  = 'gift_tier_' | append: i | append: '_active'
-    assign tier_amount_key  = 'gift_tier_' | append: i | append: '_amount'
-    assign tier_product_key = 'gift_tier_' | append: i | append: '_product'
-    assign tier_code_key    = 'gift_tier_' | append: i | append: '_code'
+    assign tier_active_key = 'gift_tier_' | append: i | append: '_active'
+    assign tier_amount_key = 'gift_tier_' | append: i | append: '_amount'
+    assign tier_code_key   = 'gift_tier_' | append: i | append: '_code'
 
-    assign tier_active  = section.settings[tier_active_key]
-    assign tier_amount  = section.settings[tier_amount_key]
-    assign tier_product = section.settings[tier_product_key]
-    assign tier_code    = section.settings[tier_code_key] | default: ''
+    assign tier_active = section.settings[tier_active_key]
+    assign tier_amount = section.settings[tier_amount_key]
+    assign tier_code   = section.settings[tier_code_key] | default: ''
 
-    if tier_active and tier_product != blank and tier_amount > 0
-      assign variant_id = tier_product.selected_or_first_available_variant.id
-      assign tier_entry = '{"tier":' | append: i | append: ',"threshold":' | append: tier_amount | append: '00,"variantId":' | append: variant_id | append: ',"code":"' | append: tier_code | append: '"}'
+    comment
+      Bu tier'ın 3 ürün slotundan dolu olanların variant id'lerini topla
+    endcomment
+    assign tier_variant_ids = ''
+    assign tier_variant_count = 0
+    for j in (1..3)
+      assign tier_product_key = 'gift_tier_' | append: i | append: '_product_' | append: j
+      assign tier_product = section.settings[tier_product_key]
+      if tier_product != blank
+        assign vid = tier_product.selected_or_first_available_variant.id
+        if tier_variant_count == 0
+          assign tier_variant_ids = vid | append: ''
+        else
+          assign tier_variant_ids = tier_variant_ids | append: ',' | append: vid
+        endif
+        assign tier_variant_count = tier_variant_count | plus: 1
+      endif
+    endfor
+
+    if tier_active and tier_variant_count > 0 and tier_amount > 0
+      assign tier_entry = '{"tier":' | append: i | append: ',"threshold":' | append: tier_amount | append: '00,"variantIds":[' | append: tier_variant_ids | append: '],"code":"' | append: tier_code | append: '"}'
       if gift_tier_count == 0
         assign gift_tiers_arr = tier_entry
       else
@@ -336,8 +352,13 @@
         if (passed.length) shouldBeActive = [passed[passed.length - 1]];
       }
 
-      const activeVariantIds  = shouldBeActive.map(t => t.variantId);
-      const allTierVariantIds = tiers.map(t => t.variantId);
+      // Aktif olması gereken tüm variant id'ler (aktif tier'ların tüm ürünleri)
+      const activeVariantIds = [];
+      shouldBeActive.forEach(t => (t.variantIds || []).forEach(v => activeVariantIds.push(v)));
+
+      // Tüm tier'lardaki tüm variant id'ler (hediye olarak tanımlı olanlar)
+      const allTierVariantIds = [];
+      tiers.forEach(t => (t.variantIds || []).forEach(v => allTierVariantIds.push(v)));
 
       // Sepetteki hediye ürünleri (_free_gift property ile tanımlı)
       const giftItemsInCart = cart.items.filter(item =>
@@ -346,8 +367,12 @@
       );
 
       const inCartVariantIds = giftItemsInCart.map(i => i.variant_id);
+
+      // Çıkarılacaklar: sepette hediye olarak var ama artık aktif olmamalı
       const toRemove = giftItemsInCart.filter(i => !activeVariantIds.includes(i.variant_id));
-      const toAdd    = shouldBeActive.filter(t => !inCartVariantIds.includes(t.variantId));
+
+      // Eklenecekler: aktif olmalı ama sepette yok
+      const toAdd = activeVariantIds.filter(v => !inCartVariantIds.includes(v));
 
       if (!toRemove.length && !toAdd.length) return;
 
@@ -362,13 +387,13 @@
       }
 
       // Ekle
-      for (const tier of toAdd) {
+      for (const variantId of toAdd) {
         await fetch('/cart/add.js', {
           method: 'POST',
           credentials: 'same-origin',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            id: tier.variantId,
+            id: variantId,
             quantity: 1,
             properties: { '_free_gift': 'true' }
           })
