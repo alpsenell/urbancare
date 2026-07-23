@@ -275,9 +275,15 @@
     fetch('/?sections=' + sectionId)
       .then(r => r.json())
       .then(data => {
-        if (!data[sectionId]) return;
+        // Shopify response key'i "sections--ID__cart-drawer" formatında gelebilir
+        // data-section attribute'u ise sadece "ID__cart-drawer" tutuyor
+        // İkisini de dene, yoksa Object.values ile ilk değeri al
+        const html = data[sectionId]
+                  || data['sections--' + sectionId]
+                  || Object.values(data)[0];
+        if (!html) return;
         const tmp = document.createElement('div');
-        tmp.innerHTML = data[sectionId];
+        tmp.innerHTML = html;
         const newDrawer = tmp.querySelector('#cart-drawer');
         const oldDrawer = document.getElementById('cart-drawer');
         if (!newDrawer || !oldDrawer) return;
