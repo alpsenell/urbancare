@@ -14,6 +14,36 @@
   endif
 %}
 
+{%- comment %} ── FREE GIFT: Aktif tier'ları topla ── {%- endcomment %}
+{%- liquid
+  assign gift_tiers_arr = ''
+  assign gift_tier_count = 0
+
+  for i in (1..5)
+    assign tier_active_key  = 'gift_tier_' | append: i | append: '_active'
+    assign tier_amount_key  = 'gift_tier_' | append: i | append: '_amount'
+    assign tier_product_key = 'gift_tier_' | append: i | append: '_product'
+
+    assign tier_active  = section.settings[tier_active_key]
+    assign tier_amount  = section.settings[tier_amount_key]
+    assign tier_product = section.settings[tier_product_key]
+
+    if tier_active and tier_product != blank and tier_amount > 0
+      assign variant_id = tier_product.selected_or_first_available_variant.id
+      assign tier_entry = '{"tier":' | append: i | append: ',"threshold":' | append: tier_amount | append: '00,"variantId":' | append: variant_id | append: '}'
+      if gift_tier_count == 0
+        assign gift_tiers_arr = tier_entry
+      else
+        assign gift_tiers_arr = gift_tiers_arr | append: ',' | append: tier_entry
+      endif
+      assign gift_tier_count = gift_tier_count | plus: 1
+    endif
+  endfor
+
+  assign gift_tiers_json = '[' | append: gift_tiers_arr | append: ']'
+  assign gift_mode = section.settings.gift_mode | default: 'highest'
+-%}
+
 <link rel="stylesheet" href="{{ 'cart.css' | asset_url }}" media="print" onload="this.media='all'">
 <script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
 <script src="{{ 'cart-summary-disclosure.js' | asset_url }}" defer></script>
@@ -27,7 +57,19 @@
   <script src="{{ 'cart-note.js' | asset_url }}" defer></script>
 {%- endif -%}
 
-<cart-drawer class="drawer fixed top-0 right-0 flex flex-col w-full has-motion" id="cart-drawer" role="dialog" aria-label="{{ 'cart.general.title' | t }}" aria-modal="true" aria-hidden="true" tabindex="-1" data-section="{{ section.id }}" data-name="cart-drawer">
+<cart-drawer
+  class="drawer fixed top-0 right-0 flex flex-col w-full has-motion"
+  id="cart-drawer"
+  role="dialog"
+  aria-label="{{ 'cart.general.title' | t }}"
+  aria-modal="true"
+  aria-hidden="true"
+  tabindex="-1"
+  data-section="{{ section.id }}"
+  data-name="cart-drawer"
+  data-gift-tiers="{{ gift_tiers_json | escape }}"
+  data-gift-mode="{{ gift_mode }}"
+>
   <header class="drawer__header">
     <div class="flex flex-col gap-y-4">
       <div class="flex justify-between items-center gap-x-5">
@@ -199,18 +241,15 @@
         super();
         this.submitHandler = this.handleSubmit.bind(this);
       }
-
       handleSubmit(evt) {
         if (!document.getElementById('cart-terms').checked) {
           evt.preventDefault();
           alert(`{{ 'cart.terms.confirmation' | t }}`);
         }
       }
-
       connectedCallback() {
         document.getElementById('cart-drawer-form').addEventListener('submit', this.submitHandler);
       }
-
       disconnectedCallback() {
         document.getElementById('cart-drawer-form').removeEventListener('submit', this.submitHandler);
       }
@@ -218,3 +257,169 @@
     customElements.define('cart-terms', CartTerms);
   </script>
 {%- endif -%}
+
+{%- comment %} ── FREE GIFT SCRIPT ── {%- endcomment %}
+<script>
+(function() {
+  // ── Konfigürasyon ──────────────────────────────────────────
+  // Gift sync kendi iç fetch çağrılarının tekrar intercept edilmesini engeller
+  let _giftLock   = false;
+  let _intercepted = false;
+
+  // ── Drawer yenile ──────────────────────────────────────────
+  function refreshDrawer() {
+    const drawerEl  = document.getElementById('cart-drawer');
+    const sectionId = drawerEl && drawerEl.dataset.section;
+    if (!sectionId) return;
+
+    fetch('/?sections=' + sectionId)
+      .then(r => r.json())
+      .then(data => {
+        if (!data[sectionId]) return;
+        const tmp = document.createElement('div');
+        tmp.innerHTML = data[sectionId];
+        const newDrawer = tmp.querySelector('#cart-drawer');
+        const oldDrawer = document.getElementById('cart-drawer');
+        if (!newDrawer || !oldDrawer) return;
+
+        // İçerik + footer güncelle, drawer'ın açık/kapalı state'ine dokunma
+        const pairs = [
+          ['.drawer__content', '.drawer__content'],
+          ['.drawer__footer',  '.drawer__footer'],
+          ['.drawer__header .js-drawer-header-title', '.drawer__header .js-drawer-header-title']
+        ];
+        pairs.forEach(([newSel, oldSel]) => {
+          const n = newDrawer.querySelector(newSel);
+          const o = oldDrawer.querySelector(oldSel);
+          if (n && o) o.innerHTML = n.innerHTML;
+        });
+      })
+      .catch(() => {});
+  }
+
+  // ── Ana gift sync ──────────────────────────────────────────
+  async function syncGifts() {
+    if (_giftLock) return;
+    _giftLock = true;
+
+    try {
+      const drawerEl = document.getElementById('cart-drawer');
+      if (!drawerEl) return;
+
+      const tiersRaw = drawerEl.dataset.giftTiers;
+      const mode     = drawerEl.dataset.giftMode || 'highest';
+
+      let tiers = [];
+      try { tiers = JSON.parse(tiersRaw || '[]'); } catch(e) { return; }
+      if (!tiers.length) return;
+
+      // Güncel cart'ı çek
+      const cart = await fetch('/cart.js', { credentials: 'same-origin' }).then(r => r.json());
+      const cartTotal = cart.total_price; // kuruş
+
+      tiers.sort((a, b) => a.threshold - b.threshold);
+
+      // Hangi tier'lar aktif olmalı?
+      let shouldBeActive = [];
+      if (mode === 'cumulative') {
+        shouldBeActive = tiers.filter(t => cartTotal >= t.threshold);
+      } else {
+        const passed = tiers.filter(t => cartTotal >= t.threshold);
+        if (passed.length) shouldBeActive = [passed[passed.length - 1]];
+      }
+
+      const activeVariantIds  = shouldBeActive.map(t => t.variantId);
+      const allTierVariantIds = tiers.map(t => t.variantId);
+
+      // Sepetteki hediye ürünleri (_free_gift property ile tanımlı)
+      const giftItemsInCart = cart.items.filter(item =>
+        allTierVariantIds.includes(item.variant_id) &&
+        item.properties && item.properties['_free_gift'] === 'true'
+      );
+
+      const inCartVariantIds = giftItemsInCart.map(i => i.variant_id);
+      const toRemove = giftItemsInCart.filter(i => !activeVariantIds.includes(i.variant_id));
+      const toAdd    = shouldBeActive.filter(t => !inCartVariantIds.includes(t.variantId));
+
+      if (!toRemove.length && !toAdd.length) return;
+
+      // Çıkar
+      for (const item of toRemove) {
+        await fetch('/cart/change.js', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: item.key, quantity: 0 })
+        });
+      }
+
+      // Ekle
+      for (const tier of toAdd) {
+        await fetch('/cart/add.js', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: tier.variantId,
+            quantity: 1,
+            properties: { '_free_gift': 'true' }
+          })
+        });
+      }
+
+      // Drawer'ı güncelle
+      refreshDrawer();
+
+      // Tema'nın kendi event sistemini de tetikle (header sayaç vs.)
+      document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+
+    } catch(err) {
+      console.warn('[FreeGift] Hata:', err);
+    } finally {
+      _giftLock = false;
+    }
+  }
+
+  // ── Fetch Intercept ────────────────────────────────────────
+  // /cart/add.js veya /cart/change.js çağrısı yapıldığında
+  // — kimin yaptığından bağımsız — gift sync tetiklenir.
+  // Gift sync'in kendi çağrıları tekrar intercept edilmez (_giftLock).
+  function installFetchIntercept() {
+    if (_intercepted) return;
+    _intercepted = true;
+
+    const _origFetch = window.fetch;
+
+    window.fetch = function(input, init) {
+      const url = (typeof input === 'string') ? input : (input && input.url) || '';
+      const isCartMutation = /\/cart\/(add|change|update)\.js/.test(url);
+
+      const promise = _origFetch.apply(this, arguments);
+
+      if (isCartMutation && !_giftLock) {
+        promise.then(response => {
+          // Response consumed olmadan clone ile okuyoruz
+          if (response.ok) {
+            // Kısa gecikme: tema'nın kendi işleminin bitmesini bekle
+            setTimeout(() => syncGifts(), 150);
+          }
+          return response;
+        }).catch(() => {});
+      }
+
+      return promise;
+    };
+  }
+
+  // ── Başlat ────────────────────────────────────────────────
+  installFetchIntercept();
+
+  // Sayfa ilk yüklendiğinde de kontrol et
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => syncGifts());
+  } else {
+    syncGifts();
+  }
+
+})();
+</script>
