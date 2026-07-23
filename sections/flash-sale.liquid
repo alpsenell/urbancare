@@ -434,12 +434,46 @@
     }
 
     /* ── CART DRAWER AÇMA ──
-       Beautify teması: .js-open-cart-drawer butonuna tıkla */
+       Beautify: cart section HTML'ini yeniden render et, sonra drawer'ı aç.
+       Bu sayede eklenen ürün drawer açılmadan önce DOM'a yazılmış olur. */
     function openCartDrawer(){
-      var cartBtn = document.querySelector('.js-open-cart-drawer');
-      if (cartBtn){ cartBtn.click(); return; }
-      // Fallback: /cart sayfasına git
-      window.location.href = '/cart';
+      // Beautify'ın cart drawer section id'sini bul
+      var cartSectionEl = null;
+      var cartSectionId = null;
+      document.querySelectorAll('[id^="shopify-section-"]').forEach(function(el){
+        if (/cart/i.test(el.id) && !cartSectionEl){ cartSectionEl = el; cartSectionId = el.id.replace('shopify-section-',''); }
+      });
+
+      function doOpen(){
+        var btn = document.querySelector('.js-open-cart-drawer');
+        if (btn){ btn.click(); }
+        else { window.location.href = '/cart'; }
+      }
+
+      if (cartSectionId){
+        // Shopify section render API — Beautify'ın cart drawer HTML'ini güncel cart ile yeniden çek
+        fetch('/?section_id=' + encodeURIComponent(cartSectionId), {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(r){ return r.text(); })
+        .then(function(html){
+          var tmp = document.createElement('div');
+          tmp.innerHTML = html;
+          // Render edilen section içeriğini DOM'a yaz
+          var inner = tmp.querySelector('[id="shopify-section-' + cartSectionId + '"]');
+          if (inner && cartSectionEl){
+            cartSectionEl.innerHTML = inner.innerHTML;
+            // Beautify'ın yeni DOM üzerinde event listener'larını yeniden bağlaması için
+            // kısa gecikme sonra drawer'ı aç
+            setTimeout(doOpen, 50);
+          } else {
+            doOpen();
+          }
+        })
+        .catch(function(){ doOpen(); });
+      } else {
+        doOpen();
+      }
     }
 
     /* ── SEPETE EKLE ── */
@@ -475,11 +509,9 @@
       })
       .then(function(){
         if (CODE){
-          // İndirim kodu varsa önce ekle, sonra koda yönlendir
           window.location.href = '/discount/' + encodeURIComponent(CODE) + '?redirect=/cart';
         } else {
           b.textContent = 'Eklendi ✓';
-          // Ekleme tamamlandıktan SONRA drawer'ı aç
           openCartDrawer();
           setTimeout(function(){ b.textContent = orig; b.disabled = false; }, 1800);
         }
