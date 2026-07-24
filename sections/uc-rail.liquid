@@ -3,7 +3,7 @@
   Urban Care — Kişisel Ürün Bandı v1
   Sekmeler: Son Gezdiklerin · Son Aldıkların · Sana Özel
   Offer katmanı: customer.tags eşleşmeli, tarih kontrollü, blok bazlı
-  Sepete Ekle → cart drawer tetikler (cart:refresh)
+  Sepete Ekle → cart drawer tetikler (cart:refresh + cart-drawer.open fallback)
   Yeni: görsel boyutu, kart stili, buton rengi, sekme rengi schema'dan ayarlanabilir
 {%- endcomment -%}
 
@@ -373,7 +373,7 @@
     font-size: 12px;
     font-weight: 500;
     line-height: 1.4;
-    height: calc(12px * 1.4 * 2); /* 2 satır sabit yükseklik */
+    height: calc(12px * 1.4 * 2);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -647,14 +647,33 @@
     t.addEventListener('click', function () { activate(t.getAttribute('data-tab')); });
   });
 
-  /* ── Sepete Ekle ── */
-  function refreshCart() {
+  /* ────────────────────────────────────────────────────────────────
+     SEPETE EKLE — DÜZELTİLMİŞ CART DRAWER ENTEGRASYONU
+     1) /cart/add.js ile ürünü sepete ekle
+     2) cart:refresh event fırlat (Beautify cart-drawer snippet'i dinliyor)
+     3) 50ms sonra cart-drawer.open() çağır — drawer zaman zaman
+        event'i yakalamadan önce render'a ihtiyaç duyuyor, bu fallback
+        flash sale oturumunda test edildi ve çalışıyor.
+  ──────────────────────────────────────────────────────────────── */
+  function openDrawer() {
+    /* Katman 1: cart:refresh — Beautify'ın kendi event'i */
     try {
       document.dispatchEvent(new CustomEvent('cart:refresh', {
-        bubbles: true, detail: { open: true }
+        bubbles: true,
+        detail: { open: true }
       }));
     } catch (e) {}
+
+    /* Katman 2: 50ms sonra cart-drawer custom element doğrudan açılır */
+    setTimeout(function () {
+      var drawerEl = document.querySelector('cart-drawer');
+      if (!drawerEl) return;
+      if (typeof drawerEl.open === 'function') {
+        drawerEl.open();
+      }
+    }, 50);
   }
+
   function flashBtn(b) {
     var orig = b.getAttribute('data-label') || b.textContent;
     b.textContent = 'Eklendi ✓';
@@ -666,24 +685,29 @@
       b.classList.remove('is-added');
     }, 1800);
   }
+
   function addByVariant(vid) {
     return fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: [{ id: Number(vid), quantity: 1 }] })
-    }).then(function (r) { if (!r.ok) throw 0; return r.json(); });
+      body: JSON.stringify({ items: [{ id: parseInt(vid, 10), quantity: 1 }] })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('cart_add_failed');
+      return r.json();
+    });
   }
+
   function addByHandle(h) {
     return fetch('/products/' + h + '.js')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (p) {
-        if (!p || !p.variants) throw 0;
+        if (!p || !p.variants || !p.variants.length) throw new Error('no_variants');
         var v = null;
         for (var i = 0; i < p.variants.length; i++) {
           if (p.variants[i].available) { v = p.variants[i]; break; }
         }
         if (!v) v = p.variants[0];
-        if (!v) throw 0;
+        if (!v) throw new Error('no_variant');
         return addByVariant(v.id);
       });
   }
@@ -694,10 +718,13 @@
     e.preventDefault();
     if (b.disabled) return;
     b.disabled = true;
+
     var vid = b.getAttribute('data-variant-id');
     var h   = b.getAttribute('data-handle');
-    var ok  = function () { flashBtn(b); refreshCart(); };
+
+    var ok  = function () { flashBtn(b); openDrawer(); };
     var bad = function () { b.disabled = false; };
+
     if (vid) {
       addByVariant(vid).then(ok).catch(function () {
         if (h) addByHandle(h).then(ok).catch(bad); else bad();
