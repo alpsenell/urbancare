@@ -475,6 +475,7 @@
         "feature_UWTL4P",
         "feature_MbiGU8"
       ],
+      "disabled": true,
       "name": "UC Style Guide",
       "settings": {
         "eyebrow": "URBAN CARE",
