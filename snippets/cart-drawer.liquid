@@ -340,36 +340,54 @@
       // Güncel cart'ı çek
       const cart = await fetch('/cart.js', { credentials: 'same-origin' }).then(r => r.json());
 
-      // ── ESTIMATED TOTAL (tüm indirimler sonrası, hediyeler hariç) ──────
-      // Neden cart.total_price'ı doğrudan kullanmıyoruz:
-      //   • /cart.js otomatik indirimleri total_price'a yansıtır AMA manuel
-      //     kod indirimlerini (ör. "500₺ üstü %20" kodu) yansıtmayabilir.
-      //   • Hediye ürünlerinin kendi %100 kupon indirimi de /cart.js'e
-      //     yansımadığı için hediye satırı tam fiyatla toplama girer ve
-      //     bir üst tier'ı yanlışlıkla tetikleyip zincirleme ekleme yapar.
-      // Çözüm: satır ara toplamından sepet düzeyi indirimleri ve hediye
-      // satırlarını düşerek müşterinin gerçekten ödeyeceği tutarı bul.
+      // ── ESTIMATED TOTAL (müşterinin gerçekten ödeyeceği net tutar) ─────
+      // Hediye eşiği, TÜM indirimler uygulandıktan sonraki net tutara bakmalı.
+      //
+      // Sorun: "500₺ üstü %20" gibi sepet indirimleri bir KUPON/kod ise
+      // Shopify bunu /cart.js yanıtına yansıtmaz (cart_level_discount_applications
+      // boş gelir). Bu yüzden JS indirimi göremez ve eşik indirim ÖNCESI tutara
+      // bakar → hediye yanlışlıkla erken verilir.
+      //
+      // Çözüm: mağazanın sepet indirimi kuralını aşağıya sabit tanıtıyoruz.
+      // JS, hediye olmayan ürün ara toplamına bu indirimi kendisi uygular,
+      // böylece cart.js'e yansısa da yansımasa da doğru net tutarı bulur.
 
-      // items_subtotal_price: satır indirimleri dahil, sepet düzeyi indirim öncesi
-      var subtotal = (typeof cart.items_subtotal_price === 'number')
-        ? cart.items_subtotal_price
-        : cart.total_price;
+      // ══════════ MAĞAZA SEPET İNDİRİMİ ══════════
+      // "500₺ ve üzeri %20" kuralı. Kampanya değişirse burayı güncelle.
+      // İndirim yoksa: pct: 0 yap.
+      var STORE_CART_PROMO = { pct: 20, minTRY: 500 };
+      // ════════════════════════════════════════════
 
-      // Sepet düzeyi indirimleri düş (otomatik + cart.js'e yansıyan kodlar)
-      var cartLevelDiscount = 0;
-      (cart.cart_level_discount_applications || []).forEach(function (d) {
-        cartLevelDiscount += (d.total_allocated_amount || 0);
-      });
-
-      // Hediye satırlarını toplamdan çıkar — zincirleme tetiklemeyi engeller
-      var giftLineTotal = 0;
+      // Hediye OLMAYAN ürünlerin ara toplamı (satır indirimleri dahil)
+      var qualifyingSubtotal = 0;
       (cart.items || []).forEach(function (item) {
-        if (item.properties && item.properties['_free_gift'] === 'true') {
-          giftLineTotal += (item.final_line_price || 0);
-        }
+        var isGift = item.properties && item.properties['_free_gift'] === 'true';
+        if (isGift) return;
+        qualifyingSubtotal += (item.final_line_price || 0);
       });
 
-      var cartTotal = Math.max(0, subtotal - cartLevelDiscount - giftLineTotal); // kuruş
+      // Net tutarı hesapla: önce mağaza sepet indirimini uygula
+      var estimatedTotal = qualifyingSubtotal;
+      var promoMinCents  = (STORE_CART_PROMO.minTRY || 0) * 100;
+      if (STORE_CART_PROMO.pct > 0 && qualifyingSubtotal >= promoMinCents) {
+        estimatedTotal = Math.round(qualifyingSubtotal * (100 - STORE_CART_PROMO.pct) / 100);
+      }
+
+      // Ek olarak /cart.js'e YANSIYAN sepet indirimleri de düş (otomatik
+      // indirimler). Yalnızca yukarıdaki promo uygulanmadıysa çift saymayı
+      // önlemek için — promo uygulandıysa aynı indirim tekrar düşülmez.
+      if (!(STORE_CART_PROMO.pct > 0 && qualifyingSubtotal >= promoMinCents)) {
+        var cartLevelDiscount = 0;
+        (cart.cart_level_discount_applications || []).forEach(function (d) {
+          // Hediye kuponunu (canta_hediye vb.) düşme — o zaten hediyeye ait
+          var title = (d.title || '').toLowerCase();
+          if (title.indexOf('hediye') !== -1 || title.indexOf('gift') !== -1) return;
+          cartLevelDiscount += (d.total_allocated_amount || 0);
+        });
+        estimatedTotal = Math.max(0, estimatedTotal - cartLevelDiscount);
+      }
+
+      var cartTotal = Math.max(0, estimatedTotal); // kuruş — hediye eşiği bununla kıyaslanır
 
       tiers.sort((a, b) => a.threshold - b.threshold);
 
