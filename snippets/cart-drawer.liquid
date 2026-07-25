@@ -1,3 +1,12 @@
+{%- comment %}
+  ══════════════════════════════════════════════════════════════
+  snippets/cart-drawer.liquid
+  Free Gift motoru: eşik = otomatik indirimler sonrası ödenecek tutar
+  (hediye satırları hariç). Eşik aşılınca hediye otomatik eklenir,
+  altına düşünce otomatik silinir. Hediye satırı kilitlidir.
+  ══════════════════════════════════════════════════════════════
+{% endcomment -%}
+
 {%- liquid
   assign show_gift_wrapping = false
   if settings.show_gift_wrapping and settings.gift_wrap_product != blank
@@ -14,52 +23,23 @@
   endif
 %}
 
-{%- comment %} ── FREE GIFT: Aktif tier'ları topla (her tier max 3 ürün) ── {%- endcomment %}
+{%- comment %} ── FREE GIFT: section'dan gelen parametreleri normalize et ── {%- endcomment %}
 {%- liquid
-  assign gift_tiers_arr = ''
-  assign gift_tier_count = 0
+  assign gift_tiers_json = gift_tiers_json | default: '[]'
+  assign gift_mode = gift_mode | default: 'highest'
+  assign gift_badge_text = gift_badge_text | default: '🎁 Hediye'
 
-  for i in (1..5)
-    assign tier_active_key = 'gift_tier_' | append: i | append: '_active'
-    assign tier_amount_key = 'gift_tier_' | append: i | append: '_amount'
-    assign tier_code_key   = 'gift_tier_' | append: i | append: '_code'
+  assign gift_lock = true
+  if gift_lock_lines == false
+    assign gift_lock = false
+  endif
 
-    assign tier_active = section.settings[tier_active_key]
-    assign tier_amount = section.settings[tier_amount_key]
-    assign tier_code   = section.settings[tier_code_key] | default: ''
+  assign gift_qty_up = false
+  if gift_allow_qty_up == true
+    assign gift_qty_up = true
+  endif
 
-    comment
-      Bu tier'ın 3 ürün slotundan dolu olanların variant id'lerini topla
-    endcomment
-    assign tier_variant_ids = ''
-    assign tier_variant_count = 0
-    for j in (1..3)
-      assign tier_product_key = 'gift_tier_' | append: i | append: '_product_' | append: j
-      assign tier_product = section.settings[tier_product_key]
-      if tier_product != blank
-        assign vid = tier_product.selected_or_first_available_variant.id
-        if tier_variant_count == 0
-          assign tier_variant_ids = vid | append: ''
-        else
-          assign tier_variant_ids = tier_variant_ids | append: ',' | append: vid
-        endif
-        assign tier_variant_count = tier_variant_count | plus: 1
-      endif
-    endfor
-
-    if tier_active and tier_variant_count > 0 and tier_amount > 0
-      assign tier_entry = '{"tier":' | append: i | append: ',"threshold":' | append: tier_amount | append: '00,"variantIds":[' | append: tier_variant_ids | append: '],"code":"' | append: tier_code | append: '"}'
-      if gift_tier_count == 0
-        assign gift_tiers_arr = tier_entry
-      else
-        assign gift_tiers_arr = gift_tiers_arr | append: ',' | append: tier_entry
-      endif
-      assign gift_tier_count = gift_tier_count | plus: 1
-    endif
-  endfor
-
-  assign gift_tiers_json = '[' | append: gift_tiers_arr | append: ']'
-  assign gift_mode = section.settings.gift_mode | default: 'highest'
+  assign gift_section_id = section.id | default: 'cart-drawer'
 -%}
 
 <link rel="stylesheet" href="{{ 'cart.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -75,6 +55,51 @@
   <script src="{{ 'cart-note.js' | asset_url }}" defer></script>
 {%- endif -%}
 
+{%- comment %} ── FREE GIFT: hediye satırı kilit stilleri ── {%- endcomment %}
+<style>
+  [data-free-gift='true'] quantity-input,
+  [data-free-gift='true'] .quantity-input,
+  [data-free-gift='true'] .cart-item__quantity,
+  [data-free-gift='true'] .cart-item__qty,
+  [data-free-gift='true'] .cart-item__remove,
+  [data-free-gift='true'] .js-remove-item,
+  [data-free-gift='true'] [data-cart-remove],
+  [data-free-gift='true'] a[href*='/cart/change'],
+  [data-free-gift='true'] input[name^='updates'] {
+    display: none !important;
+  }
+
+  [data-free-gift='true'] .cart-item__price s,
+  [data-free-gift='true'] .cart-item__price del {
+    display: none !important;
+  }
+
+  .free-gift-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    margin-top: 0.35em;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    background: rgba(0, 0, 0, 0.06);
+    white-space: nowrap;
+  }
+
+  .free-gift-qty {
+    display: block;
+    font-size: 12px;
+    opacity: 0.6;
+  }
+
+  [data-free-gift='true'] {
+    position: relative;
+  }
+</style>
+
 <cart-drawer
   class="drawer fixed top-0 right-0 flex flex-col w-full has-motion"
   id="cart-drawer"
@@ -83,10 +108,13 @@
   aria-modal="true"
   aria-hidden="true"
   tabindex="-1"
-  data-section="{{ section.id }}"
+  data-section="{{ gift_section_id }}"
   data-name="cart-drawer"
   data-gift-tiers="{{ gift_tiers_json | escape }}"
   data-gift-mode="{{ gift_mode }}"
+  data-gift-badge="{{ gift_badge_text | escape }}"
+  data-gift-lock="{% if gift_lock %}true{% else %}false{% endif %}"
+  data-gift-qty-up="{% if gift_qty_up %}true{% else %}false{% endif %}"
 >
   <header class="drawer__header">
     <div class="flex flex-col gap-y-4">
@@ -276,205 +304,368 @@
   </script>
 {%- endif -%}
 
-{%- comment %} ── FREE GIFT SCRIPT ── {%- endcomment %}
+{%- comment %} ══════════ FREE GIFT ENGINE ══════════ {%- endcomment %}
 <script>
-(function() {
-  // ── Konfigürasyon ──────────────────────────────────────────
-  // Gift sync kendi iç fetch çağrılarının tekrar intercept edilmesini engeller
-  let _giftLock   = false;
-  let _intercepted = false;
+(function () {
+  'use strict';
 
-  // ── Drawer yenile ──────────────────────────────────────────
-  function refreshDrawer() {
-    const drawerEl  = document.getElementById('cart-drawer');
-    const sectionId = drawerEl && drawerEl.dataset.section;
-    if (!sectionId) return;
+  // Aynı script iki kez çalışmasın
+  if (window.__ccFreeGiftInit) return;
+  window.__ccFreeGiftInit = true;
 
-    fetch('/?sections=' + sectionId)
-      .then(r => r.json())
-      .then(data => {
-        // Shopify response key'i "sections--ID__cart-drawer" formatında gelebilir
-        // data-section attribute'u ise sadece "ID__cart-drawer" tutuyor
-        // İkisini de dene, yoksa Object.values ile ilk değeri al
-        const html = data[sectionId]
-                  || data['sections--' + sectionId]
-                  || Object.values(data)[0];
-        if (!html) return;
-        const tmp = document.createElement('div');
-        tmp.innerHTML = html;
-        const newDrawer = tmp.querySelector('#cart-drawer');
-        const oldDrawer = document.getElementById('cart-drawer');
-        if (!newDrawer || !oldDrawer) return;
+  var DRAWER_ID = 'cart-drawer';
+  var PROP = '_free_gift';
 
-        // İçerik + footer güncelle, drawer'ın açık/kapalı state'ine dokunma
-        const pairs = [
-          ['.drawer__content', '.drawer__content'],
-          ['.drawer__footer',  '.drawer__footer'],
-          ['.drawer__header .js-drawer-header-title', '.drawer__header .js-drawer-header-title']
-        ];
-        pairs.forEach(([newSel, oldSel]) => {
-          const n = newDrawer.querySelector(newSel);
-          const o = oldDrawer.querySelector(oldSel);
-          if (n && o) o.innerHTML = n.innerHTML;
-        });
-      })
-      .catch(() => {});
-  }
+  var busy = false;      // gift sync çalışıyor
+  var queued = false;    // sync sırasında yeni tetik geldi
+  var timer = null;
+  var lockTimer = null;
 
-  // ── Ana gift sync ──────────────────────────────────────────
-  async function syncGifts() {
-    if (_giftLock) return;
-    _giftLock = true;
-
-    try {
-      const drawerEl = document.getElementById('cart-drawer');
-      if (!drawerEl) return;
-
-      const tiersRaw = drawerEl.dataset.giftTiers;
-      const mode     = drawerEl.dataset.giftMode || 'highest';
-
-      let tiers = [];
-      try { tiers = JSON.parse(tiersRaw || '[]'); } catch(e) { return; }
-      if (!tiers.length) return;
-
-      // Güncel cart'ı çek
-      const cart = await fetch('/cart.js', { credentials: 'same-origin' }).then(r => r.json());
-      const cartTotal = cart.total_price; // kuruş
-
-      tiers.sort((a, b) => a.threshold - b.threshold);
-
-      // Hangi tier'lar aktif olmalı?
-      let shouldBeActive = [];
-      if (mode === 'cumulative') {
-        shouldBeActive = tiers.filter(t => cartTotal >= t.threshold);
-      } else {
-        const passed = tiers.filter(t => cartTotal >= t.threshold);
-        if (passed.length) shouldBeActive = [passed[passed.length - 1]];
-      }
-
-      // Aktif olması gereken tüm variant id'ler (aktif tier'ların tüm ürünleri)
-      const activeVariantIds = [];
-      shouldBeActive.forEach(t => (t.variantIds || []).forEach(v => activeVariantIds.push(v)));
-
-      // Tüm tier'lardaki tüm variant id'ler (hediye olarak tanımlı olanlar)
-      const allTierVariantIds = [];
-      tiers.forEach(t => (t.variantIds || []).forEach(v => allTierVariantIds.push(v)));
-
-      // Sepetteki hediye ürünleri (_free_gift property ile tanımlı)
-      const giftItemsInCart = cart.items.filter(item =>
-        allTierVariantIds.includes(item.variant_id) &&
-        item.properties && item.properties['_free_gift'] === 'true'
-      );
-
-      const inCartVariantIds = giftItemsInCart.map(i => i.variant_id);
-
-      // Çıkarılacaklar: sepette hediye olarak var ama artık aktif olmamalı
-      const toRemove = giftItemsInCart.filter(i => !activeVariantIds.includes(i.variant_id));
-
-      // Eklenecekler: aktif olmalı ama sepette yok
-      const toAdd = activeVariantIds.filter(v => !inCartVariantIds.includes(v));
-
-      if (!toRemove.length && !toAdd.length) return;
-
-      // Çıkar
-      for (const item of toRemove) {
-        await fetch('/cart/change.js', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: item.key, quantity: 0 })
-        });
-      }
-
-      // Ekle
-      for (const variantId of toAdd) {
-        await fetch('/cart/add.js', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: variantId,
-            quantity: 1,
-            properties: { '_free_gift': 'true' }
-          })
-        });
-      }
-
-      // ── Discount kodu uygula ──────────────────────────────
-      // Aktif tier'lardan koda sahip olanı bul, /discount/KOD ile uygula.
-      // NOT: Shopify tek seferde tek kod tutar — en yüksek aktif tier'ın
-      // kodu uygulanır. Kümülatif modda birden fazla kod aynı anda
-      // uygulanamaz (Shopify sınırı), en yüksek tier'ınki geçerli olur.
-      let codeToApply = '';
-      // shouldBeActive eşiğe göre artan sıralı; sonu = en yüksek tier
-      for (let k = shouldBeActive.length - 1; k >= 0; k--) {
-        if (shouldBeActive[k].code) { codeToApply = shouldBeActive[k].code; break; }
-      }
-
-      if (codeToApply) {
-        try {
-          // /discount/KOD çağrısı discount cookie'sini set eder
-          await fetch('/discount/' + encodeURIComponent(codeToApply), {
-            method: 'GET',
-            credentials: 'same-origin',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-          });
-        } catch(e) { /* sessiz geç */ }
-      }
-
-      // Drawer'ı güncelle
-      refreshDrawer();
-
-      // Tema'nın kendi event sistemini de tetikle (header sayaç vs.)
-      document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
-
-    } catch(err) {
-      console.warn('[FreeGift] Hata:', err);
-    } finally {
-      _giftLock = false;
-    }
-  }
-
-  // ── Fetch Intercept ────────────────────────────────────────
-  // /cart/add.js veya /cart/change.js çağrısı yapıldığında
-  // — kimin yaptığından bağımsız — gift sync tetiklenir.
-  // Gift sync'in kendi çağrıları tekrar intercept edilmez (_giftLock).
-  function installFetchIntercept() {
-    if (_intercepted) return;
-    _intercepted = true;
-
-    const _origFetch = window.fetch;
-
-    window.fetch = function(input, init) {
-      const url = (typeof input === 'string') ? input : (input && input.url) || '';
-      const isCartMutation = /\/cart\/(add|change|update)\.js/.test(url);
-
-      const promise = _origFetch.apply(this, arguments);
-
-      if (isCartMutation && !_giftLock) {
-        promise.then(response => {
-          // Response consumed olmadan clone ile okuyoruz
-          if (response.ok) {
-            // Kısa gecikme: tema'nın kendi işleminin bitmesini bekle
-            setTimeout(() => syncGifts(), 150);
-          }
-          return response;
-        }).catch(() => {});
-      }
-
-      return promise;
+  // ── Konfig ────────────────────────────────────────────────
+  function cfg() {
+    var el = document.getElementById(DRAWER_ID);
+    if (!el) return null;
+    var tiers = [];
+    try { tiers = JSON.parse(el.dataset.giftTiers || '[]'); } catch (e) { tiers = []; }
+    tiers.sort(function (a, b) { return a.threshold - b.threshold; });
+    return {
+      el: el,
+      tiers: tiers,
+      mode: el.dataset.giftMode || 'highest',
+      badge: el.dataset.giftBadge || '🎁 Hediye',
+      lockLines: el.dataset.giftLock !== 'false',
+      qtyUp: el.dataset.giftQtyUp === 'true',
+      sectionId: el.dataset.section || 'cart-drawer'
     };
   }
 
-  // ── Başlat ────────────────────────────────────────────────
-  installFetchIntercept();
+  function getCart() {
+    return fetch('/cart.js', {
+      credentials: 'same-origin',
+      headers: { 'Accept': 'application/json' }
+    }).then(function (r) { return r.json(); });
+  }
 
-  // Sayfa ilk yüklendiğinde de kontrol et
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => syncGifts());
-  } else {
+  function isGift(item) {
+    return !!(item.properties && (item.properties[PROP] === 'true' || item.properties[PROP] === true));
+  }
+
+  // Satırın gerçekten ödenen tutarı (line-level + order-level indirim düşülmüş)
+  function linePayable(item) {
+    var orig = (item.original_line_price != null) ? item.original_line_price : (item.line_price || 0);
+    var disc = (item.total_discount != null) ? item.total_discount : 0;
+    return Math.max(0, orig - disc);
+  }
+
+  // Eşik hesabı: otomatik indirimler sonrası ödenecek tutar, HEDİYELER HARİÇ
+  function eligibleTotal(cart) {
+    var all = 0, gifts = 0;
+    (cart.items || []).forEach(function (i) {
+      var p = linePayable(i);
+      all += p;
+      if (isGift(i)) gifts += p;
+    });
+    // Sağlama: satır toplamı cart.total_price ile uyuşmuyorsa (order-level
+    // indirim satıra yansımamışsa) cart.total_price'ı baz al.
+    if (Math.abs(all - cart.total_price) > 5) {
+      var giftFinal = 0;
+      (cart.items || []).forEach(function (i) {
+        if (isGift(i)) giftFinal += (i.final_line_price != null ? i.final_line_price : i.line_price || 0);
+      });
+      return Math.max(0, cart.total_price - giftFinal);
+    }
+    return Math.max(0, all - gifts);
+  }
+
+  function activeTiers(cart, c) {
+    var total = eligibleTotal(cart);
+    var passed = c.tiers.filter(function (t) { return total >= t.threshold; });
+    if (!passed.length) return [];
+    return (c.mode === 'cumulative') ? passed : [passed[passed.length - 1]];
+  }
+
+  // ── Cart mutasyonları ─────────────────────────────────────
+  function changeLine(key, qty) {
+    return fetch('/cart/change.js', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: qty })
+    });
+  }
+
+  function addGift(variantId) {
+    var props = {};
+    props[PROP] = 'true';
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: [{ id: variantId, quantity: 1, properties: props }] })
+    }).then(function (r) {
+      if (!r.ok) console.warn('[FreeGift] eklenemedi (stok/variant?):', variantId, r.status);
+      return r;
+    });
+  }
+
+  function applyCode(active) {
+    var code = '';
+    for (var i = active.length - 1; i >= 0; i--) {
+      if (active[i].code) { code = active[i].code; break; }
+    }
+    if (!code) return Promise.resolve();
+    return fetch('/discount/' + encodeURIComponent(code), {
+      credentials: 'same-origin',
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    }).catch(function () {});
+  }
+
+  // ── Ana senkron ───────────────────────────────────────────
+  function syncGifts() {
+    var c = cfg();
+    if (!c || !c.tiers.length) return Promise.resolve();
+    if (busy) { queued = true; return Promise.resolve(); }
+    busy = true;
+
+    return getCart().then(function (cart) {
+      var active = activeTiers(cart, c);
+
+      var activeIds = [];
+      active.forEach(function (t) {
+        (t.variantIds || []).forEach(function (v) { activeIds.push(Number(v)); });
+      });
+
+      var allIds = [];
+      c.tiers.forEach(function (t) {
+        (t.variantIds || []).forEach(function (v) { allIds.push(Number(v)); });
+      });
+
+      var giftLines = (cart.items || []).filter(isGift);
+
+      // Çıkacaklar: hediye işaretli ama aktif tier'da olmayan (veya artık tier'da tanımlı olmayan) satırlar
+      var toRemove = giftLines.filter(function (i) { return activeIds.indexOf(i.variant_id) === -1; });
+      // Sepette duran ve kalması gereken hediyeler
+      var present = giftLines.filter(function (i) { return activeIds.indexOf(i.variant_id) !== -1; });
+      // Eklenecekler
+      var toAdd = activeIds.filter(function (v) {
+        return !present.some(function (i) { return i.variant_id === v; });
+      });
+      // Adet sabitleme (qtyUp kapalıysa hediye adedi 1 olmalı)
+      var toFix = c.qtyUp ? [] : present.filter(function (i) { return i.quantity !== 1; });
+
+      if (!toRemove.length && !toAdd.length && !toFix.length) return null;
+
+      var chain = Promise.resolve();
+      toRemove.forEach(function (i) { chain = chain.then(function () { return changeLine(i.key, 0); }); });
+      toFix.forEach(function (i) { chain = chain.then(function () { return changeLine(i.key, 1); }); });
+      toAdd.forEach(function (v) { chain = chain.then(function () { return addGift(v); }); });
+
+      return chain
+        .then(function () { return applyCode(active); })
+        .then(function () { return refreshDrawer(c); });
+    }).catch(function (e) {
+      console.warn('[FreeGift] hata:', e);
+    }).then(function () {
+      busy = false;
+      if (queued) { queued = false; schedule(80); }
+      lockGiftLines();
+    });
+  }
+
+  // ── Drawer yenile (Section Rendering API) ─────────────────
+  function refreshDrawer(c) {
+    return fetch('/?sections=' + encodeURIComponent(c.sectionId), { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var html = data[c.sectionId] || data['sections--' + c.sectionId] || Object.values(data)[0];
+        if (!html) return;
+
+        var tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        var fresh = tmp.querySelector('#' + DRAWER_ID);
+        var live = document.getElementById(DRAWER_ID);
+        if (!fresh || !live) return;
+
+        [
+          '.drawer__content',
+          '.drawer__footer',
+          '.drawer__header .js-drawer-header-title'
+        ].forEach(function (sel) {
+          var n = fresh.querySelector(sel);
+          var o = live.querySelector(sel);
+          if (n && o) o.innerHTML = n.innerHTML;
+        });
+
+        // Header sepet sayacı vb. için temanın kendi event'i
+        document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+      })
+      .catch(function () {});
+  }
+
+  // ── Hediye satırını kilitle (adet/kaldır yok + etiket) ────
+  function findRow(item) {
+    var key = item.key;
+    var sels = [
+      '[data-line-item-key="' + key + '"]',
+      '[data-line-key="' + key + '"]',
+      '[data-key="' + key + '"]',
+      'input[name="updates[' + key + ']"]',
+      '[data-quantity-key="' + key + '"]',
+      'a[href*="' + key + '"]'
+    ];
+    var el = null;
+    for (var i = 0; i < sels.length; i++) {
+      try { el = document.querySelector(sels[i]); } catch (e) { el = null; }
+      if (el) break;
+    }
+    if (!el) {
+      try {
+        el = document.querySelector('.cart-item a[href*="variant=' + item.variant_id + '"]');
+      } catch (e) { el = null; }
+    }
+    if (!el) return null;
+    return el.closest('.cart-item, .cart-item__inner, .drawer__cart-item, li, tr') || el;
+  }
+
+  function lockGiftLines() {
+    var c = cfg();
+    if (!c || !c.lockLines) return;
+
+    getCart().then(function (cart) {
+      var gifts = (cart.items || []).filter(isGift);
+      if (!gifts.length) return;
+
+      gifts.forEach(function (item) {
+        var row = findRow(item);
+        if (!row || row.getAttribute('data-free-gift') === 'true') return;
+        row.setAttribute('data-free-gift', 'true');
+
+        // Etiket
+        if (!row.querySelector('.free-gift-badge')) {
+          var titleEl = row.querySelector('.cart-item__title, .cart-item__name, a[href*="/products/"]');
+          var badge = document.createElement('span');
+          badge.className = 'free-gift-badge';
+          badge.textContent = c.badge;
+          if (titleEl && titleEl.parentNode) {
+            titleEl.parentNode.insertBefore(badge, titleEl.nextSibling);
+          } else {
+            row.appendChild(badge);
+          }
+        }
+
+        // Adet/kaldır kontrollerini kaldır (CSS'e ek olarak inline garanti)
+        if (!c.qtyUp) {
+          row.querySelectorAll(
+            'quantity-input, .quantity-input, .cart-item__quantity, .cart-item__qty,' +
+            'input[name^="updates"], a[href*="/cart/change"], .cart-item__remove,' +
+            '.js-remove-item, [data-cart-remove], button[name="minus"], button[name="plus"]'
+          ).forEach(function (n) { n.style.display = 'none'; });
+
+          if (!row.querySelector('.free-gift-qty')) {
+            var q = document.createElement('span');
+            q.className = 'free-gift-qty';
+            q.textContent = '1 adet';
+            row.appendChild(q);
+          }
+        }
+      });
+    }).catch(function () {});
+  }
+
+  function scheduleLock(delay) {
+    clearTimeout(lockTimer);
+    lockTimer = setTimeout(lockGiftLines, delay == null ? 120 : delay);
+  }
+
+  function schedule(delay) {
+    clearTimeout(timer);
+    timer = setTimeout(syncGifts, delay == null ? 250 : delay);
+  }
+
+  // ── Cart mutasyonlarını yakala (fetch + XHR) ──────────────
+  var CART_RE = /\/cart\/(add|change|update|clear)(\.js|\.json)?/;
+
+  function installIntercepts() {
+    var origFetch = window.fetch;
+    window.fetch = function (input, init) {
+      var url = (typeof input === 'string') ? input : ((input && input.url) || '');
+      var isCart = CART_RE.test(url);
+      var trigger = isCart && !busy; // kendi çağrılarımız busy=true iken yapılır
+      var p = origFetch.apply(this, arguments);
+      if (trigger) {
+        p.then(function (r) { if (r && r.ok) schedule(200); return r; }).catch(function () {});
+      }
+      return p;
+    };
+
+    var origOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function (m, u) {
+      this.__giftUrl = u || '';
+      return origOpen.apply(this, arguments);
+    };
+
+    var origSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function () {
+      if (CART_RE.test(this.__giftUrl || '') && !busy) {
+        var self = this;
+        this.addEventListener('load', function () {
+          if (self.status >= 200 && self.status < 300) schedule(200);
+        });
+      }
+      return origSend.apply(this, arguments);
+    };
+  }
+
+  // ── Drawer DOM değişince kilidi yeniden uygula ────────────
+  function observeDrawer() {
+    var el = document.getElementById(DRAWER_ID);
+    if (!el || !window.MutationObserver) return;
+
+    new MutationObserver(function () { scheduleLock(120); })
+      .observe(el, { childList: true, subtree: true });
+
+    // Drawer açıldığında da kontrol et
+    new MutationObserver(function () {
+      if (el.getAttribute('aria-hidden') === 'false') { schedule(60); scheduleLock(200); }
+    }).observe(el, { attributes: true, attributeFilter: ['aria-hidden', 'class'] });
+  }
+
+  // ── Debug yardımcısı: konsolda FreeGift.state() ───────────
+  window.FreeGift = {
+    sync: syncGifts,
+    lock: lockGiftLines,
+    config: cfg,
+    state: function () {
+      var c = cfg();
+      return getCart().then(function (cart) {
+        var s = {
+          tiers: c ? c.tiers : null,
+          mode: c ? c.mode : null,
+          cart_total_price: cart.total_price,
+          eligible_total: c ? eligibleTotal(cart) : null,
+          active_tiers: c ? activeTiers(cart, c) : null,
+          gift_lines: (cart.items || []).filter(isGift).map(function (i) {
+            return { title: i.title, variant_id: i.variant_id, qty: i.quantity, key: i.key };
+          })
+        };
+        console.table ? console.log(s) : console.log(s);
+        return s;
+      });
+    }
+  };
+
+  // ── Başlat ────────────────────────────────────────────────
+  installIntercepts();
+
+  function boot() {
+    observeDrawer();
     syncGifts();
   }
 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();
 </script>
