@@ -202,7 +202,7 @@
             "product": "hyaluronic-collagen-kuru-ve-cansiz-saclara-ozel-4lu-sac-bakim-seti-vegan",
             "discount_percent": 0,
             "start_at": "",
-            "end_at": "2026-07-23 23:59",
+            "end_at": "2026-07-25 23:59",
             "discount_code": "",
             "subtext": ""
           }
@@ -214,7 +214,7 @@
             "product": "expert-biotin-ve-kafein-dokulme-karsiti-sac-bakim-seti-sampuan-tonik-serum",
             "discount_percent": 0,
             "start_at": "",
-            "end_at": "2026-07-23 23:59",
+            "end_at": "2026-07-25 23:59",
             "discount_code": "",
             "subtext": ""
           }
@@ -226,7 +226,7 @@
             "product": "glycolic-retinol-parlaklik-etkili-3lu-sac-bakim-seti",
             "discount_percent": 0,
             "start_at": "",
-            "end_at": "2026-07-23 23:59",
+            "end_at": "2026-07-25 23:59",
             "discount_code": "",
             "subtext": ""
           }
@@ -345,6 +345,158 @@
         "section_join_mode": "default"
       }
     },
+    "uc_style_guide_L9dnGT": {
+      "type": "uc-style-guide",
+      "blocks": {
+        "product_UcAAzn": {
+          "type": "product",
+          "settings": {
+            "product": "style-guide-fiber-gum",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_3LJbiL": {
+          "type": "product",
+          "settings": {
+            "product": "style-guide-stick-wax-35-gr",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_RLNKAA": {
+          "type": "product",
+          "settings": {
+            "product": "urban-care-style-guide-matte-wax",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_Ae3VJ4": {
+          "type": "product",
+          "settings": {
+            "product": "style-guide-cream-wax-100ml",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_tnQra9": {
+          "type": "product",
+          "settings": {
+            "product": "urban-care-style-guide-elastic-curl-sac-kopugu",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_VGGWyw": {
+          "type": "product",
+          "settings": {
+            "product": "urban-care-style-guide-aqua-max",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_6aktYV": {
+          "type": "product",
+          "settings": {
+            "product": "urban-care-style-guide-deniz-tuzu-sac-kopugu",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_L7ktmG": {
+          "type": "product",
+          "settings": {
+            "product": "urban-care-style-guide-deniz-tuzu-sac-spreyi",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_rFqANX": {
+          "type": "product",
+          "settings": {
+            "product": "style-guide-big-hair-volume-foam-200ml",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "product_yde73T": {
+          "type": "product",
+          "settings": {
+            "product": "urban-care-style-guide-elastic-curl-jole",
+            "label": "",
+            "category": "",
+            "hold_level": 0
+          }
+        },
+        "feature_Q7A7rD": {
+          "type": "feature",
+          "settings": {
+            "title": "VEGAN FORMÜL",
+            "text": "Bitkisel keratin içerir."
+          }
+        },
+        "feature_UWTL4P": {
+          "type": "feature",
+          "settings": {
+            "title": "UV FİLTRESİ",
+            "text": "Saçı güneşe karşı korur."
+          }
+        },
+        "feature_MbiGU8": {
+          "type": "feature",
+          "settings": {
+            "title": "TEMİZ İÇERİK",
+            "text": "Paraben, silikon, boya içermez."
+          }
+        }
+      },
+      "block_order": [
+        "product_UcAAzn",
+        "product_3LJbiL",
+        "product_RLNKAA",
+        "product_Ae3VJ4",
+        "product_tnQra9",
+        "product_VGGWyw",
+        "product_6aktYV",
+        "product_L7ktmG",
+        "product_rFqANX",
+        "product_yde73T",
+        "feature_Q7A7rD",
+        "feature_UWTL4P",
+        "feature_MbiGU8"
+      ],
+      "name": "UC Style Guide",
+      "settings": {
+        "eyebrow": "URBAN CARE",
+        "heading": "Style Guide Serisi",
+        "subheading": "Kuaför performansında, uzun süre kalıcı ve göz kamaştırıcı saç stilleri için geliştirildi.",
+        "show_filters": true,
+        "filter_all_label": "Tümü",
+        "show_price": true,
+        "show_sale_badge": true,
+        "show_hold": true,
+        "hold_label": "Tutuş",
+        "vegan_label": "VEGAN",
+        "cta_add": "Sepete Ekle",
+        "cta_sold": "Tükendi",
+        "empty_text": "Bu kategoride ürün yok.",
+        "brand_color": "#C5006A",
+        "bg_color": "#ffffff",
+        "color_scheme": "",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
     "uc_trust": {
       "type": "icons-with-text",
       "blocks": {
@@ -388,7 +540,7 @@
         "icon_size": 48,
         "icon_position": "beside",
         "height": "py-6",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-68afd050-bcc4-45bf-bb60-433948c864d0"
       }
     },
     "sets_section": {
@@ -698,6 +850,7 @@
     "flash_sale_NaeQVV",
     "uc_rail_aJNkJJ",
     "featured_collection_bestsellers",
+    "uc_style_guide_L9dnGT",
     "uc_trust",
     "sets_section",
     "collection_list_EAraJP",
