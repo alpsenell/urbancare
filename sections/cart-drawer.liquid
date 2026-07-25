@@ -1,6 +1,73 @@
+{%- comment %}
+  ══════════════════════════════════════════════════════════════
+  sections/cart-drawer.liquid
+  Free Gift tier konfigürasyonu BURADA hesaplanır ve snippet'e
+  parametre olarak geçilir. Böylece snippet içinde section.settings
+  okunamama / boş gelme riski tamamen ortadan kalkar.
+  ══════════════════════════════════════════════════════════════
+{% endcomment -%}
+
+{%- liquid
+  assign gift_tiers_arr = ''
+  assign gift_tier_count = 0
+
+  for i in (1..5)
+    assign k_active = 'gift_tier_' | append: i | append: '_active'
+    assign k_amount = 'gift_tier_' | append: i | append: '_amount'
+    assign k_code   = 'gift_tier_' | append: i | append: '_code'
+
+    assign t_active = section.settings[k_active]
+    assign t_amount = section.settings[k_amount] | default: 0
+    assign t_code   = section.settings[k_code] | default: '' | strip
+
+    comment
+      Bu tier'ın 3 ürün slotundan DOLU ve SATIN ALINABİLİR olanların
+      variant id'lerini topla. Stokta yoksa listeye girmez (add.js hatası olmasın).
+    endcomment
+    assign t_vids = ''
+    assign t_vcount = 0
+
+    for j in (1..3)
+      assign k_prod = 'gift_tier_' | append: i | append: '_product_' | append: j
+      assign t_prod = section.settings[k_prod]
+      if t_prod != blank
+        assign t_var = t_prod.selected_or_first_available_variant
+        if t_var != blank and t_var.available
+          if t_vcount == 0
+            assign t_vids = t_var.id | append: ''
+          else
+            assign t_vids = t_vids | append: ',' | append: t_var.id
+          endif
+          assign t_vcount = t_vcount | plus: 1
+        endif
+      endif
+    endfor
+
+    if t_active and t_vcount > 0 and t_amount > 0
+      assign t_threshold = t_amount | times: 100 | round: 0
+      assign t_code_json = t_code | json
+      assign entry = '{"tier":' | append: i | append: ',"threshold":' | append: t_threshold | append: ',"variantIds":[' | append: t_vids | append: '],"code":' | append: t_code_json | append: '}'
+      if gift_tier_count == 0
+        assign gift_tiers_arr = entry
+      else
+        assign gift_tiers_arr = gift_tiers_arr | append: ',' | append: entry
+      endif
+      assign gift_tier_count = gift_tier_count | plus: 1
+    endif
+  endfor
+
+  assign gift_tiers_json = '[' | append: gift_tiers_arr | append: ']'
+-%}
+
 {%- unless request.page_type == 'cart' or settings.cart_type == 'page' -%}
   {%- comment %}theme-check-disable NestedSnippet{% endcomment -%}
-  {%- render 'cart-drawer' -%}
+  {%- render 'cart-drawer',
+    gift_tiers_json: gift_tiers_json,
+    gift_mode: section.settings.gift_mode,
+    gift_badge_text: section.settings.gift_badge_text,
+    gift_lock_lines: section.settings.gift_lock_lines,
+    gift_allow_qty_up: section.settings.gift_allow_qty_up
+  -%}
   {%- comment %}theme-check-enable NestedSnippet{% endcomment -%}
 {%- endunless -%}
 
@@ -25,6 +92,10 @@
       "content": "🎁 Ücretsiz Hediye Ayarları"
     },
     {
+      "type": "paragraph",
+      "content": "Eşikler, otomatik indirimler uygulandıktan sonra ödenecek tutara göre hesaplanır. Hediye satırları bu tutara dahil edilmez."
+    },
+    {
       "type": "select",
       "id": "gift_mode",
       "label": "Hediye modu",
@@ -34,6 +105,30 @@
       ],
       "default": "highest",
       "info": "Kümülatif modda ₺500 ve ₺1000 eşiğini geçen müşteri her iki hediyeyi de alır."
+    },
+    {
+      "type": "header",
+      "content": "Hediye satırı görünümü"
+    },
+    {
+      "type": "text",
+      "id": "gift_badge_text",
+      "label": "Hediye etiketi",
+      "default": "🎁 Hediye"
+    },
+    {
+      "type": "checkbox",
+      "id": "gift_lock_lines",
+      "label": "Hediye satırını kilitle",
+      "default": true,
+      "info": "Adet artır/azalt ve kaldır butonlarını gizler. Hediye sadece eşik davranışıyla eklenir/çıkar."
+    },
+    {
+      "type": "checkbox",
+      "id": "gift_allow_qty_up",
+      "label": "Adet artırmaya izin ver",
+      "default": false,
+      "info": "Kapalıyken hediye adedi her zaman 1'e sabitlenir."
     },
     {
       "type": "header",
