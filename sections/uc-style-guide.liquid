@@ -1,0 +1,644 @@
+{%- comment -%}
+  uc-style-guide.liquid
+  Urban Care — Style Guide Serisi (editorial + shoppable)
+  · Hero banner (desktop/mobile ayrı)
+  · Kategoriye göre filtre (Köpük · Sprey · Wax · Jel)
+  · Her ürün block olarak seçilir; tutuş gücü göstergesi (1-5)
+  · Sepete Ekle → Beautify cart drawer (cart:refresh + cart-drawer.open)
+  · Alt bilgi şeridi (vegan formül vs.) schema'dan
+{%- endcomment -%}
+
+{%- liquid
+  assign show_price   = section.settings.show_price
+  assign show_hold    = section.settings.show_hold
+  assign show_filters = section.settings.show_filters
+  assign vegan_label  = section.settings.vegan_label | default: 'VEGAN'
+-%}
+
+{%- comment -%} ── Kategori listesi (bloklardan benzersiz topla) ── {%- endcomment -%}
+{%- assign cat_list = '' -%}
+{%- for block in section.blocks -%}
+  {%- if block.type != 'product' -%}{%- continue -%}{%- endif -%}
+  {%- assign c = block.settings.category | strip -%}
+  {%- if c == blank -%}{%- continue -%}{%- endif -%}
+  {%- assign ckey = ',' | append: c | append: ',' -%}
+  {%- assign clist_wrap = ',' | append: cat_list | append: ',' -%}
+  {%- unless clist_wrap contains ckey -%}
+    {%- if cat_list == blank -%}
+      {%- assign cat_list = c -%}
+    {%- else -%}
+      {%- assign cat_list = cat_list | append: ',' | append: c -%}
+    {%- endif -%}
+  {%- endunless -%}
+{%- endfor -%}
+
+{%- style -%}
+  #uc-sg-{{ section.id }} {
+    --sg-brand:    {{ section.settings.brand_color | default: '#C5006A' }};
+    --sg-brand-dk: #9e0055;
+    --sg-text:     #1a1a1a;
+    --sg-muted:    #6b6b6b;
+    --sg-border:   #ececec;
+    --sg-bg:       {{ section.settings.bg_color | default: '#ffffff' }};
+    --sg-card-bg:  #f7f7f8;
+    --sg-radius:   16px;
+  }
+
+  #uc-sg-{{ section.id }} {
+    background: var(--sg-bg);
+    padding-top:    {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  /* ── Başlık ── */
+  #uc-sg-{{ section.id }} .sg-head {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 26px;
+    padding: 0 16px;
+  }
+  #uc-sg-{{ section.id }} .sg-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--sg-brand);
+    margin-bottom: 10px;
+  }
+  #uc-sg-{{ section.id }} .sg-title {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.05;
+    color: var(--sg-text);
+    margin: 0 0 10px;
+  }
+  #uc-sg-{{ section.id }} .sg-sub {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--sg-muted);
+    margin: 0;
+  }
+
+  /* ── Hero ── */
+  #uc-sg-{{ section.id }} .sg-hero {
+    position: relative;
+    border-radius: var(--sg-radius);
+    overflow: hidden;
+    margin: 0 auto 30px;
+    max-width: 1180px;
+  }
+  #uc-sg-{{ section.id }} .sg-hero img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  #uc-sg-{{ section.id }} .sg-hero__mob { display: none; }
+  @media (max-width: 749px) {
+    #uc-sg-{{ section.id }} .sg-hero__desk { display: none; }
+    #uc-sg-{{ section.id }} .sg-hero__mob  { display: block; }
+  }
+
+  /* ── Filtre pill'leri ── */
+  #uc-sg-{{ section.id }} .sg-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 24px;
+    padding: 0 16px;
+    max-width: 900px;
+  }
+  #uc-sg-{{ section.id }} .sg-filter {
+    border: 1.5px solid var(--sg-border);
+    background: #fff;
+    color: var(--sg-text);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .15s ease;
+    white-space: nowrap;
+  }
+  #uc-sg-{{ section.id }} .sg-filter:hover { border-color: var(--sg-brand); color: var(--sg-brand); }
+  #uc-sg-{{ section.id }} .sg-filter.is-active {
+    background: var(--sg-brand);
+    border-color: var(--sg-brand);
+    color: #fff;
+  }
+
+  /* ── Grid ── */
+  #uc-sg-{{ section.id }} .sg-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  @media (min-width: 600px)  { #uc-sg-{{ section.id }} .sg-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+  @media (min-width: 900px)  { #uc-sg-{{ section.id }} .sg-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
+  @media (min-width: 1200px) { #uc-sg-{{ section.id }} .sg-grid { grid-template-columns: repeat(5, 1fr); } }
+
+  /* ── Kart ── */
+  #uc-sg-{{ section.id }} .sg-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--sg-border);
+    border-radius: var(--sg-radius);
+    overflow: hidden;
+    transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+  }
+  #uc-sg-{{ section.id }} .sg-card:hover {
+    box-shadow: 0 8px 26px rgba(197,0,106,.10);
+    transform: translateY(-3px);
+    border-color: #f2d6e6;
+  }
+  #uc-sg-{{ section.id }} .sg-card[hidden] { display: none; }
+
+  #uc-sg-{{ section.id }} .sg-card__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    background: var(--sg-card-bg);
+    text-decoration: none;
+  }
+  #uc-sg-{{ section.id }} .sg-card__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 14px;
+    transition: transform .3s ease;
+  }
+  #uc-sg-{{ section.id }} .sg-card:hover .sg-card__media img { transform: scale(1.05); }
+
+  #uc-sg-{{ section.id }} .sg-badge {
+    position: absolute;
+    top: 10px; left: 10px;
+    z-index: 2;
+    background: var(--sg-text);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    padding: 4px 8px;
+    border-radius: 999px;
+  }
+  #uc-sg-{{ section.id }} .sg-badge--sale {
+    left: auto; right: 10px;
+    background: var(--sg-brand);
+  }
+
+  #uc-sg-{{ section.id }} .sg-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 12px 14px;
+    flex: 1;
+  }
+  #uc-sg-{{ section.id }} .sg-card__label {
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--sg-text);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: .01em;
+    min-height: calc(12.5px * 1.25 * 2);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  #uc-sg-{{ section.id }} .sg-card:hover .sg-card__label { color: var(--sg-brand); }
+  #uc-sg-{{ section.id }} .sg-card__cat {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--sg-brand);
+  }
+
+  /* ── Tutuş gücü göstergesi ── */
+  #uc-sg-{{ section.id }} .sg-hold {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    color: var(--sg-muted);
+    font-weight: 600;
+  }
+  #uc-sg-{{ section.id }} .sg-hold__dots { display: inline-flex; gap: 3px; }
+  #uc-sg-{{ section.id }} .sg-hold__dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #e2e2e2;
+  }
+  #uc-sg-{{ section.id }} .sg-hold__dot.is-on { background: var(--sg-brand); }
+
+  /* ── Fiyat ── */
+  #uc-sg-{{ section.id }} .sg-price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+  }
+  #uc-sg-{{ section.id }} .sg-price { font-size: 14px; font-weight: 800; color: var(--sg-text); }
+  #uc-sg-{{ section.id }} .sg-compare { font-size: 12px; color: #b3b3b3; text-decoration: line-through; }
+
+  /* ── Buton ── */
+  #uc-sg-{{ section.id }} .sg-btn {
+    margin-top: auto;
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    cursor: pointer;
+    background: var(--sg-brand);
+    color: #fff;
+    transition: background .15s ease;
+  }
+  #uc-sg-{{ section.id }} .sg-btn:hover { background: var(--sg-brand-dk); }
+  #uc-sg-{{ section.id }} .sg-btn.is-added { background: #1a9d5a; }
+  #uc-sg-{{ section.id }} .sg-btn[disabled] { opacity: .75; cursor: default; }
+  #uc-sg-{{ section.id }} .sg-btn--sold {
+    background: #efefef; color: #999; cursor: default;
+  }
+
+  /* ── Alt bilgi şeridi ── */
+  #uc-sg-{{ section.id }} .sg-info {
+    max-width: 1180px;
+    margin: 34px auto 0;
+    padding: 0 16px;
+  }
+  #uc-sg-{{ section.id }} .sg-info__inner {
+    background: var(--sg-text);
+    color: #fff;
+    border-radius: var(--sg-radius);
+    padding: 26px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+  }
+  #uc-sg-{{ section.id }} .sg-info__item { display: flex; flex-direction: column; gap: 4px; }
+  #uc-sg-{{ section.id }} .sg-info__t {
+    font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--sg-brand); filter: brightness(1.6);
+  }
+  #uc-sg-{{ section.id }} .sg-info__d { font-size: 13px; line-height: 1.5; color: #dcdcdc; }
+
+  #uc-sg-{{ section.id }} .sg-empty {
+    text-align: center; color: var(--sg-muted); font-size: 14px;
+    padding: 30px 0; font-style: italic;
+  }
+{%- endstyle -%}
+
+<div id="uc-sg-{{ section.id }}" class="uc-sg color-{{ section.settings.color_scheme }}">
+
+  {%- comment -%} ── Başlık ── {%- endcomment -%}
+  {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.subheading != blank -%}
+    <div class="sg-head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="sg-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="sg-title">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="sg-sub">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── Hero ── {%- endcomment -%}
+  {%- if section.settings.hero_image != blank -%}
+    <div class="sg-hero">
+      <div class="sg-hero__desk">
+        <img src="{{ section.settings.hero_image | image_url: width: 2000 }}"
+             srcset="{{ section.settings.hero_image | image_url: width: 800 }} 800w,
+                     {{ section.settings.hero_image | image_url: width: 1400 }} 1400w,
+                     {{ section.settings.hero_image | image_url: width: 2000 }} 2000w"
+             sizes="(min-width: 1200px) 1180px, 100vw"
+             alt="{{ section.settings.heading | escape }}"
+             width="{{ section.settings.hero_image.width }}"
+             height="{{ section.settings.hero_image.height }}"
+             loading="lazy">
+      </div>
+      {%- if section.settings.hero_image_mobile != blank -%}
+        <div class="sg-hero__mob">
+          <img src="{{ section.settings.hero_image_mobile | image_url: width: 1000 }}"
+               alt="{{ section.settings.heading | escape }}"
+               width="{{ section.settings.hero_image_mobile.width }}"
+               height="{{ section.settings.hero_image_mobile.height }}"
+               loading="lazy">
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── Filtreler ── {%- endcomment -%}
+  {%- if show_filters and cat_list != blank -%}
+    <div class="sg-filters" data-filters>
+      <button type="button" class="sg-filter is-active" data-filter="all">
+        {{ section.settings.filter_all_label | default: 'Tümü' | escape }}
+      </button>
+      {%- assign cats = cat_list | split: ',' -%}
+      {%- for c in cats -%}
+        <button type="button" class="sg-filter" data-filter="{{ c | handle }}">{{ c | escape }}</button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── Ürün grid ── {%- endcomment -%}
+  <div class="sg-grid" data-grid>
+    {%- for block in section.blocks -%}
+      {%- if block.type != 'product' -%}{%- continue -%}{%- endif -%}
+      {%- assign prod = block.settings.product -%}
+      {%- if prod == blank -%}
+        {%- if request.design_mode -%}
+          <div class="sg-card" {{ block.shopify_attributes }}>
+            <div class="sg-card__body"><p class="sg-card__label">Ürün seçilmedi</p></div>
+          </div>
+        {%- endif -%}
+        {%- continue -%}
+      {%- endif -%}
+
+      {%- assign pvar = prod.selected_or_first_available_variant -%}
+      {%- assign has_sale = false -%}
+      {%- if pvar.compare_at_price > pvar.price -%}{%- assign has_sale = true -%}{%- endif -%}
+      {%- assign label = block.settings.label | default: prod.title -%}
+      {%- assign cat = block.settings.category | strip -%}
+
+      <div class="sg-card"
+           data-card
+           data-cat="{{ cat | handle }}"
+           {{ block.shopify_attributes }}>
+        <a class="sg-card__media" href="{{ prod.url }}">
+          {%- if vegan_label != blank -%}
+            <span class="sg-badge">{{ vegan_label | escape }}</span>
+          {%- endif -%}
+          {%- if has_sale and section.settings.show_sale_badge -%}
+            {%- assign diff = pvar.compare_at_price | minus: pvar.price | times: 100 | divided_by: pvar.compare_at_price -%}
+            <span class="sg-badge sg-badge--sale">%{{ diff }}</span>
+          {%- endif -%}
+          {%- if prod.featured_image -%}
+            <img src="{{ prod.featured_image | image_url: width: 500 }}"
+                 alt="{{ label | escape }}" loading="lazy" width="250" height="250">
+          {%- endif -%}
+        </a>
+
+        <div class="sg-card__body">
+          {%- if cat != blank -%}
+            <span class="sg-card__cat">{{ cat | escape }}</span>
+          {%- endif -%}
+          <a class="sg-card__label" href="{{ prod.url }}">{{ label | escape }}</a>
+
+          {%- if show_hold and block.settings.hold_level > 0 -%}
+            <span class="sg-hold">
+              {{ section.settings.hold_label | default: 'Tutuş' | escape }}
+              <span class="sg-hold__dots">
+                {%- for i in (1..5) -%}
+                  <span class="sg-hold__dot{% if i <= block.settings.hold_level %} is-on{% endif %}"></span>
+                {%- endfor -%}
+              </span>
+            </span>
+          {%- endif -%}
+
+          {%- if show_price -%}
+            <span class="sg-price-wrap">
+              {%- if has_sale -%}
+                <span class="sg-compare">{{ pvar.compare_at_price | money }}</span>
+              {%- endif -%}
+              <span class="sg-price">{{ pvar.price | money }}</span>
+            </span>
+          {%- endif -%}
+
+          {%- if pvar.available -%}
+            <button type="button" class="sg-btn"
+                    data-add
+                    data-variant-id="{{ pvar.id }}"
+                    data-handle="{{ prod.handle }}"
+                    data-label="{{ section.settings.cta_add | default: 'Sepete Ekle' | escape }}">
+              {{ section.settings.cta_add | default: 'Sepete Ekle' | escape }}
+            </button>
+          {%- else -%}
+            <button type="button" class="sg-btn sg-btn--sold" disabled>
+              {{ section.settings.cta_sold | default: 'Tükendi' | escape }}
+            </button>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <p class="sg-empty" data-empty hidden>{{ section.settings.empty_text | default: 'Bu kategoride ürün yok.' | escape }}</p>
+
+  {%- comment -%} ── Alt bilgi şeridi ── {%- endcomment -%}
+  {%- assign has_info = false -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'feature' -%}{%- assign has_info = true -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if has_info -%}
+    <div class="sg-info">
+      <div class="sg-info__inner">
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'feature' -%}{%- continue -%}{%- endif -%}
+          <div class="sg-info__item" {{ block.shopify_attributes }}>
+            {%- if block.settings.title != blank -%}
+              <span class="sg-info__t">{{ block.settings.title | escape }}</span>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <span class="sg-info__d">{{ block.settings.text | escape }}</span>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+</div>
+
+<script>
+(function () {
+  var root = document.getElementById('uc-sg-{{ section.id }}');
+  if (!root || root.dataset.inited) return;
+  root.dataset.inited = '1';
+
+  /* ── Filtre ── */
+  var filterWrap = root.querySelector('[data-filters]');
+  var cards      = Array.prototype.slice.call(root.querySelectorAll('[data-card]'));
+  var emptyEl    = root.querySelector('[data-empty]');
+
+  function applyFilter(f) {
+    var visible = 0;
+    cards.forEach(function (c) {
+      var show = (f === 'all') || (c.getAttribute('data-cat') === f);
+      c.hidden = !show;
+      if (show) visible++;
+    });
+    if (emptyEl) emptyEl.hidden = visible > 0;
+  }
+
+  if (filterWrap) {
+    filterWrap.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.sg-filter') : null;
+      if (!b) return;
+      filterWrap.querySelectorAll('.sg-filter').forEach(function (x) {
+        x.classList.toggle('is-active', x === b);
+      });
+      applyFilter(b.getAttribute('data-filter'));
+    });
+  }
+
+  /* ── Cart drawer (Beautify: cart:refresh + cart-drawer.open fallback) ── */
+  function openDrawer() {
+    try {
+      document.dispatchEvent(new CustomEvent('cart:refresh', {
+        bubbles: true, detail: { open: true }
+      }));
+    } catch (e) {}
+    setTimeout(function () {
+      var d = document.querySelector('cart-drawer');
+      if (d && typeof d.open === 'function') d.open();
+    }, 50);
+  }
+
+  function flashBtn(b) {
+    var orig = b.getAttribute('data-label') || b.textContent;
+    b.textContent = 'Eklendi ✓';
+    b.disabled = true;
+    b.classList.add('is-added');
+    setTimeout(function () {
+      b.textContent = orig;
+      b.disabled = false;
+      b.classList.remove('is-added');
+    }, 1800);
+  }
+
+  function addByVariant(vid) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: [{ id: parseInt(vid, 10), quantity: 1 }] })
+    }).then(function (r) { if (!r.ok) throw new Error('add_fail'); return r.json(); });
+  }
+
+  function addByHandle(h) {
+    return fetch('/products/' + h + '.js')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (p) {
+        if (!p || !p.variants || !p.variants.length) throw new Error('no_var');
+        var v = null;
+        for (var i = 0; i < p.variants.length; i++) {
+          if (p.variants[i].available) { v = p.variants[i]; break; }
+        }
+        if (!v) v = p.variants[0];
+        return addByVariant(v.id);
+      });
+  }
+
+  root.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('[data-add]') : null;
+    if (!b) return;
+    e.preventDefault();
+    if (b.disabled) return;
+    b.disabled = true;
+    var vid = b.getAttribute('data-variant-id');
+    var h   = b.getAttribute('data-handle');
+    var ok  = function () { flashBtn(b); openDrawer(); };
+    var bad = function () { b.disabled = false; };
+    if (vid) {
+      addByVariant(vid).then(ok).catch(function () {
+        if (h) addByHandle(h).then(ok).catch(bad); else bad();
+      });
+    } else if (h) {
+      addByHandle(h).then(ok).catch(bad);
+    } else { bad(); }
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "UC Style Guide",
+  "tag": "section",
+  "class": "uc-style-guide-section",
+  "settings": [
+    { "type": "header", "content": "Başlık" },
+    { "type": "text",     "id": "eyebrow",      "label": "Üst etiket", "default": "URBAN CARE" },
+    { "type": "text",     "id": "heading",      "label": "Başlık",     "default": "Style Guide Serisi" },
+    { "type": "textarea", "id": "subheading",   "label": "Alt açıklama", "default": "Kuaför performansında, uzun süre kalıcı ve göz kamaştırıcı saç stilleri için geliştirildi." },
+
+    { "type": "header", "content": "Hero Görsel" },
+    { "type": "image_picker", "id": "hero_image",        "label": "Hero görsel (masaüstü)" },
+    { "type": "image_picker", "id": "hero_image_mobile", "label": "Hero görsel (mobil, opsiyonel)" },
+
+    { "type": "header", "content": "Filtreler" },
+    { "type": "checkbox", "id": "show_filters",      "label": "Kategori filtresini göster", "default": true },
+    { "type": "text",     "id": "filter_all_label",  "label": "'Tümü' etiketi", "default": "Tümü" },
+
+    { "type": "header", "content": "Kart Ayarları" },
+    { "type": "checkbox", "id": "show_price",       "label": "Fiyat göster", "default": true },
+    { "type": "checkbox", "id": "show_sale_badge",  "label": "İndirim % rozeti göster", "default": true },
+    { "type": "checkbox", "id": "show_hold",        "label": "Tutuş gücü göstergesini göster", "default": true },
+    { "type": "text",     "id": "hold_label",       "label": "Tutuş etiketi", "default": "Tutuş" },
+    { "type": "text",     "id": "vegan_label",      "label": "Vegan rozet metni (boş = gizli)", "default": "VEGAN" },
+    { "type": "text",     "id": "cta_add",          "label": "Sepete Ekle metni", "default": "Sepete Ekle" },
+    { "type": "text",     "id": "cta_sold",         "label": "Tükendi metni", "default": "Tükendi" },
+    { "type": "text",     "id": "empty_text",       "label": "Boş kategori metni", "default": "Bu kategoride ürün yok." },
+
+    { "type": "header", "content": "Renk & Yerleşim" },
+    { "type": "color", "id": "brand_color", "label": "Marka rengi", "default": "#C5006A" },
+    { "type": "color", "id": "bg_color",    "label": "Arka plan", "default": "#ffffff" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Renk şeması" },
+    { "type": "range", "id": "padding_top",    "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Üst boşluk",  "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Alt boşluk",  "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Ürün",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Ürün" },
+        { "type": "text",    "id": "label",   "label": "Görünen ad (boş = ürün adı)", "info": "Örn: ELASTIC CURL KÖPÜK" },
+        { "type": "text",    "id": "category", "label": "Kategori", "info": "Örn: Köpük, Sprey, Wax, Jel. Aynı yazımlar tek filtreye toplanır." },
+        { "type": "range",   "id": "hold_level", "min": 0, "max": 5, "step": 1, "label": "Tutuş gücü (0 = gizle)", "default": 3 }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Alt bilgi maddesi",
+      "settings": [
+        { "type": "text",     "id": "title", "label": "Başlık", "default": "VEGAN FORMÜL" },
+        { "type": "textarea", "id": "text",  "label": "Açıklama", "default": "Bitkisel keratin ve UV filtresi içerir." }
+      ]
+    }
+  ],
+  "max_blocks": 30,
+  "presets": [
+    {
+      "name": "UC Style Guide",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "feature", "settings": { "title": "VEGAN FORMÜL",  "text": "Bitkisel keratin içerir." } },
+        { "type": "feature", "settings": { "title": "UV FİLTRESİ",   "text": "Saçı güneşe karşı korur." } },
+        { "type": "feature", "settings": { "title": "TEMİZ İÇERİK",  "text": "Paraben, silikon, boya içermez." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
