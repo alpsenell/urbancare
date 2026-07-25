@@ -1,37 +1,32 @@
 {%- comment -%}
-  uc-curate-hair-care.liquid
+  uc-curate-hair-care.liquid  ·  v2 (Urban Care editorial redesign)
   ─────────────────────────────────────────────────────────────────
   Urban Care · Beautify Theme
-  "Saç Tipine Göre Keşfet" — Hair Type Tab + Influencer + Product Rail
-  
-  Her tab bir saç tipi bloğu:
-    · Üstte scroll-snap ikon+etiket tab bar
-    · Seçili tab: sol→influencer video/fotoğraf + profil bilgileri + alıntı
-                  sağ→koleksiyon adı + ürün yatay slider + Tümünü Gör
-  
-  KURULUM:
-  1. Shopify Admin → Themes → (draft theme) → Edit code
-  2. Sections klasörü → "Add a new section" → uc-curate-hair-care
-  3. Liquid içeriğini yapıştır, kaydet
-  4. Theme Customizer → Add Section → "UC Saç Tipine Göre Keşfet"
-  5. Her Tab bloğuna ürünleri/influencer'ı gir
+  "Saç Tipine Göre Keşfet" — Yatay tab + Influencer profili + Ürün rail
+
+  Layout (referans editorial düzen, UC markasına uyarlandı):
+    · Üstte yatay tab bar: yuvarlak foto + etiket yan yana, aktifte açılı magenta highlight
+    · Sol kolon: büyük influencer video/foto + isim + stat satırı (ikon|ikon|ikon) + vurgulu alıntı + konum
+    · Sağ kolon: "... Serisini Keşfet" başlığı + yuvarlak ok navigasyonu + ürün kartları
+    · Altta ortada "Tümünü Keşfet" butonu
+
+  Ayar ID'leri v1 ile aynı — mevcut içerik korunur.
+  Sepete Ekle → Beautify drawer (cart:refresh + cart-drawer.open fallback)
   ─────────────────────────────────────────────────────────────────
 {%- endcomment -%}
 
 {%- style -%}
-/* ═══════════════════════════════════════════════════
-   UC CURATE — Root Tokens
-═══════════════════════════════════════════════════ */
 #uc-chc-{{ section.id }} {
   --chc-magenta:   {{ section.settings.accent_color | default: '#C5006A' }};
+  --chc-magenta-dk:#9e0055;
+  --chc-tint:      #fbe6f1;
   --chc-dark:      #1a1a1a;
-  --chc-mid:       #555;
+  --chc-mid:       #6b6b6b;
   --chc-line:      rgba(26,26,26,.1);
-  --chc-bg:        {{ section.settings.section_bg | default: '#FAFAF8' }};
+  --chc-bg:        {{ section.settings.section_bg | default: '#fdf5f9' }};
   --chc-card-bg:   #ffffff;
-  --chc-radius-lg: 20px;
-  --chc-radius-sm: 12px;
-  --chc-gap:       24px;
+  --chc-radius-lg: 22px;
+  --chc-radius-sm: 14px;
   background: var(--chc-bg);
   padding: {{ section.settings.pad_top | default: 64 }}px 0 {{ section.settings.pad_bottom | default: 64 }}px;
 }
@@ -39,346 +34,326 @@
 /* ── Heading ── */
 #uc-chc-{{ section.id }} .chc__heading {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 34px;
   padding: 0 20px;
 }
-@media (max-width: 767px) {
-  #uc-chc-{{ section.id }} .chc__heading { margin-bottom: 24px; }
-  #uc-chc-{{ section.id }} .chc__tabs-wrap { margin-bottom: 20px; }
-}
 #uc-chc-{{ section.id }} .chc__heading h2 {
-  font-size: clamp(1.6rem, 4vw, 2.6rem);
-  font-weight: 700;
+  font-size: clamp(1.7rem, 4.2vw, 2.9rem);
+  font-weight: 800;
   color: var(--chc-dark);
   margin: 0 0 6px;
   letter-spacing: -.02em;
-  line-height: 1.2;
+  line-height: 1.12;
 }
 #uc-chc-{{ section.id }} .chc__heading h2 em {
   font-style: italic;
   color: var(--chc-magenta);
 }
 #uc-chc-{{ section.id }} .chc__heading p {
-  font-size: .95rem;
+  font-size: .96rem;
   color: var(--chc-mid);
-  margin: 0;
-  max-width: 480px;
-  margin-inline: auto;
+  margin: 0 auto;
+  max-width: 500px;
+  line-height: 1.5;
 }
 
-/* ── Tab Nav ── */
+/* ── Tab Nav (yatay: foto + etiket yan yana) ── */
 #uc-chc-{{ section.id }} .chc__tabs-wrap {
   position: relative;
-  margin-bottom: 36px;
+  margin-bottom: 38px;
 }
 #uc-chc-{{ section.id }} .chc__tabs {
   display: flex;
-  gap: 10px;
+  gap: 14px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding: 0 max(20px, calc((100vw - 1200px) / 2));
+  padding: 8px max(48px, calc((100vw - 1120px) / 2));
+  justify-content: flex-start;
+}
+@media (min-width: 1000px) {
+  #uc-chc-{{ section.id }} .chc__tabs { justify-content: center; }
 }
 #uc-chc-{{ section.id }} .chc__tabs::-webkit-scrollbar { display: none; }
 
 #uc-chc-{{ section.id }} .chc__tab {
+  position: relative;
   flex: 0 0 auto;
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
-  padding: 10px 16px 12px;
-  border-radius: var(--chc-radius-sm);
-  border: 2px solid transparent;
-  background: var(--chc-card-bg);
-  transition: border-color .22s, background .22s, transform .18s;
-  min-width: 90px;
-  max-width: 120px;
+  padding: 8px 22px 8px 8px;
+  border: none;
+  background: transparent;
+  transition: transform .18s;
+  border-radius: 100px;
 }
-#uc-chc-{{ section.id }} .chc__tab:hover {
-  border-color: rgba(197,0,106,.3);
-  transform: translateY(-2px);
+/* açılı highlight — aktif tab arkası */
+#uc-chc-{{ section.id }} .chc__tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--chc-magenta);
+  border-radius: 100px 100px 100px 100px;
+  transform: skewX(-8deg) scale(.9);
+  opacity: 0;
+  transition: opacity .22s, transform .22s;
+  z-index: 0;
 }
-#uc-chc-{{ section.id }} .chc__tab.is-active {
-  border-color: var(--chc-magenta);
-  background: #fff8fc;
+#uc-chc-{{ section.id }} .chc__tab.is-active::before {
+  opacity: 1;
+  transform: skewX(-8deg) scale(1);
 }
+#uc-chc-{{ section.id }} .chc__tab:hover:not(.is-active) { transform: translateY(-2px); }
+
 #uc-chc-{{ section.id }} .chc__tab-thumb {
-  width: 64px;
-  height: 64px;
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   object-fit: cover;
+  object-position: center top;
   display: block;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
 }
 #uc-chc-{{ section.id }} .chc__tab-label {
-  font-size: .72rem;
+  position: relative;
+  z-index: 1;
+  font-size: .95rem;
   font-weight: 700;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  color: var(--chc-dark);
-  text-align: center;
-  line-height: 1.3;
+  letter-spacing: -.01em;
+  color: var(--chc-mid);
+  text-align: left;
+  line-height: 1.2;
+  max-width: 130px;
+  transition: color .2s;
 }
-#uc-chc-{{ section.id }} .chc__tab.is-active .chc__tab-label {
-  color: var(--chc-magenta);
-}
+#uc-chc-{{ section.id }} .chc__tab.is-active .chc__tab-label { color: #fff; }
 
 /* Tab scroll arrows */
 #uc-chc-{{ section.id }} .chc__tabs-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 36px; height: 36px;
+  width: 38px; height: 38px;
   border-radius: 50%;
   border: 1.5px solid var(--chc-line);
-  background: white;
+  background: #fff;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  z-index: 2;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
-  transition: opacity .2s;
+  z-index: 3;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  transition: background .18s, color .18s, border-color .18s;
 }
-#uc-chc-{{ section.id }} .chc__tabs-arrow--prev { left: 4px; }
-#uc-chc-{{ section.id }} .chc__tabs-arrow--next { right: 4px; }
-#uc-chc-{{ section.id }} .chc__tabs-arrow svg { width: 16px; height: 16px; color: var(--chc-dark); }
+#uc-chc-{{ section.id }} .chc__tabs-arrow:hover {
+  background: var(--chc-magenta); border-color: var(--chc-magenta); color: #fff;
+}
+#uc-chc-{{ section.id }} .chc__tabs-arrow--prev { left: 8px; }
+#uc-chc-{{ section.id }} .chc__tabs-arrow--next { right: 8px; }
+#uc-chc-{{ section.id }} .chc__tabs-arrow svg { width: 16px; height: 16px; }
 @media (max-width: 767px) {
   #uc-chc-{{ section.id }} .chc__tabs-arrow { display: none; }
 }
 
 /* ── Panel ── */
 #uc-chc-{{ section.id }} .chc__panel { display: none; }
-#uc-chc-{{ section.id }} .chc__panel.is-active { display: block; }
+#uc-chc-{{ section.id }} .chc__panel.is-active { display: block; animation: chcFade .35s ease; }
+@keyframes chcFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 #uc-chc-{{ section.id }} .chc__panel-inner {
   display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 32px;
+  grid-template-columns: 400px 1fr;
+  gap: 40px;
   align-items: start;
-  padding: 0 max(20px, calc((100vw - 1200px) / 2));
+  padding: 0 max(24px, calc((100vw - 1200px) / 2));
 }
-@media (max-width: 900px) {
-  #uc-chc-{{ section.id }} .chc__panel-inner {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
+@media (max-width: 980px) {
+  #uc-chc-{{ section.id }} .chc__panel-inner { grid-template-columns: 1fr; gap: 28px; }
 }
 @media (max-width: 767px) {
-  #uc-chc-{{ section.id }} .chc__panel-inner {
-    padding: 0 16px;
-  }
-  #uc-chc-{{ section.id }} .chc__tabs {
-    padding: 0 16px;
-  }
+  #uc-chc-{{ section.id }} .chc__panel-inner { padding: 0 16px; }
 }
 
-/* ── Influencer card ── */
-#uc-chc-{{ section.id }} .chc__infl {
-  border-radius: var(--chc-radius-lg);
-  overflow: hidden;
-  background: var(--chc-card-bg);
-  box-shadow: 0 4px 24px rgba(0,0,0,.08);
-}
-@media (min-width: 901px) {
-  #uc-chc-{{ section.id }} .chc__infl {
-    position: sticky;
-    top: 20px;
-  }
+/* ── Influencer card (sol) ── */
+#uc-chc-{{ section.id }} .chc__infl { }
+@media (min-width: 981px) {
+  #uc-chc-{{ section.id }} .chc__infl { position: sticky; top: 20px; }
 }
 #uc-chc-{{ section.id }} .chc__infl-media {
   position: relative;
   overflow: hidden;
-  background: #f0e8f0;
-  /* Desktop: sabit yükseklik — 380px kolon genişliğinde 9/16 = 676px çok uzun olur */
+  background: #f0e0eb;
+  border-radius: var(--chc-radius-lg);
   height: 480px;
+  box-shadow: 0 8px 30px rgba(197,0,106,.12);
 }
 #uc-chc-{{ section.id }} .chc__infl-media img,
 #uc-chc-{{ section.id }} .chc__infl-media video {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center top; /* yüz üstte kalsın */
+  object-position: center top;
   display: block;
 }
-#uc-chc-{{ section.id }} .chc__infl-media video {
-  position: absolute; inset: 0;
+#uc-chc-{{ section.id }} .chc__infl-media video { position: absolute; inset: 0; }
+@media (max-width: 1100px) and (min-width: 981px) {
+  #uc-chc-{{ section.id }} .chc__infl-media { height: 420px; }
 }
-/* Tablet: biraz daha kısa */
-@media (max-width: 1100px) and (min-width: 901px) {
-  #uc-chc-{{ section.id }} .chc__infl-media { height: 400px; }
-}
-/* Mobil: gerçek 9/16 — video tam format */
-@media (max-width: 900px) {
+@media (max-width: 980px) {
   #uc-chc-{{ section.id }} .chc__infl-media {
-    height: auto;
-    aspect-ratio: 9/16;
-    max-height: 75vh; /* ekranın %75'inden uzun olmasın */
+    height: auto; aspect-ratio: 4/5; max-height: 72vh;
   }
 }
 
-
-/* stats overlay */
-#uc-chc-{{ section.id }} .chc__infl-stats {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  background: linear-gradient(transparent, rgba(20,10,18,.72));
-  padding: 32px 16px 14px;
-  display: flex;
-  gap: 14px;
-  z-index: 2;
-}
-#uc-chc-{{ section.id }} .chc__stat {
-  text-align: center;
-  flex: 1;
-}
-#uc-chc-{{ section.id }} .chc__stat-icon {
-  font-size: 17px;
-  margin-bottom: 2px;
-  line-height: 1;
-}
-#uc-chc-{{ section.id }} .chc__stat-label {
-  display: block;
-  font-size: .58rem;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.7);
-  margin-bottom: 1px;
-}
-#uc-chc-{{ section.id }} .chc__stat-val {
-  display: block;
-  font-size: .88rem;
+/* isim + eyebrow */
+#uc-chc-{{ section.id }} .chc__infl-eyebrow {
+  font-size: .68rem;
   font-weight: 800;
-  color: #fff;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--chc-magenta);
+  margin: 20px 0 4px;
+}
+#uc-chc-{{ section.id }} .chc__infl-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  color: var(--chc-dark);
+  margin: 0 0 14px;
   line-height: 1.1;
 }
 
-/* quote area */
-#uc-chc-{{ section.id }} .chc__infl-quote {
-  padding: 16px 18px 18px;
-}
-#uc-chc-{{ section.id }} .chc__infl-name {
-  font-size: .8rem;
-  font-weight: 700;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  color: var(--chc-magenta);
-  margin-bottom: 6px;
-}
-#uc-chc-{{ section.id }} .chc__infl-quote p {
-  font-size: .92rem;
-  line-height: 1.55;
-  color: var(--chc-dark);
-  margin: 0;
-  font-style: italic;
-}
-#uc-chc-{{ section.id }} .chc__infl-meta {
+/* stat satırı (ikon | ikon | ikon) */
+#uc-chc-{{ section.id }} .chc__stats {
   display: flex;
-  gap: 16px;
-  margin-top: 10px;
-  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 16px;
 }
-#uc-chc-{{ section.id }} .chc__infl-meta-item {
-  font-size: .72rem;
+#uc-chc-{{ section.id }} .chc__stat {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  border-left: 1px solid var(--chc-line);
+}
+#uc-chc-{{ section.id }} .chc__stat:first-child { padding-left: 0; border-left: none; }
+#uc-chc-{{ section.id }} .chc__stat-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+#uc-chc-{{ section.id }} .chc__stat-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+#uc-chc-{{ section.id }} .chc__stat-label {
+  font-size: .58rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
   color: var(--chc-mid);
 }
-#uc-chc-{{ section.id }} .chc__infl-meta-item strong {
-  display: block;
-  font-size: .68rem;
-  letter-spacing: .06em;
-  text-transform: uppercase;
+#uc-chc-{{ section.id }} .chc__stat-val {
+  font-size: .85rem;
+  font-weight: 700;
   color: var(--chc-dark);
-  margin-bottom: 1px;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ── Product rail ── */
-#uc-chc-{{ section.id }} .chc__products-col {}
+/* alıntı — vurgulu */
+#uc-chc-{{ section.id }} .chc__infl-quote {
+  font-size: .98rem;
+  line-height: 1.6;
+  color: var(--chc-dark);
+  margin: 0 0 12px;
+}
+#uc-chc-{{ section.id }} .chc__infl-quote span {
+  background: linear-gradient(transparent 55%, var(--chc-tint) 55%);
+  padding: 0 2px;
+  font-style: italic;
+}
+#uc-chc-{{ section.id }} .chc__infl-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .8rem;
+  color: var(--chc-mid);
+  font-weight: 600;
+}
+#uc-chc-{{ section.id }} .chc__infl-loc svg { width: 14px; height: 14px; color: var(--chc-magenta); }
+
+/* ── Ürün rail (sağ) ── */
 #uc-chc-{{ section.id }} .chc__products-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   gap: 12px;
-  flex-wrap: wrap;
 }
 #uc-chc-{{ section.id }} .chc__products-title {
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -.01em;
   color: var(--chc-dark);
   margin: 0;
 }
-#uc-chc-{{ section.id }} .chc__explore-btn {
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--chc-magenta);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  border: 1.5px solid var(--chc-magenta);
-  padding: 7px 16px;
-  border-radius: 100px;
-  transition: background .2s, color .2s;
+#uc-chc-{{ section.id }} .chc__snav { display: flex; gap: 8px; flex-shrink: 0; }
+#uc-chc-{{ section.id }} .chc__snav-btn {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: #eadfe6;
+  color: var(--chc-dark);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background .18s, color .18s;
 }
-#uc-chc-{{ section.id }} .chc__explore-btn:hover {
-  background: var(--chc-magenta);
-  color: white;
-}
+#uc-chc-{{ section.id }} .chc__snav-btn:last-child { background: var(--chc-magenta); color: #fff; }
+#uc-chc-{{ section.id }} .chc__snav-btn:hover { background: var(--chc-magenta-dk); color: #fff; }
+#uc-chc-{{ section.id }} .chc__snav-btn svg { width: 17px; height: 17px; }
 
 /* slider */
-#uc-chc-{{ section.id }} .chc__slider-wrap {
-  position: relative;
-}
 #uc-chc-{{ section.id }} .chc__slider {
   display: flex;
-  gap: 14px;
+  gap: 18px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
 }
 #uc-chc-{{ section.id }} .chc__slider::-webkit-scrollbar { display: none; }
 
 #uc-chc-{{ section.id }} .chc__pcard {
-  flex: 0 0 220px;
+  flex: 0 0 250px;
   scroll-snap-align: start;
   border-radius: var(--chc-radius-sm);
   background: var(--chc-card-bg);
-  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  border: 1px solid #f0e2ea;
+  box-shadow: 0 2px 14px rgba(197,0,106,.06);
   overflow: hidden;
   transition: box-shadow .2s, transform .2s;
+  display: flex;
+  flex-direction: column;
 }
 #uc-chc-{{ section.id }} .chc__pcard:hover {
-  box-shadow: 0 6px 24px rgba(0,0,0,.13);
-  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(197,0,106,.14);
+  transform: translateY(-4px);
 }
 @media (max-width: 767px) {
-  #uc-chc-{{ section.id }} .chc__pcard { flex: 0 0 56vw; }
-  #uc-chc-{{ section.id }} .chc__slider { padding-bottom: 8px; }
+  #uc-chc-{{ section.id }} .chc__pcard { flex: 0 0 62vw; }
 }
 
-#uc-chc-{{ section.id }} .chc__pcard-badge {
-  position: absolute;
-  top: 8px; left: 8px;
-  background: var(--chc-magenta);
-  color: white;
-  font-size: .58rem;
-  font-weight: 800;
-  letter-spacing: .07em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 4px;
-  z-index: 2;
-}
 #uc-chc-{{ section.id }} .chc__pcard-img-wrap {
   position: relative;
   aspect-ratio: 1;
   overflow: hidden;
-  background: #f5eef5;
+  background: #f7f0f4;
 }
 #uc-chc-{{ section.id }} .chc__pcard-img-wrap img {
   width: 100%; height: 100%;
@@ -386,92 +361,142 @@
   display: block;
   transition: transform .35s ease;
 }
-#uc-chc-{{ section.id }} .chc__pcard:hover .chc__pcard-img-wrap img {
-  transform: scale(1.04);
+#uc-chc-{{ section.id }} .chc__pcard:hover .chc__pcard-img-wrap img { transform: scale(1.05); }
+
+/* TOP RATED badge (sağ üst pill) */
+#uc-chc-{{ section.id }} .chc__pcard-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 2;
+  background: rgba(255,255,255,.94);
+  color: var(--chc-magenta);
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
 }
+#uc-chc-{{ section.id }} .chc__pcard-badge svg { width: 11px; height: 11px; }
+
+/* alt şerit (MADE FOR X) */
+#uc-chc-{{ section.id }} .chc__pcard-strip {
+  background: var(--chc-dark);
+  color: #fff;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 7px 8px;
+}
+
 #uc-chc-{{ section.id }} .chc__pcard-info {
-  padding: 12px 14px;
+  padding: 13px 15px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 #uc-chc-{{ section.id }} .chc__pcard-name {
-  font-size: .82rem;
+  font-size: .88rem;
   font-weight: 700;
   color: var(--chc-dark);
-  margin: 0 0 4px;
-  line-height: 1.35;
+  margin: 0 0 3px;
+  line-height: 1.32;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: calc(.88rem * 1.32 * 2);
 }
 #uc-chc-{{ section.id }} .chc__pcard-sub {
-  font-size: .72rem;
+  font-size: .74rem;
   color: var(--chc-mid);
-  margin: 0 0 8px;
-}
-#uc-chc-{{ section.id }} .chc__pcard-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-#uc-chc-{{ section.id }} .chc__pcard-price {
-  font-size: .92rem;
-  font-weight: 800;
-  color: var(--chc-magenta);
-}
-#uc-chc-{{ section.id }} .chc__pcard-compare {
-  font-size: .72rem;
-  color: #999;
-  text-decoration: line-through;
+  margin: 0 0 9px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 #uc-chc-{{ section.id }} .chc__pcard-rating {
-  font-size: .7rem;
-  color: var(--chc-mid);
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
+  font-size: .76rem;
+  font-weight: 700;
+  color: var(--chc-dark);
+  margin-bottom: 8px;
 }
-#uc-chc-{{ section.id }} .chc__pcard-star { color: #FFC200; }
+#uc-chc-{{ section.id }} .chc__pcard-rating .star { color: #f5a623; }
+#uc-chc-{{ section.id }} .chc__pcard-rating .count { color: var(--chc-mid); font-weight: 500; }
+#uc-chc-{{ section.id }} .chc__pcard-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+#uc-chc-{{ section.id }} .chc__pcard-price {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--chc-dark);
+}
+#uc-chc-{{ section.id }} .chc__pcard-compare {
+  font-size: .78rem;
+  color: #b3b3b3;
+  text-decoration: line-through;
+}
 #uc-chc-{{ section.id }} .chc__atc-btn {
   width: 100%;
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: auto;
+  padding: 11px;
   background: var(--chc-magenta);
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 100px;
   font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .04em;
+  font-weight: 800;
+  letter-spacing: .05em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: opacity .2s, transform .15s;
+  transition: background .18s, transform .15s;
 }
-#uc-chc-{{ section.id }} .chc__atc-btn:hover { opacity: .88; transform: scale(.98); }
-#uc-chc-{{ section.id }} .chc__atc-btn.is-added { background: #2d8a4e; }
+#uc-chc-{{ section.id }} .chc__atc-btn:hover { background: var(--chc-magenta-dk); transform: scale(.98); }
+#uc-chc-{{ section.id }} .chc__atc-btn.is-added { background: #1a9d5a; }
 
-/* slider nav */
-#uc-chc-{{ section.id }} .chc__snav {
-  display: flex;
+/* placeholder */
+#uc-chc-{{ section.id }} .chc__pcard--ph { opacity: .4; }
+#uc-chc-{{ section.id }} .chc__pcard--ph .chc__pcard-img-wrap {
+  display: flex; align-items: center; justify-content: center; font-size: 2rem;
+}
+
+/* Explore All */
+#uc-chc-{{ section.id }} .chc__explore-all {
+  text-align: center;
+  margin-top: 36px;
+}
+#uc-chc-{{ section.id }} .chc__explore-all a {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-  margin-top: 16px;
-  justify-content: flex-end;
+  background: var(--chc-dark);
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 34px;
+  border-radius: 100px;
+  transition: background .2s, transform .15s;
 }
-#uc-chc-{{ section.id }} .chc__snav-btn {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1.5px solid var(--chc-line);
-  background: white;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  transition: background .18s, border-color .18s;
-}
-#uc-chc-{{ section.id }} .chc__snav-btn:hover {
-  background: var(--chc-magenta);
-  border-color: var(--chc-magenta);
-  color: white;
-}
-#uc-chc-{{ section.id }} .chc__snav-btn svg { width: 16px; height: 16px; }
+#uc-chc-{{ section.id }} .chc__explore-all a:hover { background: var(--chc-magenta); transform: translateY(-2px); }
+#uc-chc-{{ section.id }} .chc__explore-all svg { width: 15px; height: 15px; }
 {%- endstyle -%}
 
 <div id="uc-chc-{{ section.id }}">
@@ -497,9 +522,9 @@
             <img class="chc__tab-thumb"
                  src="{{ block.settings.tab_image | image_url: width: 128 }}"
                  alt="{{ block.settings.tab_label | escape }}"
-                 width="64" height="64" loading="lazy">
+                 width="58" height="58" loading="lazy">
           {%- else -%}
-            <span class="chc__tab-thumb" style="background:{{ block.settings.tab_color | default: '#f0e0eb' }};display:flex;align-items:center;justify-content:center;font-size:26px;">
+            <span class="chc__tab-thumb" style="background:{{ block.settings.tab_color | default: '#f0e0eb' }};display:flex;align-items:center;justify-content:center;font-size:24px;">
               {{ block.settings.tab_emoji | default: '💇' }}
             </span>
           {%- endif -%}
@@ -516,6 +541,7 @@
   {%- for block in section.blocks -%}
     {%- liquid
       assign panel_id = 'chc-panel-' | append: forloop.index0 | append: '-' | append: section.id
+      assign slider_key = forloop.index0 | append: '-' | append: section.id
     -%}
     <div
       class="chc__panel{% if forloop.first %} is-active{% endif %}"
@@ -528,73 +554,68 @@
         <div class="chc__infl">
           <div class="chc__infl-media">
             {%- if block.settings.video_url != blank -%}
-              <video autoplay muted loop playsinline
-                     data-src="{{ block.settings.video_url }}"
-                     class="uc-lazy-vid">
-              </video>
+              <video muted loop playsinline data-src="{{ block.settings.video_url }}" class="uc-lazy-vid"></video>
             {%- elsif block.settings.influencer_image != blank -%}
-              <img src="{{ block.settings.influencer_image | image_url: width: 760 }}"
+              <img src="{{ block.settings.influencer_image | image_url: width: 800 }}"
                    alt="{{ block.settings.influencer_name | escape }}"
-                   loading="lazy" width="380" height="507">
+                   loading="lazy" width="400" height="500">
             {%- else -%}
               <div style="height:100%;background:linear-gradient(135deg,#f0e0eb,#fce4f3);display:flex;align-items:center;justify-content:center;">
                 <span style="font-size:3rem;opacity:.4">🌿</span>
               </div>
             {%- endif -%}
+          </div>
 
-            <div class="chc__infl-stats">
+          {%- if section.settings.testimonial_eyebrow != blank -%}
+            <p class="chc__infl-eyebrow">{{ section.settings.testimonial_eyebrow }}</p>
+          {%- endif -%}
+          {%- if block.settings.influencer_name != blank -%}
+            <h3 class="chc__infl-name">{{ block.settings.influencer_name }}</h3>
+          {%- endif -%}
+
+          {%- comment -%} stat satırı — stat1/2/3 {%- endcomment -%}
+          {%- if block.settings.stat1_label != blank or block.settings.stat2_label != blank or block.settings.stat3_label != blank -%}
+            <div class="chc__stats">
               {%- if block.settings.stat1_label != blank -%}
                 <div class="chc__stat">
                   <span class="chc__stat-icon">{{ block.settings.stat1_icon | default: '👤' }}</span>
-                  <span class="chc__stat-label">{{ block.settings.stat1_label }}</span>
-                  <span class="chc__stat-val">{{ block.settings.stat1_val }}</span>
+                  <span class="chc__stat-txt">
+                    <span class="chc__stat-label">{{ block.settings.stat1_label }}</span>
+                    <span class="chc__stat-val">{{ block.settings.stat1_val }}</span>
+                  </span>
                 </div>
               {%- endif -%}
               {%- if block.settings.stat2_label != blank -%}
                 <div class="chc__stat">
                   <span class="chc__stat-icon">{{ block.settings.stat2_icon | default: '⚡' }}</span>
-                  <span class="chc__stat-label">{{ block.settings.stat2_label }}</span>
-                  <span class="chc__stat-val">{{ block.settings.stat2_val }}</span>
+                  <span class="chc__stat-txt">
+                    <span class="chc__stat-label">{{ block.settings.stat2_label }}</span>
+                    <span class="chc__stat-val">{{ block.settings.stat2_val }}</span>
+                  </span>
                 </div>
               {%- endif -%}
               {%- if block.settings.stat3_label != blank -%}
                 <div class="chc__stat">
                   <span class="chc__stat-icon">{{ block.settings.stat3_icon | default: '✨' }}</span>
-                  <span class="chc__stat-label">{{ block.settings.stat3_label }}</span>
-                  <span class="chc__stat-val">{{ block.settings.stat3_val }}</span>
+                  <span class="chc__stat-txt">
+                    <span class="chc__stat-label">{{ block.settings.stat3_label }}</span>
+                    <span class="chc__stat-val">{{ block.settings.stat3_val }}</span>
+                  </span>
                 </div>
               {%- endif -%}
             </div>
-          </div>
+          {%- endif -%}
 
-          <div class="chc__infl-quote">
-            {%- if block.settings.influencer_name != blank -%}
-              <p class="chc__infl-name">{{ block.settings.influencer_name }}</p>
-            {%- endif -%}
-            {%- if block.settings.quote != blank -%}
-              <p>"{{ block.settings.quote }}"</p>
-            {%- endif -%}
-            <div class="chc__infl-meta">
-              {%- if block.settings.meta1_val != blank -%}
-                <div class="chc__infl-meta-item">
-                  <strong>{{ block.settings.meta1_label | default: 'Saç Tipi' }}</strong>
-                  {{ block.settings.meta1_val }}
-                </div>
-              {%- endif -%}
-              {%- if block.settings.meta2_val != blank -%}
-                <div class="chc__infl-meta-item">
-                  <strong>{{ block.settings.meta2_label | default: 'Sorun' }}</strong>
-                  {{ block.settings.meta2_val }}
-                </div>
-              {%- endif -%}
-              {%- if block.settings.meta3_val != blank -%}
-                <div class="chc__infl-meta-item">
-                  <strong>{{ block.settings.meta3_label | default: 'Şehir' }}</strong>
-                  {{ block.settings.meta3_val }}
-                </div>
-              {%- endif -%}
-            </div>
-          </div>
+          {%- if block.settings.quote != blank -%}
+            <p class="chc__infl-quote"><span>{{ block.settings.quote }}</span></p>
+          {%- endif -%}
+
+          {%- if block.settings.meta3_val != blank -%}
+            <span class="chc__infl-loc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              {{ block.settings.meta3_val }}
+            </span>
+          {%- endif -%}
         </div>
 
         {%- comment -%} RIGHT: Products {%- endcomment -%}
@@ -602,99 +623,114 @@
           <div class="chc__products-head">
             <h3 class="chc__products-title">
               {%- if block.settings.collection_title != blank -%}
-                {{ block.settings.collection_title }}
+                {{ block.settings.collection_title }} {{ section.settings.shop_suffix | default: 'Serisini Keşfet' }}
               {%- else -%}
-                {{ block.settings.tab_label }} Serisi
+                {{ block.settings.tab_label }} {{ section.settings.shop_suffix | default: 'Serisini Keşfet' }}
               {%- endif -%}
             </h3>
-            {%- if block.settings.collection != blank -%}
-              <a class="chc__explore-btn" href="{{ block.settings.collection.url }}">
-                Tümünü Gör
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-              </a>
-            {%- endif -%}
-          </div>
-
-          <div class="chc__slider-wrap">
-            <div class="chc__slider" id="chc-slider-{{ forloop.index0 }}-{{ section.id }}">
-              {%- liquid
-                if block.settings.collection != blank
-                  assign products_source = block.settings.collection.products
-                  assign products_limit = block.settings.products_count | default: 6
-                else
-                  assign products_source = null
-                  assign products_limit = 0
-                endif
-              -%}
-
-              {%- if products_source != blank -%}
-                {%- for p in products_source limit: products_limit -%}
-                  {%- assign v = p.selected_or_first_available_variant -%}
-                  <div class="chc__pcard">
-                    <div class="chc__pcard-img-wrap">
-                      {%- if block.settings.card_badge != blank -%}
-                        <span class="chc__pcard-badge">{{ block.settings.card_badge }}</span>
-                      {%- endif -%}
-                      <a href="{{ p.url }}">
-                        {%- if p.featured_image -%}
-                          <img src="{{ p.featured_image | image_url: width: 440 }}"
-                               alt="{{ p.title | escape }}"
-                               loading="lazy" width="220" height="220">
-                        {%- endif -%}
-                      </a>
-                    </div>
-                    <div class="chc__pcard-info">
-                      <a href="{{ p.url }}" style="text-decoration:none;">
-                        <p class="chc__pcard-name">{{ p.title }}</p>
-                      </a>
-                      {%- if p.metafields.custom.subtitle != blank -%}
-                        <p class="chc__pcard-sub">{{ p.metafields.custom.subtitle }}</p>
-                      {%- elsif p.description != blank -%}
-                        <p class="chc__pcard-sub">{{ p.description | strip_html | truncate: 60 }}</p>
-                      {%- endif -%}
-                      <div class="chc__pcard-meta">
-                        <div>
-                          <span class="chc__pcard-price">{{ p.price | money }}</span>
-                          {%- if v.compare_at_price > p.price -%}
-                            <span class="chc__pcard-compare">{{ v.compare_at_price | money }}</span>
-                          {%- endif -%}
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        class="chc__atc-btn"
-                        data-vid="{{ v.id }}"
-                        data-pname="{{ p.title | escape }}">
-                        Sepete Ekle
-                      </button>
-                    </div>
-                  </div>
-                {%- endfor -%}
-              {%- else -%}
-                {%- comment -%} Placeholder cards when collection not yet selected {%- endcomment -%}
-                {%- for i in (1..4) -%}
-                  <div class="chc__pcard" style="opacity:.35;">
-                    <div class="chc__pcard-img-wrap" style="background:#f0e8f0;height:220px;display:flex;align-items:center;justify-content:center;">
-                      <span style="font-size:2rem;">🌿</span>
-                    </div>
-                    <div class="chc__pcard-info">
-                      <p class="chc__pcard-name">Ürün {{ i }}</p>
-                      <p class="chc__pcard-sub">Koleksiyon seçin</p>
-                    </div>
-                  </div>
-                {%- endfor -%}
-              {%- endif -%}
-            </div>
-
             <div class="chc__snav">
-              <button type="button" class="chc__snav-btn" data-chslider-prev="{{ forloop.index0 }}-{{ section.id }}" aria-label="Önceki">
+              <button type="button" class="chc__snav-btn" data-chslider-prev="{{ slider_key }}" aria-label="Önceki">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
               </button>
-              <button type="button" class="chc__snav-btn" data-chslider-next="{{ forloop.index0 }}-{{ section.id }}" aria-label="Sonraki">
+              <button type="button" class="chc__snav-btn" data-chslider-next="{{ slider_key }}" aria-label="Sonraki">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
               </button>
             </div>
           </div>
+
+          <div class="chc__slider" id="chc-slider-{{ slider_key }}">
+            {%- liquid
+              if block.settings.collection != blank
+                assign products_source = block.settings.collection.products
+                assign products_limit = block.settings.products_count | default: 6
+              else
+                assign products_source = null
+                assign products_limit = 0
+              endif
+            -%}
+
+            {%- if products_source != blank -%}
+              {%- for p in products_source limit: products_limit -%}
+                {%- assign v = p.selected_or_first_available_variant -%}
+                <div class="chc__pcard">
+                  <div class="chc__pcard-img-wrap">
+                    {%- if block.settings.card_badge != blank -%}
+                      <span class="chc__pcard-badge">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        {{ block.settings.card_badge }}
+                      </span>
+                    {%- endif -%}
+                    <a href="{{ p.url }}">
+                      {%- if p.featured_image -%}
+                        <img src="{{ p.featured_image | image_url: width: 500 }}"
+                             alt="{{ p.title | escape }}" loading="lazy" width="250" height="250">
+                      {%- endif -%}
+                    </a>
+                  </div>
+
+                  {%- if block.settings.card_strip_label != blank -%}
+                    <div class="chc__pcard-strip">{{ block.settings.card_strip_label }}</div>
+                  {%- endif -%}
+
+                  <div class="chc__pcard-info">
+                    <a href="{{ p.url }}" style="text-decoration:none;">
+                      <p class="chc__pcard-name">{{ p.title }}</p>
+                    </a>
+                    {%- if p.metafields.custom.subtitle != blank -%}
+                      <p class="chc__pcard-sub">{{ p.metafields.custom.subtitle }}</p>
+                    {%- elsif p.description != blank -%}
+                      <p class="chc__pcard-sub">{{ p.description | strip_html | truncate: 50 }}</p>
+                    {%- endif -%}
+
+                    {%- assign rating_mf = p.metafields.reviews.rating.value -%}
+                    {%- if rating_mf != blank -%}
+                      <div class="chc__pcard-rating">
+                        <span class="star">★</span>
+                        {{ rating_mf.rating | default: rating_mf | round: 1 }}
+                        <span class="count">({{ p.metafields.reviews.rating_count | default: 0 }})</span>
+                      </div>
+                    {%- endif -%}
+
+                    <div class="chc__pcard-price-row">
+                      {%- if v.compare_at_price > p.price -%}
+                        <span class="chc__pcard-compare">{{ v.compare_at_price | money }}</span>
+                      {%- endif -%}
+                      <span class="chc__pcard-price">{{ p.price | money }}</span>
+                    </div>
+
+                    {%- if v.available -%}
+                      <button type="button" class="chc__atc-btn" data-vid="{{ v.id }}" data-handle="{{ p.handle }}">
+                        Sepete Ekle
+                      </button>
+                    {%- else -%}
+                      <button type="button" class="chc__atc-btn" style="background:#efefef;color:#999;cursor:default;" disabled>
+                        Tükendi
+                      </button>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for i in (1..4) -%}
+                <div class="chc__pcard chc__pcard--ph">
+                  <div class="chc__pcard-img-wrap" style="background:#f0e8f0;"><span>🌿</span></div>
+                  <div class="chc__pcard-info">
+                    <p class="chc__pcard-name">Ürün {{ i }}</p>
+                    <p class="chc__pcard-sub">Koleksiyon seçin</p>
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+
+          {%- if block.settings.collection != blank and section.settings.explore_all_label != blank -%}
+            <div class="chc__explore-all">
+              <a href="{{ block.settings.collection.url }}">
+                {{ section.settings.explore_all_label }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+            </div>
+          {%- endif -%}
         </div>
 
       </div>
@@ -708,17 +744,14 @@
   if (!root || root.dataset.ucChcInited) return;
   root.dataset.ucChcInited = '1';
 
-  /* ── Tab switching ── */
   var tabs   = root.querySelectorAll('.chc__tab');
   var panels = root.querySelectorAll('.chc__panel');
 
   function activateTab(idx) {
-    tabs.forEach(function(t,i){
-      t.classList.toggle('is-active', i === idx);
-    });
-    panels.forEach(function(p,i){
-      p.classList.toggle('is-active', i === idx);
-    });
+    tabs.forEach(function(t,i){ t.classList.toggle('is-active', i === idx); });
+    panels.forEach(function(p,i){ p.classList.toggle('is-active', i === idx); });
+    var active = tabs[idx];
+    if (active) active.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
     var vid = panels[idx] ? panels[idx].querySelector('.uc-lazy-vid') : null;
     if (vid && !vid.src && vid.dataset.src) {
       vid.src = vid.dataset.src;
@@ -730,57 +763,70 @@
     btn.addEventListener('click', function(){ activateTab(idx); });
   });
 
-  /* ── Tab scroll arrows ── */
+  /* Tab scroll arrows */
   var tabsEl = root.querySelector('.chc__tabs');
   var prevTabBtn = root.querySelector('[data-chtabs-prev]');
   var nextTabBtn = root.querySelector('[data-chtabs-next]');
-  if (prevTabBtn) prevTabBtn.addEventListener('click', function(){ tabsEl.scrollBy({left:-120,behavior:'smooth'}); });
-  if (nextTabBtn) nextTabBtn.addEventListener('click', function(){ tabsEl.scrollBy({left:120,behavior:'smooth'}); });
+  if (prevTabBtn) prevTabBtn.addEventListener('click', function(){ tabsEl.scrollBy({left:-160,behavior:'smooth'}); });
+  if (nextTabBtn) nextTabBtn.addEventListener('click', function(){ tabsEl.scrollBy({left:160,behavior:'smooth'}); });
 
-  /* ── Product slider nav ── */
+  /* Product slider nav */
   root.querySelectorAll('[data-chslider-prev]').forEach(function(btn){
-    var key = btn.dataset.chsliderPrev;
-    var sl = document.getElementById('chc-slider-' + key);
+    var sl = document.getElementById('chc-slider-' + btn.dataset.chsliderPrev);
     if (sl) btn.addEventListener('click', function(){
       var w = sl.querySelector('.chc__pcard');
-      sl.scrollBy({left: w ? -(w.getBoundingClientRect().width + 14) : -234, behavior:'smooth'});
+      sl.scrollBy({left: w ? -(w.getBoundingClientRect().width + 18) : -268, behavior:'smooth'});
     });
   });
   root.querySelectorAll('[data-chslider-next]').forEach(function(btn){
-    var key = btn.dataset.chsliderNext;
-    var sl = document.getElementById('chc-slider-' + key);
+    var sl = document.getElementById('chc-slider-' + btn.dataset.chsliderNext);
     if (sl) btn.addEventListener('click', function(){
       var w = sl.querySelector('.chc__pcard');
-      sl.scrollBy({left: w ? (w.getBoundingClientRect().width + 14) : 234, behavior:'smooth'});
+      sl.scrollBy({left: w ? (w.getBoundingClientRect().width + 18) : 268, behavior:'smooth'});
     });
   });
 
-  /* ── Add to Cart ── */
+  /* Cart drawer (Beautify: cart:refresh + cart-drawer.open fallback) */
+  function openDrawer(){
+    try { document.dispatchEvent(new CustomEvent('cart:refresh',{bubbles:true,detail:{open:true}})); } catch(e){}
+    setTimeout(function(){
+      var d = document.querySelector('cart-drawer');
+      if (d && typeof d.open === 'function') d.open();
+    }, 50);
+  }
+
   root.querySelectorAll('.chc__atc-btn').forEach(function(btn){
+    if (btn.disabled) return;
     btn.addEventListener('click', function(){
       var id = parseInt(btn.dataset.vid, 10);
       if (!id) return;
+      btn.disabled = true;
+      var orig = btn.textContent;
       btn.textContent = 'Ekleniyor…';
       fetch('/cart/add.js', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({id: id, quantity: 1})
+        body: JSON.stringify({ items:[{ id:id, quantity:1 }] })
       })
-      .then(function(r){ return r.json(); })
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
       .then(function(){
         btn.textContent = 'Eklendi ✓';
         btn.classList.add('is-added');
-        try{ document.dispatchEvent(new CustomEvent('cart:refresh',{bubbles:true,detail:{open:true}})); }catch(e){}
+        openDrawer();
         setTimeout(function(){
           btn.textContent = 'Sepete Ekle';
           btn.classList.remove('is-added');
+          btn.disabled = false;
         }, 1800);
       })
-      .catch(function(){ btn.textContent = 'Hata'; setTimeout(function(){ btn.textContent = 'Sepete Ekle'; }, 1200); });
+      .catch(function(){
+        btn.textContent = 'Hata';
+        setTimeout(function(){ btn.textContent = orig; btn.disabled = false; }, 1200);
+      });
     });
   });
 
-  /* ── Lazy video on first active panel ── */
+  /* Lazy video — ilk aktif panel */
   var firstVid = root.querySelector('.chc__panel.is-active .uc-lazy-vid');
   if (firstVid && firstVid.dataset.src && !firstVid.src) {
     firstVid.src = firstVid.dataset.src;
@@ -796,11 +842,15 @@
   "class": "uc-curate-hair-care",
   "settings": [
     { "type": "header", "content": "Başlık" },
-    { "type": "text",   "id": "heading",    "label": "Başlık",  "default": "Saç Tipine Göre Keşfet" },
+    { "type": "text",   "id": "heading",    "label": "Başlık (em ile vurgu: <em>kelime</em>)", "default": "Saç Tipine Göre <em>Keşfet</em>" },
     { "type": "text",   "id": "subheading", "label": "Alt başlık" },
+    { "type": "text",   "id": "testimonial_eyebrow", "label": "Influencer üst etiketi", "default": "GERÇEK DENEYİM" },
+    { "type": "text",   "id": "shop_suffix", "label": "Ürün başlığı eki", "default": "Serisini Keşfet", "info": "Örn: 'Kıvırcık' + 'Serisini Keşfet'" },
+    { "type": "text",   "id": "explore_all_label", "label": "Tümünü Keşfet buton metni (boş = gizli)", "default": "Tümünü Keşfet" },
+
     { "type": "header", "content": "Renk & Stil" },
-    { "type": "color",  "id": "accent_color", "label": "Vurgu rengi",    "default": "#C5006A" },
-    { "type": "color",  "id": "section_bg",   "label": "Arka plan rengi","default": "#FAFAF8" },
+    { "type": "color",  "id": "accent_color", "label": "Vurgu rengi (magenta)", "default": "#C5006A" },
+    { "type": "color",  "id": "section_bg",   "label": "Arka plan rengi",       "default": "#fdf5f9" },
     { "type": "header", "content": "Boşluk" },
     { "type": "range",  "id": "pad_top",    "label": "Üst boşluk (px)", "min": 0, "max": 120, "step": 8, "default": 64 },
     { "type": "range",  "id": "pad_bottom", "label": "Alt boşluk (px)", "min": 0, "max": 120, "step": 8, "default": 64 }
@@ -813,40 +863,37 @@
       "settings": [
         { "type": "header",       "content": "Tab Görseli" },
         { "type": "text",         "id": "tab_label",  "label": "Tab etiketi",  "default": "Kıvırcık Saç" },
-        { "type": "image_picker", "id": "tab_image",  "label": "Tab görseli (64×64 yuvarlak)" },
+        { "type": "image_picker", "id": "tab_image",  "label": "Tab görseli (yuvarlak, kare yükle)" },
         { "type": "color",        "id": "tab_color",  "label": "Görsel yoksa bg rengi", "default": "#f0e0eb" },
         { "type": "text",         "id": "tab_emoji",  "label": "Görsel yoksa emoji",    "default": "🌀" },
 
-        { "type": "header",       "content": "Influencer Bilgileri" },
+        { "type": "header",       "content": "Influencer" },
         { "type": "text",         "id": "influencer_name",  "label": "İsim",    "default": "Ayşe K." },
-        { "type": "image_picker", "id": "influencer_image", "label": "Fotoğraf (3:4 önerilir)" },
-        { "type": "url",          "id": "video_url",        "label": "Video URL (.mp4 — opsiyonel, görsel yerine geçer)" },
+        { "type": "image_picker", "id": "influencer_image", "label": "Fotoğraf (4:5 önerilir)" },
+        { "type": "url",          "id": "video_url",        "label": "Video URL (.mp4 — foto yerine geçer)" },
         { "type": "textarea",     "id": "quote",            "label": "Alıntı",  "default": "Urban Care sayesinde saçlarım inanılmaz derecede canlandı!" },
 
-        { "type": "header",       "content": "İstatistik Kartları (overlay)" },
+        { "type": "header",       "content": "Stat Satırı (isim altı)" },
         { "type": "text",   "id": "stat1_icon",  "label": "Stat 1 emoji",  "default": "👤" },
         { "type": "text",   "id": "stat1_label", "label": "Stat 1 etiket", "default": "YAŞ" },
         { "type": "text",   "id": "stat1_val",   "label": "Stat 1 değer",  "default": "24" },
-        { "type": "text",   "id": "stat2_icon",  "label": "Stat 2 emoji",  "default": "⚡" },
+        { "type": "text",   "id": "stat2_icon",  "label": "Stat 2 emoji",  "default": "💬" },
         { "type": "text",   "id": "stat2_label", "label": "Stat 2 etiket", "default": "SORUN" },
         { "type": "text",   "id": "stat2_val",   "label": "Stat 2 değer",  "default": "Kırılganlık" },
-        { "type": "text",   "id": "stat3_icon",  "label": "Stat 3 emoji",  "default": "✨" },
+        { "type": "text",   "id": "stat3_icon",  "label": "Stat 3 emoji",  "default": "🌀" },
         { "type": "text",   "id": "stat3_label", "label": "Stat 3 etiket", "default": "TİP" },
         { "type": "text",   "id": "stat3_val",   "label": "Stat 3 değer",  "default": "Kıvırcık 3A" },
 
-        { "type": "header",       "content": "Meta Bilgileri (profil altı)" },
-        { "type": "text",   "id": "meta1_label", "label": "Meta 1 etiket", "default": "Saç Tipi" },
-        { "type": "text",   "id": "meta1_val",   "label": "Meta 1 değer",  "default": "Kıvırcık 3A" },
-        { "type": "text",   "id": "meta2_label", "label": "Meta 2 etiket", "default": "Sorun" },
-        { "type": "text",   "id": "meta2_val",   "label": "Meta 2 değer",  "default": "Kırılganlık" },
-        { "type": "text",   "id": "meta3_label", "label": "Meta 3 etiket", "default": "Şehir" },
-        { "type": "text",   "id": "meta3_val",   "label": "Meta 3 değer",  "default": "İstanbul" },
+        { "type": "header",       "content": "Konum (opsiyonel)" },
+        { "type": "text",   "id": "meta3_label", "label": "Konum etiketi (kullanılmıyor)", "default": "Şehir" },
+        { "type": "text",   "id": "meta3_val",   "label": "Şehir / konum",  "default": "İstanbul" },
 
         { "type": "header",         "content": "Ürün Serisi" },
         { "type": "collection",     "id": "collection",       "label": "Koleksiyon" },
-        { "type": "text",           "id": "collection_title", "label": "Başlık (boş bırakılırsa tab adı + Serisi kullanılır)" },
+        { "type": "text",           "id": "collection_title", "label": "Seri adı (boş = tab adı)" },
         { "type": "range",          "id": "products_count",   "label": "Ürün sayısı",   "min": 2, "max": 8, "step": 1, "default": 4 },
-        { "type": "text",           "id": "card_badge",       "label": "Ürün kartı badge (opsiyonel)" }
+        { "type": "text",           "id": "card_badge",       "label": "Kart rozeti (sağ üst, opsiyonel)", "info": "Örn: TOP RATED" },
+        { "type": "text",           "id": "card_strip_label", "label": "Kart alt şeridi (opsiyonel)", "info": "Örn: KIVIRCIK İÇİN" }
       ]
     }
   ],
@@ -855,8 +902,8 @@
       "name": "UC Saç Tipine Göre Keşfet",
       "blocks": [
         { "type": "hair_type", "settings": { "tab_label": "Kıvırcık Saç", "tab_emoji": "🌀", "influencer_name": "Ayşe K.", "quote": "Kıvırcık saçlarım hiç bu kadar iyi görünmemişti!" } },
-        { "type": "hair_type", "settings": { "tab_label": "Dalgalı Saç",  "tab_emoji": "~", "influencer_name": "Zeynep A.", "quote": "Dalgalarım artık çok daha belirgin ve bakımlı." } },
-        { "type": "hair_type", "settings": { "tab_label": "Düz Saç",      "tab_emoji": "-",  "influencer_name": "Merve B.", "quote": "Düz saçım artık çok daha parlak ve sağlıklı!" } }
+        { "type": "hair_type", "settings": { "tab_label": "Dalgalı Saç",  "tab_emoji": "〰️", "influencer_name": "Zeynep A.", "quote": "Dalgalarım artık çok daha belirgin ve bakımlı." } },
+        { "type": "hair_type", "settings": { "tab_label": "Düz Saç",      "tab_emoji": "💇",  "influencer_name": "Merve B.", "quote": "Düz saçım artık çok daha parlak ve sağlıklı!" } }
       ]
     }
   ]
