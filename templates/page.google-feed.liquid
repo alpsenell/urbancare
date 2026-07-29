@@ -10,7 +10,7 @@
           {% if variant.available %}
             <item>
               <g:id>{{ variant.id }}</g:id>
-              <g:title>{{ product.title | xml_escape }}{% if variant.title != 'Default Title' %} - {{ variant.title | xml_escape }}{% endif %}</g:title>
+              <g:title>{{ product.title | xml_escape }}{% unless variant.title == 'Default Title' %} - {{ variant.title | xml_escape }}{% endunless %}</g:title>
               <g:description>{{ product.description | strip_html | truncate: 5000 | xml_escape }}</g:description>
               <g:link>{{ shop.url }}/products/{{ product.handle }}{% if product.variants.size > 1 %}?variant={{ variant.id }}{% endif %}</g:link>
               <g:image_link>https:{{ product.featured_image | img_url: 'master' }}</g:image_link>
