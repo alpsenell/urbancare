@@ -19,9 +19,16 @@
               {% endfor %}
               <g:condition>new</g:condition>
               <g:availability>in_stock</g:availability>
-              <g:price>{{ variant.price | money_without_currency | remove: ' ' }} TRY</g:price>
+              {% comment %} --- Fiyat: cent bazli tam sayi matematigi, binlik ayiraci yok, her zaman 2 ondalik --- {% endcomment %}
+              {% assign reg_cents = variant.price %}
+              {% if variant.compare_at_price > variant.price %}{% assign reg_cents = variant.compare_at_price %}{% endif %}
+              {% assign reg_whole = reg_cents | divided_by: 100 %}
+              {% assign reg_rem = reg_cents | modulo: 100 | prepend: '00' | slice: -2, 2 %}
+              <g:price>{{ reg_whole }}.{{ reg_rem }} TRY</g:price>
               {% if variant.compare_at_price > variant.price %}
-                <g:sale_price>{{ variant.price | money_without_currency | remove: ' ' }} TRY</g:sale_price>
+                {% assign sale_whole = variant.price | divided_by: 100 %}
+                {% assign sale_rem = variant.price | modulo: 100 | prepend: '00' | slice: -2, 2 %}
+                <g:sale_price>{{ sale_whole }}.{{ sale_rem }} TRY</g:sale_price>
               {% endif %}
               <g:brand>Urban Care</g:brand>
               {% if variant.sku != blank %}
