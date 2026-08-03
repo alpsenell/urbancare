@@ -44,6 +44,7 @@
       "blocks": {
         "collection_pPRfdr": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "",
             "title": ""
@@ -51,6 +52,7 @@
         },
         "collection_FFKtTn": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "",
             "title": ""
@@ -58,6 +60,7 @@
         },
         "collection_TypABA": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "",
             "title": ""
@@ -65,6 +68,7 @@
         },
         "collection_Y6pTNr": {
           "type": "collection",
+          "disabled": true,
           "settings": {
             "collection": "",
             "title": ""
