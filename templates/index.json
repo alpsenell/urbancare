@@ -12,42 +12,6 @@
     "slideshow_hero": {
       "type": "slideshow",
       "blocks": {
-        "slide_k9yKrN": {
-          "type": "slide",
-          "settings": {
-            "image_desktop": "shopify://shop_images/Canta-_-Havlu.jpg",
-            "tint_override": false,
-            "tint_color": "#000000",
-            "tint_opacity": 40,
-            "url": "",
-            "overlay_position": "justify-center items-center",
-            "overlay_text_align": "text-start",
-            "overlay_width_override": false,
-            "overlay_max_width": 640,
-            "mob_center_text": false,
-            "subheading": "",
-            "heading": "",
-            "heading_size_override": false,
-            "heading_size_desktop": "h1",
-            "heading_size_mobile": "h1",
-            "text": "",
-            "enlarge_text": false,
-            "button_1_label": "",
-            "button_1_link": "",
-            "button_1_style": "btn btn--primary",
-            "button_2_label": "",
-            "button_2_link": "",
-            "button_2_style": "btn btn--primary",
-            "countdown_show": false,
-            "end_date": "",
-            "end_time": "",
-            "end_text": "",
-            "hide_on_end": false,
-            "number_size": 40,
-            "number_font": "base",
-            "show_timer_labels": true
-          }
-        },
         "slide_kFyBaK": {
           "type": "slide",
           "settings": {
@@ -158,7 +122,6 @@
         }
       },
       "block_order": [
-        "slide_k9yKrN",
         "slide_kFyBaK",
         "slide_4",
         "slide_5"
