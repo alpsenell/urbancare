@@ -15,7 +15,7 @@
       "type": "cart-drawer",
       "settings": {
         "show_backorder_text": true,
-        "gift_mode": "highest",
+        "gift_mode": "cumulative",
         "gift_badge_text": "🎁 Hediye",
         "gift_lock_lines": true,
         "gift_allow_qty_up": false,
@@ -27,7 +27,7 @@
         "gift_tier_1_code": "",
         "gift_tier_2_active": true,
         "gift_tier_2_amount": 1250,
-        "gift_tier_2_product_1": "seaweed-citrus-vucut-losyonu",
+        "gift_tier_2_product_1": "",
         "gift_tier_2_product_2": "urban-care-plaj-havlusu",
         "gift_tier_2_product_3": "",
         "gift_tier_2_code": "",
