@@ -217,7 +217,7 @@
         "color_scheme": "",
         "heading_size_desktop": "h1",
         "heading_size_mobile": "h1",
-        "full_width": true,
+        "full_width": false,
         "background_mode": "default",
         "background_color": "#ffffff",
         "background_gradient_stop_1": "#cccccc",
