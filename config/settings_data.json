@@ -104,7 +104,7 @@
     "recommendations_promo_image": "",
     "recommendations_promo_content": "<p><strong>Editörün Seçimi<br/></strong>Trend ve vazgeçilmez ürünleri keşfedin</p>",
     "recommendations_promo_color_scheme": "scheme-57822735-32ea-4111-abb2-a6d7bd3e4330",
-    "enable_animations": "desktop",
+    "enable_animations": "mobile_desktop",
     "enable_load_animations": true,
     "animate_cards": true,
     "animation_speed": "medium",

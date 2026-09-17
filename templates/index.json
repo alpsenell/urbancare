@@ -229,6 +229,147 @@
         "section_join_mode": "default"
       }
     },
+    "video_carousel_FmCTeY": {
+      "type": "video-carousel",
+      "blocks": {
+        "shopify_video_6PaJgk": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/yasminozdemirkaraa_1771949968_3839716042062978488_3724795457.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "hibiscus-shea-butter-kivircik-ve-dalgali-saclara-ozel-sac-kremi-250ml",
+            "tag": "@yasminozdemirkaraa",
+            "tag_url": "https://www.instagram.com/yasminozdemirkaraa/?hl=en"
+          }
+        },
+        "shopify_video_3Q8W8F": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/bilgealtintas7_1763208140_3765469716786499132_1031501057.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "hibiscus-shea-butter-kivircik-ve-dalgali-saclara-ozel-sac-kremi-250ml",
+            "tag": "@bilgealtintas7",
+            "tag_url": "https://www.instagram.com/bilgealtintas7/?hl=en"
+          }
+        },
+        "shopify_video_D7Kd6g": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/urbancaretr_1720004049_3403962589648300372_573872577.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "urban-care-summer-glow-asamali-kalici-renk-acici-sac-spreyi-150-ml",
+            "tag": "@melisayanik",
+            "tag_url": "https://www.instagram.com/melisayanik/?hl=en"
+          }
+        },
+        "shopify_video_dAgCdn": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/urbancaretr_1755776657_3704043876507936692_573872577.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "style-guide-stick-wax-35-gr",
+            "tag": "@akinireem",
+            "tag_url": "https://www.instagram.com/akinireem/?hl=en"
+          }
+        },
+        "shopify_video_p3CKCp": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/gizemsaritekin_1729013879_3479538802389716165_320923377.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "no1-bond-plex-maske-50-ml",
+            "tag": "@gizemsaritekin",
+            "tag_url": "https://www.instagram.com/gizemsaritekin/?hl=en"
+          }
+        },
+        "shopify_video_DRndFQ": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/begumbahardemir_1747488432_3634518159951775300_47152750721.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "hyaluronic-collagen-ekstra-dolgunlastirici-sac-bakim-sampuani-350-ml-vegan",
+            "tag": "@begumbahardemir",
+            "tag_url": "https://www.instagram.com/begumbahardemir/?hl=en"
+          }
+        },
+        "shopify_video_iiEFHa": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/urbancaretr_1744822800_3612157566050355491_573872577.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "hibiscus-shea-butter-bukle-belirginlestirici-sac-bakim-sampuani-350-ml-vegan",
+            "tag": "@melisminkari",
+            "tag_url": "https://www.instagram.com/melisminkari/?hl=en"
+          }
+        },
+        "shopify_video_jGNXhV": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/yarenalaca_1747750001_3636712467658937622_5126082671.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "intense-keratin-yogun-hasar-onarici-sac-bakim-sampuani-350ml-vegan",
+            "tag": "@yarenalaca",
+            "tag_url": "https://www.instagram.com/yarenalaca/?hl=en"
+          }
+        },
+        "shopify_video_am8V4A": {
+          "type": "shopify_video",
+          "settings": {
+            "media": "shopify://files/videos/ahsenbucek_1709991076_3319967113491380075_737806467.mp4",
+            "video_frame_enabled": false,
+            "video_frame_color": "#000000",
+            "product_card_enabled": true,
+            "product": "pink-grapefruit-pomelo-dus-jeli",
+            "tag": "@ahsenbucek",
+            "tag_url": "https://www.instagram.com/ahsenbucek/?hl=en"
+          }
+        }
+      },
+      "block_order": [
+        "shopify_video_6PaJgk",
+        "shopify_video_3Q8W8F",
+        "shopify_video_D7Kd6g",
+        "shopify_video_dAgCdn",
+        "shopify_video_p3CKCp",
+        "shopify_video_DRndFQ",
+        "shopify_video_iiEFHa",
+        "shopify_video_jGNXhV",
+        "shopify_video_am8V4A"
+      ],
+      "name": "Video carousel",
+      "settings": {
+        "heading": "",
+        "heading_size": "h3",
+        "heading_align": "text-center",
+        "mob_center_text": true,
+        "autoplay": true,
+        "hover_enabled": false,
+        "cta_label": "Sepete Ekle",
+        "color_scheme": "scheme-1",
+        "background_mode": "default",
+        "background_color": "#ffffff",
+        "background_gradient_stop_1": "#cccccc",
+        "background_gradient_stop_2": "#ffffff",
+        "background_gradient_curve": "linear",
+        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)"
+      }
+    },
     "flash_sale_NaeQVV": {
       "type": "flash-sale",
       "blocks": {
@@ -684,147 +825,6 @@
         "card_color_scheme": ""
       }
     },
-    "video_carousel_FmCTeY": {
-      "type": "video-carousel",
-      "blocks": {
-        "shopify_video_6PaJgk": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/yasminozdemirkaraa_1771949968_3839716042062978488_3724795457.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "hibiscus-shea-butter-kivircik-ve-dalgali-saclara-ozel-sac-kremi-250ml",
-            "tag": "@yasminozdemirkaraa",
-            "tag_url": "https://www.instagram.com/yasminozdemirkaraa/?hl=en"
-          }
-        },
-        "shopify_video_3Q8W8F": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/bilgealtintas7_1763208140_3765469716786499132_1031501057.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "hibiscus-shea-butter-kivircik-ve-dalgali-saclara-ozel-sac-kremi-250ml",
-            "tag": "@bilgealtintas7",
-            "tag_url": "https://www.instagram.com/bilgealtintas7/?hl=en"
-          }
-        },
-        "shopify_video_D7Kd6g": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/urbancaretr_1720004049_3403962589648300372_573872577.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "urban-care-summer-glow-asamali-kalici-renk-acici-sac-spreyi-150-ml",
-            "tag": "@melisayanik",
-            "tag_url": "https://www.instagram.com/melisayanik/?hl=en"
-          }
-        },
-        "shopify_video_dAgCdn": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/urbancaretr_1755776657_3704043876507936692_573872577.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "style-guide-stick-wax-35-gr",
-            "tag": "@akinireem",
-            "tag_url": "https://www.instagram.com/akinireem/?hl=en"
-          }
-        },
-        "shopify_video_p3CKCp": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/gizemsaritekin_1729013879_3479538802389716165_320923377.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "no1-bond-plex-maske-50-ml",
-            "tag": "@gizemsaritekin",
-            "tag_url": "https://www.instagram.com/gizemsaritekin/?hl=en"
-          }
-        },
-        "shopify_video_DRndFQ": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/begumbahardemir_1747488432_3634518159951775300_47152750721.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "hyaluronic-collagen-ekstra-dolgunlastirici-sac-bakim-sampuani-350-ml-vegan",
-            "tag": "@begumbahardemir",
-            "tag_url": "https://www.instagram.com/begumbahardemir/?hl=en"
-          }
-        },
-        "shopify_video_iiEFHa": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/urbancaretr_1744822800_3612157566050355491_573872577.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "hibiscus-shea-butter-bukle-belirginlestirici-sac-bakim-sampuani-350-ml-vegan",
-            "tag": "@melisminkari",
-            "tag_url": "https://www.instagram.com/melisminkari/?hl=en"
-          }
-        },
-        "shopify_video_jGNXhV": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/yarenalaca_1747750001_3636712467658937622_5126082671.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "intense-keratin-yogun-hasar-onarici-sac-bakim-sampuani-350ml-vegan",
-            "tag": "@yarenalaca",
-            "tag_url": "https://www.instagram.com/yarenalaca/?hl=en"
-          }
-        },
-        "shopify_video_am8V4A": {
-          "type": "shopify_video",
-          "settings": {
-            "media": "shopify://files/videos/ahsenbucek_1709991076_3319967113491380075_737806467.mp4",
-            "video_frame_enabled": false,
-            "video_frame_color": "#000000",
-            "product_card_enabled": true,
-            "product": "pink-grapefruit-pomelo-dus-jeli",
-            "tag": "@ahsenbucek",
-            "tag_url": "https://www.instagram.com/ahsenbucek/?hl=en"
-          }
-        }
-      },
-      "block_order": [
-        "shopify_video_6PaJgk",
-        "shopify_video_3Q8W8F",
-        "shopify_video_D7Kd6g",
-        "shopify_video_dAgCdn",
-        "shopify_video_p3CKCp",
-        "shopify_video_DRndFQ",
-        "shopify_video_iiEFHa",
-        "shopify_video_jGNXhV",
-        "shopify_video_am8V4A"
-      ],
-      "name": "Video carousel",
-      "settings": {
-        "heading": "",
-        "heading_size": "h2",
-        "heading_align": "text-center",
-        "mob_center_text": true,
-        "autoplay": true,
-        "hover_enabled": false,
-        "cta_label": "Sepete Ekle",
-        "color_scheme": "",
-        "background_mode": "default",
-        "background_color": "#ffffff",
-        "background_gradient_stop_1": "#cccccc",
-        "background_gradient_stop_2": "#ffffff",
-        "background_gradient_curve": "linear",
-        "background_gradient": "linear-gradient(#f8f1f4, #f8f1f4 12%, #c8bdc1, #e8dccc 92%)"
-      }
-    },
     "uc_concern": {
       "type": "uc-concern",
       "blocks": {
@@ -885,6 +885,7 @@
   },
   "order": [
     "slideshow_hero",
+    "video_carousel_FmCTeY",
     "flash_sale_NaeQVV",
     "uc_rail_aJNkJJ",
     "featured_collection_bestsellers",
@@ -892,7 +893,6 @@
     "uc_trust",
     "sets_section",
     "collection_list_EAraJP",
-    "video_carousel_FmCTeY",
     "uc_concern"
   ]
 }
