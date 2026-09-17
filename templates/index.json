@@ -16,7 +16,6 @@
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/Yatay_Banner.png",
-            "image_mobile": "shopify://shop_images/Dikey_Banner.png",
             "tint_override": false,
             "tint_color": "#000000",
             "tint_opacity": 40,
@@ -52,7 +51,7 @@
         "slide_gM6eP3": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/Seaweed.png",
+            "image_desktop": "shopify://shop_images/Seaweed_86a51470-0bd2-465e-a030-5274d67722fa.png",
             "tint_override": false,
             "tint_color": "#000000",
             "tint_opacity": 40,
