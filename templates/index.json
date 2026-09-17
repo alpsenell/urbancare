@@ -202,7 +202,9 @@
       ],
       "custom_css": [
         "@media screen and (max-width: 749px) {.wide-container {padding-left: 0px; padding-right: 0px; }}",
-        ".image-banner__image {border-radius: 0;}"
+        ".image-banner__image {border-radius: 0;}",
+        ".section--border-radius {border-radius: 0;}",
+        ".section--boundary-default {margin-bottom: 0px; margin-top: 0px;}"
       ],
       "name": "Slideshow",
       "settings": {
@@ -356,7 +358,9 @@
         "shopify_video_jGNXhV",
         "shopify_video_am8V4A"
       ],
-      "custom_css": [],
+      "custom_css": [
+        ".pt-16 {padding-top: 16px;}"
+      ],
       "name": "Video carousel",
       "settings": {
         "heading": "",
