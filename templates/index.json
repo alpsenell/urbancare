@@ -84,15 +84,15 @@
             "show_timer_labels": true
           }
         },
-        "slide_wqRhMX": {
+        "slide_4": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/Perfecting_website_banner.png",
+            "image_desktop": "shopify://shop_images/3840x1920px_TUANA.jpg",
             "tint_override": false,
             "tint_color": "#000000",
             "tint_opacity": 40,
-            "url": "",
-            "overlay_position": "justify-center items-start",
+            "url": "shopify://collections/glycolic-retinol",
+            "overlay_position": "justify-center items-center",
             "overlay_text_align": "text-center",
             "overlay_width_override": false,
             "overlay_max_width": 640,
@@ -120,15 +120,15 @@
             "show_timer_labels": true
           }
         },
-        "slide_4": {
+        "slide_wqRhMX": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/3840x1920px_TUANA.jpg",
+            "image_desktop": "shopify://shop_images/Perfecting_website_banner.png",
             "tint_override": false,
             "tint_color": "#000000",
             "tint_opacity": 40,
-            "url": "shopify://collections/glycolic-retinol",
-            "overlay_position": "justify-center items-center",
+            "url": "",
+            "overlay_position": "justify-center items-start",
             "overlay_text_align": "text-center",
             "overlay_width_override": false,
             "overlay_max_width": 640,
@@ -196,8 +196,8 @@
       "block_order": [
         "slide_kFyBaK",
         "slide_gM6eP3",
-        "slide_wqRhMX",
         "slide_4",
+        "slide_wqRhMX",
         "slide_5"
       ],
       "name": "Slideshow",
