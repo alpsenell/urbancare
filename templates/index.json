@@ -15,7 +15,8 @@
         "slide_kFyBaK": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/Sac-kurutma-bonesi-hedi-banner-01.png",
+            "image_desktop": "shopify://shop_images/Yatay_Banner.png",
+            "image_mobile": "shopify://shop_images/Dikey_Banner.png",
             "tint_override": false,
             "tint_color": "#000000",
             "tint_opacity": 40,
