@@ -202,7 +202,7 @@
       ],
       "custom_css": [
         "@media screen and (max-width: 749px) {.wide-container {padding-left: 0px; padding-right: 0px; }}",
-        ".section--border-radius {border-radius: 0;}"
+        ".image-banner__image {border-radius: 0;}"
       ],
       "name": "Slideshow",
       "settings": {
@@ -356,6 +356,7 @@
         "shopify_video_jGNXhV",
         "shopify_video_am8V4A"
       ],
+      "custom_css": [],
       "name": "Video carousel",
       "settings": {
         "heading": "",
