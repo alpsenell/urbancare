@@ -200,6 +200,9 @@
         "slide_wqRhMX",
         "slide_5"
       ],
+      "custom_css": [
+        "@media screen and (max-width: 749px) {.wide-container {padding-left: 10px; padding-right: 10px; }}"
+      ],
       "name": "Slideshow",
       "settings": {
         "height_mode": "auto",
@@ -217,7 +220,7 @@
         "color_scheme": "",
         "heading_size_desktop": "h1",
         "heading_size_mobile": "h1",
-        "full_width": false,
+        "full_width": true,
         "background_mode": "default",
         "background_color": "#ffffff",
         "background_gradient_stop_1": "#cccccc",
