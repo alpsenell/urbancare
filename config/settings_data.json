@@ -46,7 +46,7 @@
     "slider_show_arrows": "always",
     "disclosure_toggle": "plus",
     "pagination_style": "traditional",
-    "prod_card_image_ratio": "0.8",
+    "prod_card_image_ratio": "1.5",
     "card_show_rating": "",
     "card_show_vendor": "",
     "card_show_subtitle": true,
